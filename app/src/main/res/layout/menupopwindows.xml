@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+<RadioButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:drawableLeft="@drawable/collectbg"
+    android:button="@null"
+    android:checked="true"
+    android:drawablePadding="20dp"
+    android:gravity="center_vertical"
+    android:id="@+id/text1"
+    android:layout_margin="10dp"
+    android:text="adhahdiqaiw"/>
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/gray"/>
+  <RadioButton
+      android:layout_width="match_parent"
+      android:id="@+id/text2"
+      android:layout_margin="10dp"
+      android:button="@null"
+      android:drawablePadding="20dp"
+      android:drawableLeft="@drawable/ic_menu_share"
+      android:layout_height="wrap_content"
+      android:text="adhahdiqaiw"/>
+</LinearLayout>

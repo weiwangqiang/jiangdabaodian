@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#00000000"
+    android:id="@+id/share_pop_buttonTop">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分享到"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/share_canceltop"
+        android:id="@+id/button" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/gray"/>
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/share_popGrid"
+        android:numColumns="4"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_above="@+id/jianzhi_view"
+        android:listSelector="#00000000"
+        android:background="@drawable/share_cancelbot"
+        android:stretchMode="columnWidth"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+         android:id="@+id/jianzhi_share_cancel"
+        android:text="取消"
+        android:layout_margin="8dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/share_cancel"/>
+</LinearLayout>

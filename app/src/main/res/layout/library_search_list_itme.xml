@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF" >
+ 
+  <LinearLayout 
+     android:orientation="horizontal"
+     android:layout_width="match_parent"
+     android:layout_height="40.0dp"
+    >
+     <View 
+        android:layout_width="1.0dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10.0dp"
+        android:background="@color/gray"
+            />
+    
+        <TextView
+        android:id="@+id/search_list_itme_text1"
+        android:layout_width="0.0dp"
+        android:layout_height="fill_parent"
+        android:text="Large Text"
+        android:textColor="@color/gray"
+        android:layout_weight="1"
+        android:gravity="center"
+         />
+        <View 
+            
+        android:id="@+id/view"
+        android:layout_width="1.0dp"
+        android:layout_height="fill_parent"
+        android:background="@color/gray"
+            />
+    <TextView
+        android:id="@+id/search_list_itme_text2"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:text="Large Text"
+        android:textColor="@color/gray"
+        android:layout_weight="3"
+        android:gravity="center"
+         />
+     <View 
+        android:layout_width="1.0dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:background="@color/gray"
+        android:layout_marginRight="10.0dp"
+            />
+</LinearLayout>
+
+    <View 
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dp"
+        android:background="@color/gray"
+        android:layout_marginLeft="10.0dp"
+        android:layout_marginRight="10.0dp"
+        />
+</LinearLayout>

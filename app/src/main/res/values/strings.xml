@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">江大宝典</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="button_main">首页</string>
+    <string name="button_library">图书馆</string>
+    <string name="collect_title">收藏栏</string>
+    <string name="gameTitle">课间小游戏</string>
+</resources>

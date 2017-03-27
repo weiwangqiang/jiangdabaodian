@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:gravity="center_horizontal">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <juhe.jiangdajiuye.view.linearlayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/baseColorLittle">
+        <juhe.jiangdajiuye.tool.CircleImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/main_my_icn"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/logo"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_margin="20sp"
+            android:textColor="@color/white"
+            android:text="@string/app_name"/>
+    </juhe.jiangdajiuye.view.linearlayout>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroup">
+
+        <Button
+            android:id="@+id/button1"
+            style="@style/radioButtonStyle"
+            android:drawableLeft="@drawable/ic_home_black"
+            android:drawablePadding="10dp"
+            android:text="首页" />
+
+        <Button
+            style="@style/radioButtonStyle"
+            android:text="图书馆"
+            android:drawableLeft="@drawable/ic_home_black"
+
+            android:id="@+id/button2"/>
+        <Button
+            style="@style/radioButtonStyle"
+            android:text="职位收藏"
+            android:drawableLeft="@drawable/ic_home_black"
+
+            android:id="@+id/button3"/>
+        <Button
+            style="@style/radioButtonStyle"
+            android:text="宣讲大全"
+            android:drawableLeft="@drawable/ic_home_black"
+
+            android:id="@+id/button4"/>
+        <Button
+            style="@style/radioButtonStyle"
+            android:text="课件小游戏"
+
+            android:drawableLeft="@drawable/ic_home_black"
+            android:id="@+id/button6"/>
+        <Button
+            style="@style/radioButtonStyle"
+            android:text="反馈建议"
+
+            android:drawableLeft="@drawable/ic_home_black"
+            android:id="@+id/button5"/>
+    </RadioGroup>
+
+    <juhe.jiangdajiuye.view.linearlayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
+</ScrollView>
