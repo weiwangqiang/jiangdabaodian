@@ -3,13 +3,12 @@ package juhe.jiangdajiuye.view;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,23 +29,18 @@ import java.util.HashMap;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.gameAdapter;
-import juhe.jiangdajiuye.tool.ProgressDialog;
-import juhe.jiangdajiuye.tool.parseTools;
+import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.tool.shareDialog;
 
 
 /**
  * Created by wangqiang on 2016/10/1.
  */
-public class game extends AppCompatActivity implements View.OnClickListener
-,ListView.OnItemClickListener{
+public class game extends BaseActivity implements ListView.OnItemClickListener{
     private String TAG = "game";
-    private parseTools parsetools =  parseTools.getparseTool() ;
     private ArrayList<HashMap<String,String>> data;
     private ListView list;
     private gameAdapter adapter ;
-    private Button back,share;
-    private ProgressDialog myprogress;
     private Dialog dialog;
     private shareDialog sharedialog;
     private String APP_ID = "1105550872";
@@ -58,16 +52,6 @@ public class game extends AppCompatActivity implements View.OnClickListener
     private WXWebpageObject webpager ;
     private WXMediaMessage message;
     private SendMessageToWX.Req req;
-    private Handler handler = new Handler(){
-        public void handleMessage(Message message){
-            switch (message.what){
-                case 0x1:
-                    break;
-                case 0x2:
-                    break;
-            }
-        }
-    };
     private String[] url = {
             "http://www.kkxyx.com/jianfengchazhen/",
             "http://www.kkxyx.com/chengganguohe/",
@@ -161,13 +145,12 @@ public class game extends AppCompatActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
-//        myprogress = new ProgressDialog(this, R.drawable.waiting);
-//        myprogress.show();
         init();
         findid();
         setlister();
         getMessage();
         upDate();
+        initToolbar();
     }
     private void init(){
         initWEi();
@@ -177,6 +160,15 @@ public class game extends AppCompatActivity implements View.OnClickListener
         tencent = Tencent.createInstance(APP_ID, game.this);
         dialog = sharedialog.getDialog(game.this);
     }
+    private Toolbar toolbar;
+    public void initToolbar(){
+        toolbar.setTitle("");
+//        toolbar.setNavigationIcon(R.drawable.menue);
+        setSupportActionBar(toolbar);
+//        toolbar.setOnMenuItemClickListener(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
     /**初始化微信
      */
     private void initWEi(){
@@ -185,26 +177,26 @@ public class game extends AppCompatActivity implements View.OnClickListener
     }
     public void findid(){
         list = (ListView)findViewById(R.id.game_list);
-        back = (Button)findViewById(R.id.game_back);
-        share = (Button)findViewById(R.id.game_share);
+//        back = (Button)findViewById(R.id.game_back);
+//        share = (Button)findViewById(R.id.game_share);
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+
     }
     public void setlister(){
-        back.setOnClickListener(this);
-        share.setOnClickListener(this);
 
     }
     public void getMessage(){
-        Log.e(TAG,"url is "+url.length + " title is "+title.length +" message is "+content.length
+        Log.e(TAG,"url is "+url.length + " title is "+title.length +" MessageItem is "+content.length
          +" image is "+image.length);
-        for(int i = 0;i<url.length;i++){
-            HashMap<String,String> map = new HashMap<>();
-            map.put("url",url[i]);
-            map.put("title",title[i]);
-            map.put("message",content[i]);
-            map.put("image",image[i]);
-            map.put("visit","12");
-            data.add(map);
-        }
+            for(int i = 0;i<url.length;i++){
+                HashMap<String,String> map = new HashMap<>();
+                map.put("url",url[i]);
+                map.put("title",title[i]);
+                map.put("MessageItem",content[i]);
+                map.put("image",image[i]);
+                map.put("visit","12");
+                data.add(map);
+            }
     }
 //    public void getMessage() {
 //        final urlConnection connection= new urlConnection();
@@ -213,13 +205,13 @@ public class game extends AppCompatActivity implements View.OnClickListener
 //            public void success(String response, int code) {
 //                upDate(parsetools.parseGame(response));
 //                Log.e(TAG," response code is "+code+"date size is "+data.size());
-//                handler.sendEmptyMessage(0x1);
+//                header.sendEmptyMessage(0x1);
 //            }
 //            @Override
 //            public void failure(Exception e,String Error, int code) {
 //                e.printStackTrace();
 //                Log.e(TAG," Error response is "+ Error+"code is "+code);
-//                handler.sendEmptyMessage(0x2);
+//                header.sendEmptyMessage(0x2);
 //            }
 //        });
 //        connection.get(url);
@@ -227,22 +219,32 @@ public class game extends AppCompatActivity implements View.OnClickListener
     public void upDate(){
         adapter = new gameAdapter(this,data,
                 R.layout.game_item,
-                new String[]{"image","title","message","visit"},
+                new String[]{"image","title","MessageItem","visit"},
                 new int[]{R.id.game_item_icn,R.id.game_item_title,
                         R.id.game_item_message,R.id.game_item_visit});
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
+        list.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+                Log.i(TAG, "onScroll: "+firstVisibleItem +"  "+visibleItemCount+"  "+totalItemCount);
+                if(totalItemCount==visibleItemCount+firstVisibleItem){
+//                    getMessage();
+//                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
     }
     @Override
     public void onClick(View view) {
         switch(view.getId()){
-            case R.id.game_back:
-                finish();
-//                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                break;
-            case R.id.game_share:
-                showShare();
-                break;
             default:
                 break;
         }
@@ -251,7 +253,25 @@ public class game extends AppCompatActivity implements View.OnClickListener
         dialog.show();
         sharedialog.setItemlister(new myItemlist());
     }
-
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+                return true;
+            case R.id.nav_share:
+                showShare();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(game.this,gameOnline.class);
@@ -259,7 +279,6 @@ public class game extends AppCompatActivity implements View.OnClickListener
         intent.putExtra("url",url);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
     }
 
     /**

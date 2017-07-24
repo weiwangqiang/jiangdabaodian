@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,11 +15,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,18 +26,18 @@ import java.util.concurrent.Executors;
 import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.ly_recyclerAdapter;
+import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.urlConnection;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
-import static juhe.jiangdajiuye.R.id.toolbar;
-
 /**
  * Created by wangqiang on 2016/10/6.
  */
-public class library extends AppCompatActivity  implements Toolbar.OnMenuItemClickListener,View.OnClickListener{
+public class library extends BaseActivity implements
+        Toolbar.OnMenuItemClickListener{
     private View view,main;
     public EditText edit;
     private String TAG = "fragmentLibrary";
@@ -91,7 +89,7 @@ public class library extends AppCompatActivity  implements Toolbar.OnMenuItemCli
                     myprogress.cancel();
                     break;
                 case 0x3:
-                    Toast.makeText(library.this,"没有你要找的书哦！",0).show();
+                    uiutils.showToast("没有你要找的书哦!");
                     refreshing = false;
                     myprogress.cancel();
                     break;
@@ -106,7 +104,7 @@ public class library extends AppCompatActivity  implements Toolbar.OnMenuItemCli
         setContentView(R.layout.library_fragment);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mOkHttpClient = new OkHttpClient();
-        service = Executors.newFixedThreadPool (4);//线程池50
+        service = Executors.newFixedThreadPool (Runtime.getRuntime().availableProcessors());//线程池50
         initView();
     }
     public void initView(){
@@ -186,7 +184,7 @@ public class library extends AppCompatActivity  implements Toolbar.OnMenuItemCli
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
                 if(edit.getText().length()==0)
                 {
-                    Toast.makeText(this,"请输入搜索词",Toast.LENGTH_SHORT).show();
+                    uiutils.showToast("请输入搜索词");
                     return;
                 }
                 page=1;
@@ -210,19 +208,16 @@ public class library extends AppCompatActivity  implements Toolbar.OnMenuItemCli
     }
 
     public void getSearch(){
-        Log.e(TAG,"Current page is "+page + "totalPage is "+totalPage);
-        if(refreshing) {
-            Log.e(TAG," is refreshing ");
+        if(refreshing)
             return;
-        }
         if(!isSearch&& (page * 10)>=totalPage){
-            Toast.makeText(this,"没有更多了",Toast.LENGTH_SHORT).show();
+            uiutils.showToast("没有更多了");
             return;
         }
         refreshing = true;
         //解决中文乱码问题
         HttpUrl parsed = HttpUrl.parse(getUrl());
-        final urlConnection connection= new urlConnection();
+        final urlConnection connection= new urlConnection(this);
         connection.setgetLister(new urlConnection.getLister() {
             @Override
             public void success(final String response, int code) {
@@ -240,6 +235,7 @@ public class library extends AppCompatActivity  implements Toolbar.OnMenuItemCli
             public void failure(Exception e,String Error, int code) {
                 e.printStackTrace();
                 Log.e(TAG," Error response is "+ Error+"code is "+code);
+                uiutils.showToast("出错，请重试");
                 handler.sendEmptyMessage(0x2);
             }
         });
@@ -249,8 +245,7 @@ public class library extends AppCompatActivity  implements Toolbar.OnMenuItemCli
         myprogress = new ProgressDialog(this,R.drawable.waiting);
         myprogress.show();
     }
-    public void upData(ArrayList<Map<String,String>> d){
-        Log.e(TAG,"response list size is "+ d.size());
+    public void upData(List<Map<String,String>> d){
         if(d.size()==0){
             handler.sendEmptyMessage(0x3);
             return ;
@@ -265,7 +260,6 @@ public class library extends AppCompatActivity  implements Toolbar.OnMenuItemCli
             }
         }
         handler.sendEmptyMessage(0x1);
-        Log.e(TAG," lis size is "+data.size());
     }
     public String  getUrl(){
         String str = "";
@@ -306,13 +300,4 @@ public class library extends AppCompatActivity  implements Toolbar.OnMenuItemCli
         super.onResume();
         imm.hideSoftInputFromWindow(edit.getWindowToken(), 0); //强制隐藏键盘
     }
-
-    /**
-     * This method will be invoked when a menu item is clicked if the item itself did
-     * not already handle the event.
-     *
-     * @param item {@link MenuItem} that was clicked
-     * @return <code>true</code> if the event was handled, <code>false</code> otherwise.
-     */
-
 }

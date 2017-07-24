@@ -1,5 +1,8 @@
 package juhe.jiangdajiuye.util;
 
+import android.app.Activity;
+import android.content.Context;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -13,9 +16,11 @@ import java.util.concurrent.Executors;
 public class urlConnection   {
     public getLister lister;
     public ExecutorService service;
-    public urlConnection(){
+    public Context mCtx;
+    public urlConnection(Context mCtx){
         //指定线程池数
-        service = Executors.newFixedThreadPool (4);
+        this.mCtx = mCtx;
+        service = Executors.newFixedThreadPool (Runtime.getRuntime().availableProcessors());
     }
 
     public interface getLister{
@@ -38,12 +43,15 @@ public class urlConnection   {
             }
         });
     }
+    String result = "";
+    HttpURLConnection connect = null;
+    int ResponseCode = 0;
     public  void realget(String url1){
-        String result = "";
+        result = "";
         BufferedReader reader =  null;
         try{
             URL url = new URL(url1);
-            HttpURLConnection connect = (HttpURLConnection)url.openConnection();
+            connect = (HttpURLConnection)url.openConnection();
             connect.setConnectTimeout(5000);
             //设置请求属性
             connect.setRequestProperty("Accept",
@@ -55,19 +63,36 @@ public class urlConnection   {
             connect.connect();
             reader = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             String line ;
+
             while ((line = reader.readLine()) !=null){
                 result += line;
             }
-            if(connect.getResponseCode()==200){
-                lister.success(result,connect.getResponseCode());
+            ResponseCode = connect.getResponseCode();
+            if(ResponseCode==200){
+                ((Activity)mCtx).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lister.success(result,ResponseCode);
+                    }
+                });
             }
             else{
-                lister.failure(null,result,connect.getResponseCode());
+                ((Activity)mCtx).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lister.failure(null,result, ResponseCode);
+                    }
+                });
+
             }
             connect.disconnect();
-        }catch(Exception e){
-            lister.failure(e,result,0);
-            e.printStackTrace();
+        }catch(final Exception e){
+            ((Activity)mCtx).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    lister.failure(e,result, ResponseCode);
+                }
+            });
         }
         finally {
             try{

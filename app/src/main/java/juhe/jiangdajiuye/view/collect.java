@@ -3,7 +3,6 @@ package juhe.jiangdajiuye.view;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,12 +17,13 @@ import java.util.HashMap;
 import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.CollectRceAdapter;
+import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 
 /**
  * Created by wangqiang on 2016/10/6.
  */
-public class collect extends AppCompatActivity implements View.OnClickListener {
+public class collect extends BaseActivity {
     private String TAG = "fragmentCollect";
     private View view;
     private Boolean first = true;

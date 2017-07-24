@@ -10,18 +10,16 @@
         tools:targetApi="lollipop"
         android:id="@+id/card_view"
         android:layout_gravity="center"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stateListAnimator="@drawable/lift_on_touch"
-        android:clickable="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:clickable="false"
+        android:layout_margin="10dp"
         card_view:cardCornerRadius="4dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="vertical"
             >
               <RelativeLayout
@@ -36,18 +34,19 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
                         android:layout_toLeftOf="@+id/company"
                         android:layout_alignParentLeft="true"
                         android:layout_weight="1"
                         android:layout_margin="10dp"
                         android:textSize="15sp"
-
                         android:id="@+id/title"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textSize="15sp"
+
                         android:gravity="end"
                         android:layout_alignParentRight="true"
                         android:layout_margin="10dp"
@@ -82,6 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
+
                     android:layout_alignParentRight="true"
                     android:layout_margin="10dp"
                     android:layout_weight="1"

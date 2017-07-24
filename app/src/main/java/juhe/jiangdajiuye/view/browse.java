@@ -3,14 +3,18 @@ package juhe.jiangdajiuye.view;
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.tencent.connect.common.Constants;
@@ -28,6 +32,7 @@ import com.tencent.tauth.UiError;
 import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.shareDialog;
@@ -35,11 +40,10 @@ import juhe.jiangdajiuye.tool.shareDialog;
 /**
  * Created by wangqiang on 2016/10/1.
  */
-public class browse extends AppCompatActivity implements View.OnClickListener {
+public class browse extends BaseActivity {
     private String TAG = "browse";
     private String title,company,location,time;
     private int from;
-    private RadioButton share,collect;
     private Boolean ischeck = false;
     private Button back;
 //    private Toolbar toolbar;
@@ -72,10 +76,18 @@ public class browse extends AppCompatActivity implements View.OnClickListener {
         myprogress.show();
         init();
         findid();
+        initToolbar();
         getParam();
         setlister();
         initView();
         initWeb(url);
+    }
+    private Toolbar toolbar;
+    public void initToolbar(){
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
     private void init(){
         initWEi();
@@ -91,19 +103,16 @@ public class browse extends AppCompatActivity implements View.OnClickListener {
         api.registerApp(WEI_ID);
     }
     public void findid(){
-        back = (Button)findViewById(R.id.browse_back);
         webView = (WebView)findViewById(R.id.webView);
-        share = (RadioButton)findViewById(R.id.browse_share);
-        collect = (RadioButton)findViewById(R.id.browse_collect);
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
     }
     public void setlister(){
-        back.setOnClickListener(this);
-        collect.setOnClickListener(this);
-        share.setOnClickListener(this);
+//        back.setOnClickListener(this);
+//        collect.setOnClickListener(this);
+//        share.setOnClickListener(this);
 
     }
     public void initView(){
-        collect.setChecked(helper.hasURL(url));
         ischeck = helper.hasURL(url);
     }
 
@@ -124,7 +133,24 @@ public class browse extends AppCompatActivity implements View.OnClickListener {
        Log.e(TAG,"url is "+url+" title is "+title+ " time is "+time+" company is "+company+" location is "+location);
     }
     public void initWeb(String url){
+        WebSettings wSet = webView.getSettings();
+        wSet.setJavaScriptEnabled(true);
+//        wSet.setAppCacheEnabled(true);
+        wSet.setSupportZoom(true);
+        wSet.setBuiltInZoomControls(true);
+        wSet.setDisplayZoomControls(false);
+        wSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN );//适应屏幕，内容将自动缩放
+        wSet.setLoadWithOverviewMode(true);
+        wSet.setUseWideViewPort(true);
         webView.loadUrl(url);
+//        webView.setInitialScale(100);   //100代表不缩放
+        webView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url)
+            { //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+                view.loadUrl(url);
+                return true;
+            }
+        });
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -138,21 +164,53 @@ public class browse extends AppCompatActivity implements View.OnClickListener {
         });
     }
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.browseitem, menu);
+        return true;
+    }
+    private Menu menu ;
+    private static String Menutitle = "";
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        this.menu = menu;
+        Menutitle = helper.hasURL(url) ? "取消收藏":"收藏";
+        menu.findItem(R.id.browse_collect).setTitle(Menutitle);
+        invalidateOptionsMenu();
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+      switch (id){
+         case android.R.id.home:
+             finish();
+             overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+             return true;
+         case R.id.browse_collect:
+             showCollect();
+             return true;
+         case R.id.browse_share:
+             showShare();
+             return true;
+          case R.id.browse_open:
+              openInBrowse();
+              return true;
+     }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void openInBrowse() {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse(url);
+        intent.setData(content_url);
+        startActivity(intent);
+    }
+
+    @Override
     public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.browse_back:
-                finish();
-                overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-                break;
-            case R.id.browse_share:
-                showShare();
-                break;
-            case R.id.browse_collect:
-                showCollect();
-                break;
-            default:
-                break;
-        }
+
     }
 
     private void showShare(){
@@ -162,11 +220,21 @@ public class browse extends AppCompatActivity implements View.OnClickListener {
     private void showCollect(){
         if(ischeck){
             Log.e(TAG,"is false");
-            collect.setChecked(false);
+//            collect.setChecked(false);
+            uiutils.showToast("取消成功");
+            Menutitle = "收藏";
+            menu.findItem(R.id.browse_collect).setTitle("收藏");
+
         }
         else if(!ischeck){
-            collect.setChecked(true);
+//            collect.setChecked(true);
+            uiutils.showToast("收藏成功");
+            Menutitle = "取消收藏";
+            Log.i(TAG, "showCollect: 取消收藏");
+            menu.findItem(R.id.browse_collect).setTitle("取消收藏");
+
         }
+        invalidateOptionsMenu();
         ischeck = !ischeck;
     }
     /**
@@ -266,10 +334,10 @@ public class browse extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onPause(){
         super.onPause();
-        if(collect.isChecked()&&from!=3){
+        if(ischeck&&from!=3){
             helper.addCollect(title,company,location,time,url);
         }
-        else if (helper.hasURL(url)&&!collect.isChecked()){
+        else if (helper.hasURL(url)&&!ischeck){
             //取消收藏
             helper.delete(url);
         }

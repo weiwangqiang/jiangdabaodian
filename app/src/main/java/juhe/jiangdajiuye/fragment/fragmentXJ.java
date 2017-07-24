@@ -3,8 +3,6 @@ package juhe.jiangdajiuye.fragment;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -15,14 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.recyclerAdapter;
+import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.tool.NetState;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.urlConnection;
@@ -32,17 +30,17 @@ import juhe.jiangdajiuye.view.browse;
  * 宣讲
  * Created by wangqiang on 2016/9/27.
  */
-public class fragmentXJ extends Fragment{
-    private View view,error,view1;
+public class fragmentXJ extends Fragment  {
+    private View view,error;
     private String TAG = "fragmentXJ";
     private String url = "http://ujs.91job.gov.cn/teachin/index";
     private Boolean isfirst = true;
     private NetState netState;
     private int page = 1;
-    public RecyclerView recyclerView;
+    public  RecyclerView recyclerView;
     private LinearLayoutManager manager;
 
-    public ArrayList<HashMap<String,String>>  date = new ArrayList<>();
+    public List<MessageItem> date = new ArrayList<>();
     public recyclerAdapter adapter;
     //下拉刷新
     private Boolean isPull = false;
@@ -50,37 +48,11 @@ public class fragmentXJ extends Fragment{
     private Boolean refreshing = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private parseTools parsetools =  parseTools.getparseTool() ;
-    private Handler handler = new Handler(){
-        public void handleMessage(Message message){
-            switch (message.what){
-                case 0x1:
-                    if(isfirst){
-                        isfirst = false;
-                        error.setVisibility(View.GONE);
-                    }
-                    if(date.size()==0){
-                        error.setVisibility(View.VISIBLE);
-                    }
-                    else
-                        error.setVisibility(View.GONE);
-                    adapter.RefreshDate(date);
-                    changeToState();
-                    break;
-                case 0x2:
-                    changeRefreshState();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.e("onCreateView","fragmentJS  is onCreateView");
         view = inflater.inflate(R.layout.fragment,container,false);
-
-                view1 = inflater.inflate( R.layout.main_list_item,container,false);
 
         init();
         return view;
@@ -93,30 +65,21 @@ public class fragmentXJ extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume");
-        if(isfirst&&!swipInit){
+       }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isfirst&&!swipInit &&isVisibleToUser ){
             if(swipeRefreshLayout!=null){
                 swipInit = true;
-                Log.e(TAG,"onResume");
-//                swipeRefreshLayout.setProgressViewOffset(false, 0, (int) TypedValue
-//                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
-//                                .getDisplayMetrics()));
-                swipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.e(TAG,"on post ");
-                        swipeRefreshLayout.setRefreshing(true);
-                    }
-                });
-                getMessage();
+
             }
         }
-
     }
     public void init(){
         findId();
         initList();
-        initRefresh();
         bindNetState();
     }
     /**
@@ -142,7 +105,6 @@ public class fragmentXJ extends Fragment{
         netState.onReceive(getActivity(), null);
     }
 
-
     public void findId(){
 
         error = view.findViewById(R.id.error);
@@ -150,8 +112,9 @@ public class fragmentXJ extends Fragment{
         manager =  new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
-        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
 
+        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
+        initRefresh();
     }
     public void initRefresh(){
         Log.e(TAG,"initRefesh");
@@ -173,54 +136,39 @@ public class fragmentXJ extends Fragment{
                 getMessage();
             }
         });
-//        setViewObserver();
-    }
-
-    public void setViewObserver(){
-        Log.e(TAG," set view Observer");
-        final ViewTreeObserver observer = recyclerView.getViewTreeObserver();
-        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        swipeRefreshLayout.post(new Runnable() {
             @Override
-            public boolean onPreDraw() {
-                Log.e(TAG," in  view Observer");
-                if(!swipInit){
-                    Log.e(TAG,"change view Observer");
-                    swipInit = true;
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                getMessage();
 
-                    swipeRefreshLayout.setRefreshing(true);
-                    isPull = true;
-                    getMessage();
-                }
-                return false;
             }
         });
     }
+
     public void initList(){
         adapter = new recyclerAdapter(getActivity(), R.layout.main_list_item,date);
         recyclerView.setAdapter(adapter);
         adapter.setLister(new myitemLister() {
             @Override
             public void ItemLister(int position) {
-                String url = date.get(position).get("url").toString();
+                MessageItem item = date.get(position);
                 Intent intent = new Intent(getActivity(),browse.class);
-                intent.putExtra("url",url);
+                intent.putExtra("url",item.getUrl());
+                intent.putExtra("title",item.getTitle());
+                intent.putExtra("time",item.getTime());
+                intent.putExtra("company",item.getFrom());
+                intent.putExtra("location",item.getLocate());
                 intent.putExtra("from",1);
-                intent.putExtra("title",date.get(position).get("title"));
-                intent.putExtra("company",date.get(position).get("company"));
-                intent.putExtra("location",date.get(position).get("place"));
-                intent.putExtra("time",date.get(position).get("time"));
                 getActivity().startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
         });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                Log.e(TAG,"state is "+newState+"== recyclerView "
-                        +recyclerView.SCROLL_STATE_IDLE
-                        +" SCROLL_STATE_DRAGGING is "+recyclerView.SCROLL_STATE_DRAGGING
-                        +" SCROLL_STATE_SETTLING is "+recyclerView.SCROLL_STATE_SETTLING);
             }
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -228,49 +176,60 @@ public class fragmentXJ extends Fragment{
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItemPosition = manager.findLastVisibleItemPosition();
                 int itemCount = manager.getItemCount();
-                Log.e(TAG,"在滚动中 itemCount is "+itemCount +" lastVisibleItem is "+lastVisibleItemPosition);
                 // 如果最后一个可见的View的position 等于 itemCount-1 代表滚动到底部
+                Log.i(TAG, "onScrolled: "+itemCount+"  :  "+lastVisibleItemPosition);
                 if((itemCount-1)==lastVisibleItemPosition){
-                    Log.e(TAG,"到底啦");
                     getMessage();
                 }
             }
         });
-
     }
-
+     long lastTime ;
     public void getMessage() {
-        Log.e(TAG,"getMessage");
-        if(refreshing) {
-            isPull = false;
-//            swipeRefreshLayout.setRefreshing(false);
+        if(refreshing)
             return;
-        }
         refreshing = true;
-        String url =  getUrl();
-        Log.e(TAG,"begin to get url is "+url);
-        final urlConnection connection= new urlConnection();
-        connection.setgetLister(new urlConnection.getLister() {
+        String url = getUrl();
+        lastTime = System.currentTimeMillis();
+        Log.i(TAG,"url is "+url+" time :"+ lastTime);
+        urlConnection connection = new urlConnection(getActivity());
+        connection.setgetLister(new urlConnection.getLister(){
+
             @Override
             public void success(String response, int code) {
-                upDate(parsetools.parseXuanjiang(response));
-                Log.e(TAG," response code is "+code+"date size is "+date.size());
-                handler.sendEmptyMessage(0x1);
-
+                Log.i(TAG, "success: use time is "+(System.currentTimeMillis() - lastTime));
+                System.out.println(""+response);
+                Log.i(TAG, "success: code "+code);
+                upDate(parsetools.parseXuanjiang(response.trim()));
+                MySuccess();
+                swipeRefreshLayout.setRefreshing(false);
+                Log.i(TAG, "success: use time is "+(System.currentTimeMillis() - lastTime));
             }
-            @Override
-            public void failure(Exception e,String Error, int code) {
-                e.printStackTrace();
 
-                Log.e(TAG," Error response is "+ Error+"code is "+code);
-                handler.sendEmptyMessage(0x2);
+            @Override
+            public void failure(Exception e, String Error, int code) {
+                changeRefreshState();
+                swipeRefreshLayout.setRefreshing(false);
+
+
             }
         });
         connection.get(url);
     }
-    //更新数据
-    public void upDate(ArrayList<HashMap<String,String>>  list){
-        Log.e(TAG,"update");
+    private void MySuccess() {
+        if(date.size()==0){
+            error.setVisibility(View.VISIBLE);
+            return;
+        }
+        else
+        {
+            isfirst = false;
+            error.setVisibility(View.GONE);
+        }
+        adapter.RefreshDate(date);
+        changeParam();
+    }
+    public void upDate(List<MessageItem>  list){
         if(isPull){
             date.clear();
             date = list;
@@ -279,32 +238,24 @@ public class fragmentXJ extends Fragment{
             date.addAll(list);
         }
     }
-    public void changeToState(){
-        Log.e(TAG,"changeToState");
-        if(isPull){
+    public void changeParam(){
+        if(isPull)
             page = 2;
-        }
         else
-        {
             page++;
-        }
         changeRefreshState();
     }
     public void changeRefreshState(){
         isPull = false;
         refreshing = false;
-        swipeRefreshLayout.setRefreshing(false);
     }
-    //获取URL
     public String getUrl(){
         Log.e(TAG,"getURL");
         String str = "";
-        if(isPull){
+        if(isPull)
             str = url;
-        }
-        else {
+        else
             str = url +"?page="+page;
-        }
         return str;
     }
     @Nullable
@@ -336,5 +287,4 @@ public class fragmentXJ extends Fragment{
     public void onHiddenChanged (boolean hidden){
         Log.d(TAG,"onHiddenChanged");
     }
-
 }

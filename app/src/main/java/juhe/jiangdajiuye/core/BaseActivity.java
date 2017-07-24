@@ -1,6 +1,5 @@
 package juhe.jiangdajiuye.core;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,21 +7,21 @@ import android.view.View;
 
 import org.xutils.x;
 
+import juhe.jiangdajiuye.util.MyApplication;
+import juhe.jiangdajiuye.util.Uiuilts;
+
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
-    protected Activity mBaseActivity;
     public static String EXIT_APP_ACTION = "com.joshua.exit";
     private Boolean isFinished = false;
     public final int NET_SUCCESS = 0x1;
     public final int NET_ERROR = 0x2;
     private String TAG = "BaseActivity";
-    public BaseActivity(){
-        mBaseActivity=this;
-    }
-
+    public static Uiuilts uiutils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        uiutils = new Uiuilts(MyApplication.getApplication());
         initScreen();
         initXUtils();
         initReceiver();

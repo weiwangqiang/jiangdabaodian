@@ -32,7 +32,7 @@ import juhe.jiangdajiuye.tool.parseTools;
 /**图书详情
  * Created by wangqiang on 2016/10/2.
  */
-public class searchBook extends BaseActivity implements View.OnClickListener{
+public class searchBook extends BaseActivity{
     private Button back;
     private TextView b,e,bm;
     private View v,footer;

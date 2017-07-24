@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:Banner="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.youth.banner.Banner
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        Banner:indicator_width= "6dp"
+        Banner:indicator_height= "6dp"
+        Banner:indicator_margin= "3dp"
+        Banner:indicator_drawable_selected= "@drawable/circle_white_setting_28"
+        Banner:indicator_drawable_unselected= "@drawable/circle_gray_setting_28"
+
+        android:layout_height="120dp"/>
+</LinearLayout>

@@ -1,12 +1,9 @@
 package juhe.jiangdajiuye.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.XmlResourceParser;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -17,15 +14,14 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import org.xmlpull.v1.XmlPullParser;
-
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.core.BaseActivity;
 
 /**
  * Created by wangqiang on 2016/7/3.
  */
-public class welcome extends Activity {
+public class welcome extends BaseActivity {
     private String TAG = "welcome";
     private Animation Loadmation;
     private AlphaAnimation start;
@@ -36,7 +32,6 @@ public class welcome extends Activity {
     private SharedPreferences sharedPreferences;
     private int[] image = new int[]{R.drawable.welcome,R.drawable.guide1,
             R.drawable.guide1,R.drawable.guide3};
-    //下拉刷新
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,30 +41,7 @@ public class welcome extends Activity {
         setContentView(R.layout.welcome);
         sharedPreferences = getSharedPreferences("welcome", Context.MODE_PRIVATE);
         isfirst = sharedPreferences.getBoolean("first",true);
-        Log.e(TAG,"isfirst is "+isfirst);
-//        getXml();
         init();
-    }
-    public void getXml(){
-        Log.w(TAG,"-->>getXml");
-        XmlResourceParser xml = getResources().getXml(R.xml.value2);
-        try{
-            xml.next();
-            int eventType = xml.getEventType();
-            Boolean inTitle = false;
-            while(eventType != XmlPullParser.END_DOCUMENT){
-                if(eventType == XmlPullParser.START_TAG){
-                    if(xml.getName().equals("title")){
-                        inTitle = true;
-                        Log.e(TAG,"title from xml is "+inTitle);
-                    }
-
-                }
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
     }
     private void init(){
         welcome  = (ImageView)findViewById(R.id.welcome_image);
@@ -88,9 +60,9 @@ public class welcome extends Activity {
                 ToMainActivity();
             }
         });
-         animation =new ScaleAnimation(1.0f, 1.03f, 1.0f, 1.03f,
+         animation =new ScaleAnimation(1.0f, 1.08f, 1.0f, 1.08f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        start = new AlphaAnimation(0.5f, 1.0f);
+        start = new AlphaAnimation(0.42f, 1.0f);
         animation.setDuration(4000);//设置动画持续时间
         start.setDuration(4000);
 //        welcome.setAnimation(start);
@@ -149,5 +121,28 @@ public class welcome extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Loadmation.cancel();
+        animation.cancel();
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+
     }
 }

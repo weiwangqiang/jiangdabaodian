@@ -4,41 +4,33 @@ package juhe.jiangdajiuye.fragment;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.BoringLayout;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.recyclerAdapter;
+import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.tool.NetState;
 import juhe.jiangdajiuye.tool.parseOther;
 import juhe.jiangdajiuye.util.urlConnection;
 import juhe.jiangdajiuye.view.browse;
-import okhttp3.OkHttpClient;
-
-import static android.R.attr.data;
-import static com.tencent.wxop.stat.common.k.e;
 
 /**
  * Created by wangqiang on 2016/9/27.
  */
-public class fragment extends Fragment {
+public class fragment extends Fragment  {
     private View view,error;
     private String baseurl;
     private String TAG;
@@ -46,7 +38,7 @@ public class fragment extends Fragment {
     public RecyclerView recyclerView;
     private LinearLayoutManager manager;
     private NetState netState;
-    public ArrayList<HashMap<String,String>>  date = new ArrayList<>();
+    public List<MessageItem> data = new ArrayList<>();
     public recyclerAdapter adapter;
     //下拉刷新
     private Boolean isPull = false;
@@ -55,36 +47,9 @@ public class fragment extends Fragment {
     private Boolean swipInit = false;
     private int page = 1;
     private SwipeRefreshLayout swipeRefreshLayout;
-    public OkHttpClient mOkHttpClient ;
     private parseOther parse = new parseOther();
-    private Handler handler = new Handler(){
-        public void handleMessage(Message message){
-            switch (message.what){
-                case 0x1:
-                    //成功返回
-                    if(date.size()==0){
-                        Log.e(TAG,"addList have a error ,list is 0 ");
-                        error.setVisibility(View.VISIBLE);
-                        break;
-                    }
-                    else
-                    {
-                        isfirst = false;
-                        Log.e(TAG," -->>isfirst is change to false ");
-                        error.setVisibility(View.GONE);
-                    }
-                    adapter.RefreshDate(date);
-                    changeToState();
-                    break;
-                case 0x2:
-                    //返回有错误，
-                    changeRefreshState();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
+
+
     public static fragment newInstance(String url,String TAG,int from) {
         fragment f = new fragment();
         Bundle b = new Bundle();
@@ -98,7 +63,6 @@ public class fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.e(TAG,"fragmentJS  is onCreateView");
         view = inflater.inflate(R.layout.fragment,container,false);
-        mOkHttpClient = new OkHttpClient();
         init();
         return view;
     }
@@ -160,53 +124,40 @@ public class fragment extends Fragment {
                 @Override
                 public void onRefresh() {
                     isPull = true;
-                    Log.e(TAG,"swiprefreshlayout getMessage");
                     getMessage();
                 }
             });
-//        setViewObserver();
-    }
-    public void setViewObserver(){
-        ViewTreeObserver observer = swipeRefreshLayout.getViewTreeObserver();
-        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                if(!swipInit){
-                    swipInit = true;
+        if(from == 0){
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
                     swipeRefreshLayout.setRefreshing(true);
-                    isPull = true;
                     getMessage();
+
                 }
-                return false;
-            }
-        });
+            });
+        }
     }
     public void initList(){
-        adapter = new recyclerAdapter(getActivity(), R.layout.main_list_item,date);
+        adapter = new recyclerAdapter(getActivity(), R.layout.main_list_item,data);
         recyclerView.setAdapter(adapter);
         adapter.setLister(new myitemLister() {
             @Override
             public void ItemLister(int position) {
-                String url = date.get(position).get("url").toString();
+                MessageItem item = data.get(position);
                 Intent intent = new Intent(getActivity(),browse.class);
-                intent.putExtra("url",url);
-                intent.putExtra("title",date.get(position).get("title"));
-                intent.putExtra("time",date.get(position).get("time"));
-                intent.putExtra("company",date.get(position).get("company"));
-                intent.putExtra("location",date.get(position).get("place"));
+                intent.putExtra("url",item.getUrl());
+                intent.putExtra("title",item.getTitle());
+                intent.putExtra("time",item.getTime());
+                intent.putExtra("company",item.getFrom());
+                intent.putExtra("location",item.getLocate());
                 intent.putExtra("from",1);
                 getActivity().startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
         });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            /**
-             * Callback method to be invoked when RecyclerView's scroll state changes.
-             *
-             * @param recyclerView The RecyclerView whose scroll state has changed.
-             * @param newState     The updated scroll state. One of {@link #SCROLL_STATE_IDLE},
-             *                     {@link #SCROLL_STATE_DRAGGING} or {@link #SCROLL_STATE_SETTLING}.
-             */
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -219,7 +170,6 @@ public class fragment extends Fragment {
                 int itemCount = manager.getItemCount();
                 // 如果最后一个可见的View的position 等于 itemCount-1 代表滚动到底部
                 if((itemCount-1)==lastVisibleItemPosition){
-                    Log.e(TAG,"list 到底啦");
                     getMessage();
                 }
             }
@@ -228,48 +178,59 @@ public class fragment extends Fragment {
 
     public void getMessage() {
         if(refreshing) {
-//            isPull = false;
-            Log.e(TAG,"is refreshing and  return");
             return;
         }
         refreshing = true;
         String url = getUrl();
-        Log.e(TAG,"------------------url is "+ url);
-        final urlConnection connection= new urlConnection();
-        connection.setgetLister(new urlConnection.getLister() {
+
+        urlConnection connection = new urlConnection(getActivity());
+        connection.setgetLister(new urlConnection.getLister(){
+
             @Override
             public void success(String response, int code) {
-                upDate(parse.parse(response,from));
-                handler.sendEmptyMessage(0x1);
+                upDate(parse.parse(response,from,baseurl));
+                MySuccess();
             }
+
             @Override
-            public void failure(Exception e,String Error, int code) {
-                e.printStackTrace();
-                Log.e(TAG,"-->> error code is  "+ code);
-                handler.sendEmptyMessage(0x2);
+            public void failure(Exception e, String Error, int code) {
+                changeRefreshState();
             }
         });
         connection.get(url);
-    }    //更新数据
-    public void upDate(ArrayList<HashMap<String,String>>  list){
-        if(isPull){
-            date.clear();
-            date = list;
-        }
-        else{
-            date.addAll(list);
-        }
-
     }
-    //预先处理下一次加载路径的参数
-    public void changeToState(){
-        if(isPull){
-            page = 2;
+    private void MySuccess() {
+        swipeRefreshLayout.setRefreshing(false);
+        if(data.size()==0){
+            error.setVisibility(View.VISIBLE);
+
+            return;
         }
         else
         {
-            page++;
+            isfirst = false;
+            error.setVisibility(View.GONE);
         }
+        adapter.RefreshDate(data);
+        changeParam();
+    }
+    //更新数据
+    public void upDate(List<MessageItem>  list){
+        if(list == null) return ;
+        if(isPull){
+            data.clear();
+            data = list;
+        }
+        else{
+            data.addAll(list);
+        }
+    }
+    //预先处理下一次加载路径的参数
+    public void changeParam(){
+        if(isPull)
+            page = 2;
+        else
+            page++;
         changeRefreshState();
     }
     public void changeRefreshState(){
@@ -291,18 +252,17 @@ public class fragment extends Fragment {
     }
     //获取下拉url
     public String  getPullurl(int from){
-        if(from==6){
+        if(from==5){
             //南京大学的url 与其他的大学不一样
             page=1;
-            return baseurl+"?type=zph&pageNow="+page;
+            return baseurl+"?type=xyzp&pageNow="+page;
         }else
             return baseurl;
     }
     //获取上拉url
     public String getNexturl(int from){
-        if(from==6) {
-            return baseurl+"?type=zph&pageNow="+page;
-        }
+        if(from==5)
+            return baseurl+"?type=xyzp&pageNow="+page;
         return  baseurl +"?page="+page;
     }
 
@@ -319,24 +279,6 @@ public class fragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(isfirst&&!swipInit){
-            if(swipeRefreshLayout!=null){
-                swipInit = true;
-                Log.e(TAG,"onResume");
-//                swipeRefreshLayout.setProgressViewOffset(false, 0, (int) TypedValue
-//                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
-//                                .getDisplayMetrics()));
-                swipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.e(TAG,"on post ");
-                        swipeRefreshLayout.setRefreshing(true);
-                    }
-                });
-                getMessage();
-            }
-        }
-
     }
     @Override
     public void onPause(){
@@ -354,4 +296,23 @@ public class fragment extends Fragment {
     @Override
     public void onHiddenChanged (boolean hidden){
     }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isfirst&&!swipInit &&isVisibleToUser){
+            if(swipeRefreshLayout!=null){
+                swipInit = true;
+                swipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(true);
+                        getMessage();
+                    }
+                });
+            }
+        }
+    }
+
 }

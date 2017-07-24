@@ -26,12 +26,14 @@
                 android:id="@+id/suggest_email"
                 android:hint="请输入联系方式"
                 android:lines="1"
+                android:padding="10dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/white_shape"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:gravity="top"
+                android:padding="10dp"
                 android:id="@+id/suggest_content"
                 android:hint="请写下你的建议"
                 android:layout_margin="10dp"

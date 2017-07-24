@@ -3,6 +3,7 @@ package juhe.jiangdajiuye;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -17,7 +18,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.tencent.connect.common.Constants;
@@ -41,23 +41,25 @@ import juhe.jiangdajiuye.fragment.fragmentXJ;
 import juhe.jiangdajiuye.fragment.fragmentZP;
 import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.tool.toast;
+import juhe.jiangdajiuye.util.TabLayoutUtils;
+import juhe.jiangdajiuye.view.aboute;
 import juhe.jiangdajiuye.view.collect;
 import juhe.jiangdajiuye.view.game;
 import juhe.jiangdajiuye.view.library;
 import juhe.jiangdajiuye.view.suggest;
 import juhe.jiangdajiuye.view.xuanjiang;
 
+
 public class MainActivity extends AppCompatActivity
-        implements Toolbar.OnMenuItemClickListener,View.OnClickListener{
+        implements NavigationView.OnNavigationItemSelectedListener ,
+        View.OnClickListener{
     private String TAG = "MainActivity";
-    private int current = 0 ;//当前显示的fragment
     private Long exitTime = 0L;
-    private View LeftView;
-    private RadioGroup radioGroup;
+
     private List<Fragment> list = new ArrayList<>();
     private toast mytoast = new toast();
     private Toolbar toolbar;
-    private TabLayout  tabLayout;
+    private TabLayout tabLayout;
     private DrawerLayout drawer;
     private FragmentAdapter adapter;
     private ViewPager viewPager;
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+            setSupportActionBar(toolbar);
         //实现左右滑动
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -101,7 +103,6 @@ public class MainActivity extends AppCompatActivity
         dialog = sharedialog.getDialog(this);
         inithShare();
         findid();
-        initRadioButton();
         initViewPager();
         initTabLayout();
     }
@@ -126,33 +127,27 @@ public class MainActivity extends AppCompatActivity
     }
     private void initTabLayout(){
         setSupportActionBar(toolbar);
-        toolbar.setOnMenuItemClickListener(this);
         DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        for(int i = 0;i<3;i++){
-            TabLayout.Tab tab = tabLayout.newTab();
-            tabLayout.addTab(tab);
-        }
-        tabLayout.setupWithViewPager(viewPager);
+            for(int i = 0;i<3;i++){
+                TabLayout.Tab tab = tabLayout.newTab();
+                tabLayout.addTab(tab);
+            }
+            tabLayout.setupWithViewPager(viewPager);
+        TabLayoutUtils.setIndicator(this,tabLayout,15,15);
+        //给left mian 的item 设置监听事件
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
     }
     public void findid(){
-        radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
-        LeftView  = findViewById(R.id.leftMain);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
     }
-    public void initRadioButton(){
-        findViewById(R.id.button1).setOnClickListener(this);
-        findViewById(R.id.button2).setOnClickListener(this);
-        findViewById(R.id.button3).setOnClickListener(this);
-        findViewById(R.id.button4).setOnClickListener(this);
-        findViewById(R.id.button5).setOnClickListener(this);
-        findViewById(R.id.button6).setOnClickListener(this);
 
-    }
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed: start");
@@ -176,58 +171,56 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public void onClick(View view) {
-       switch(view.getId()){
-           case R.id.button1:
-               current = 0;
-               drawer.closeDrawer(Gravity.LEFT);
-               break;
-           case R.id.button2:
-               current = 1;
-               Intent intent = new Intent(MainActivity.this,library.class);
-               startActivity(intent);
-               break;
-           case R.id.button3:
-               current = 2;
-               Intent intent2 = new Intent(MainActivity.this,collect.class);
-               startActivity(intent2);
-               break;
-           case R.id.button4:
-               Intent intent3 = new Intent(MainActivity.this,xuanjiang.class);
-               startActivity(intent3);
-               break;
-           case R.id.button5:
-               Intent intent4 = new Intent(MainActivity.this,suggest.class);
-               startActivity(intent4);
-               break;
-           case R.id.button6:
-               Intent intent5 = new Intent(MainActivity.this,game.class);
-               startActivity(intent5);
-               break;
-           default:
-               break;
-       }
-    }
-
-    /**
-     * tooltar 的item点击事件
-     * This method will be invoked when a menu item is clicked if the item itself did
-     * not already handle the event.
-     *
-     * @param item {@link MenuItem} that was clicked
-     * @return <code>true</code> if the event was handled, <code>false</code> otherwise.
-     */
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
         switch(item.getItemId()){
-            case R.id.nav_share:
-                showShare();
+            case R.id.nav_home:
+
+                drawer.closeDrawer(Gravity.LEFT);
+                break;
+            case R.id.nav_library:
+
+                startActivity(new Intent(MainActivity.this,library.class));
+                break;
+            case R.id.nav_favorite:
+
+                startActivity(new Intent(MainActivity.this,collect.class));
+                break;
+            case R.id.nav_xuanjianghui:
+                startActivity(new Intent(MainActivity.this,xuanjiang.class));
+                break;
+            case R.id.nav_send:
+                startActivity(new Intent(MainActivity.this,suggest.class));
+                break;
+            case R.id.nav_game:
+                startActivity(new Intent(MainActivity.this,game.class));
+                break;
+            case R.id.nav_about:
+                startActivity(new Intent(MainActivity.this,aboute.class));
                 break;
             default:
                 break;
         }
-        return false;
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.nav_share) {
+            showShare();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
     private void showShare(){
         dialog.show();
@@ -364,7 +357,7 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG," toast time is "+Toast.LENGTH_SHORT);
                 if (secondTime - exitTime > 2500) {
                     //如果两次按键时间间隔大于2秒，则不退出
-                    mytoast.makeText(MainActivity.this,"再按一次退出");
+//                    mytoast.makeText(MainActivity.this,"再按一次退出");
 
                     exitTime = secondTime;
                     //更新firstTime

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -25,9 +25,10 @@ import okhttp3.OkHttpClient;
 /**
  * Created by wangqiang on 2016/10/6.
  */
-public class suggest extends AppCompatActivity implements View.OnClickListener {
+public class suggest extends BaseActivity {
     private String TAG = "fragmentCollect";
-    private String url = "http://119.29.178.251:8080/asaad/selectData";
+    private String url = "http://123.206.104.107/asaad/selectData";
+//    private String url = "http://192.168.0.103:8080/asaad/selectData";
     private Toolbar toolbar;
     private EditText getemail ,getcontent;
     private Button send;
@@ -47,7 +48,8 @@ public class suggest extends AppCompatActivity implements View.OnClickListener {
                 case 0x2:
                     break;
                 case 0x3:
-                    Toast.makeText(suggest.this,"失败！",Toast.LENGTH_SHORT).show();
+                    dialog.cancel();
+                    Toast.makeText(suggest.this,"服务器去火星咯！",Toast.LENGTH_SHORT).show();
                     break;
             }
         }

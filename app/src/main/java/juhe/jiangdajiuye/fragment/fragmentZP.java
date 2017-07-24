@@ -3,8 +3,6 @@ package juhe.jiangdajiuye.fragment;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -12,19 +10,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.recyclerAdapter;
+import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.tool.NetState;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.urlConnection;
@@ -34,7 +30,7 @@ import juhe.jiangdajiuye.view.browse;
  * Created by wangqiang on 2016/9/27.
  */
 public class fragmentZP extends Fragment {
-    private View view,footer ,footerbg,error;
+    private View view ,error;
     private Boolean isfirst = true;
     private NetState netState;
     private String TAG = "fragmentZP";
@@ -42,7 +38,7 @@ public class fragmentZP extends Fragment {
     private int page = 1;
     public RecyclerView recyclerView;
     private LinearLayoutManager manager;
-    public ArrayList<HashMap<String,String>>  date = new ArrayList<>();
+    public List<MessageItem> date = new ArrayList<>();
     public recyclerAdapter adapter;
     //下拉刷新
     private Boolean isPull = false;
@@ -50,33 +46,11 @@ public class fragmentZP extends Fragment {
     private Boolean swipInit = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private parseTools parsetools =  parseTools.getparseTool() ;
-    private Handler handler = new Handler(){
-        public void handleMessage(Message message){
-            switch (message.what){
-                case 0x1:
-                    if(isfirst){
-                        isfirst = false;
-                        error.setVisibility(View.GONE);
-                    }
-                    adapter.RefreshDate(date);
-                    changeToState();
-                    break;
-                case 0x2:
-                    //请求失败
-                    changeRefreshState();
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.e("onCreateView","fragmentJS  is onCreateView");
         view = inflater.inflate(R.layout.fragment,container,false);
-        footer = inflater.inflate(R.layout.footer,container,false);
         init();
         return view;
     }
@@ -93,31 +67,28 @@ public class fragmentZP extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume");
-        if(isfirst&&!swipInit){
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isfirst&&!swipInit &&isVisibleToUser ){
             if(swipeRefreshLayout!=null){
                 swipInit = true;
-                Log.e(TAG,"onResume");
-//                swipeRefreshLayout.setProgressViewOffset(false, 0, (int) TypedValue
-//                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
-//                                .getDisplayMetrics()));
-
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e(TAG,"on post ");
                         swipeRefreshLayout.setRefreshing(true);
+                        getMessage();
+
                     }
                 });
-                getMessage();
             }
         }
-
     }
     public void init(){
         findId();
         initList();
-        initRefresh();
         bindNetState();
 
     }
@@ -129,13 +100,11 @@ public class fragmentZP extends Fragment {
         netState.setNetLister(new NetState.NetLister() {
             @Override
             public void OutInternet() {
-                Log.e(TAG,"error is visible");
                 error.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void GetInternet() {
-                Log.e(TAG,"error is gone");
                 error.setVisibility(View.GONE);
             }
         });
@@ -147,15 +116,55 @@ public class fragmentZP extends Fragment {
     public void findId(){
         error = view.findViewById(R.id.error);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        footerbg =  footer.findViewById(R.id.footer_view);
          manager =  new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
-//        textView = (TextView)view.findViewById(R.id.text);
         swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
 
     }
+
+    public void initList(){
+        adapter = new recyclerAdapter(getActivity(), R.layout.main_list_item,date);
+        recyclerView.setAdapter(adapter);
+
+        adapter.setLister(new myitemLister() {
+            @Override
+            public void ItemLister(int position) {
+                MessageItem item = date.get(position);
+                Intent intent = new Intent(getActivity(),browse.class);
+                intent.putExtra("url",item.getUrl());
+                intent.putExtra("title",item.getTitle());
+                intent.putExtra("time",item.getTime());
+                intent.putExtra("company",item.getFrom());
+                intent.putExtra("location",item.getLocate());
+                intent.putExtra("from",1);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                // dy>0 代表向下滚动
+                super.onScrolled(recyclerView, dx, dy);
+                int lastVisibleItemPosition = manager.findLastVisibleItemPosition();
+                int itemCount = manager.getItemCount();
+                // 如果最后一个可见的View的position 等于 itemCount-1 代表滚动到底部
+                Log.i(TAG, "onScrolled: "+itemCount+"  :  "+lastVisibleItemPosition);
+                if((itemCount-1)==lastVisibleItemPosition){
+                    getMessage();
+                }
+            }
+        });
+        initRefresh();
+    }
     public void initRefresh(){
+        Log.e(TAG,"initRefesh");
         swipeRefreshLayout.setSize(SwipeRefreshLayout.MEASURED_STATE_TOO_SMALL);
         // 设置下拉多少距离之后开始刷新数据
         swipeRefreshLayout.setDistanceToTriggerSync(200);
@@ -169,106 +178,56 @@ public class fragmentZP extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //初始化url参数
+                Log.e(TAG,"init swiprefreshlayout getMessage");
                 isPull = true;
                 getMessage();
             }
         });
-//        setViewObserver();
     }
-    public void setViewObserver(){
-        ViewTreeObserver observer = swipeRefreshLayout.getViewTreeObserver();
-        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                if(!swipInit){
-                    swipInit = true;
-                    swipeRefreshLayout.setRefreshing(true);
-                    isPull = true;
-                    getMessage();
-                }
-                return false;
-            }
-        });
-    }
-    public void initList(){
-        adapter = new recyclerAdapter(getActivity(), R.layout.main_list_item,date);
-        recyclerView.setAdapter(adapter);
-
-        adapter.setLister(new myitemLister() {
-            @Override
-            public void ItemLister(int position) {
-                String url = date.get(position).get("url").toString();
-                Intent intent = new Intent(getActivity(),browse.class);
-                intent.putExtra("url",url);
-                intent.putExtra("from",1);
-                intent.putExtra("title",date.get(position).get("title"));
-                intent.putExtra("company",date.get(position).get("company"));
-                intent.putExtra("location",date.get(position).get("place"));
-                intent.putExtra("time",date.get(position).get("time"));
-                getActivity().startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-                Log.e(TAG,"url is "+ url);
-            }
-        });
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            /**
-             * Callback method to be invoked when RecyclerView's scroll state changes.
-             *
-             * @param recyclerView The RecyclerView whose scroll state has changed.
-             * @param newState     The updated scroll state. One of {@link #SCROLL_STATE_IDLE},
-             *                     {@link #SCROLL_STATE_DRAGGING} or {@link #SCROLL_STATE_SETTLING}.
-             */
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                Log.e(TAG,"state is "+newState+"== recyclerView "
-                        +recyclerView.SCROLL_STATE_IDLE
-                        +" SCROLL_STATE_DRAGGING is "+recyclerView.SCROLL_STATE_DRAGGING
-                        +" SCROLL_STATE_SETTLING is "+recyclerView.SCROLL_STATE_SETTLING);
-            }
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                // dy>0 代表向下滚动
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItemPosition = manager.findLastVisibleItemPosition();
-                int itemCount = manager.getItemCount();
-                Log.e(TAG,"在滚动中 itemCount is "+itemCount +" lastVisibleItem is "+lastVisibleItemPosition);
-                // 如果最后一个可见的View的position 等于 itemCount-1 代表滚动到底部
-                if((itemCount-1)==lastVisibleItemPosition){
-                    Log.e(TAG,"到底啦");
-                    getMessage();
-                }
-            }
-        });
-    }
-
     public void getMessage() {
         if(refreshing) {
-//            isPull = false;
             return;
         }
         refreshing = true;
-        String url =  getUrl();
-        Log.e(TAG,"begin to get url is "+ url);
-        final urlConnection connection= new urlConnection();
-        connection.setgetLister(new urlConnection.getLister() {
+        String url = getUrl();
+        Log.i(TAG,"url is "+url);
+        urlConnection connection = new urlConnection(getActivity());
+        connection.setgetLister(new urlConnection.getLister(){
+
             @Override
             public void success(String response, int code) {
-                upDate(parsetools.parseZhaopin(response));
-                handler.sendEmptyMessage(0x1);
+                Log.i(TAG, "success: code "+code);
+                upDate(parsetools.parseZhaopin(response.trim()));
+                MySuccess();
+                swipeRefreshLayout.setRefreshing(false);
+
             }
+
             @Override
-            public void failure(Exception e,String Error, int code) {
-                e.printStackTrace();
-                Log.e(TAG," Error response is "+ Error+"code is "+code);
-                handler.sendEmptyMessage(0x2);
+            public void failure(Exception e, String Error, int code) {
+                changeRefreshState();
+                swipeRefreshLayout.setRefreshing(false);
+
             }
         });
         connection.get(url);
     }
+    private void MySuccess() {
+        swipeRefreshLayout.setRefreshing(false);
+        if(date.size()==0){
+            error.setVisibility(View.VISIBLE);
+            return;
+        }
+        else
+        {
+            isfirst = false;
+            error.setVisibility(View.GONE);
+        }
+        adapter.RefreshDate(date);
+        changeParam();
+    }
     //更新数据
-    public void upDate(ArrayList<HashMap<String,String>>  list){
+    public void upDate(List<MessageItem>  list){
         if(isPull){
             date.clear();
             date = list;
@@ -278,16 +237,12 @@ public class fragmentZP extends Fragment {
                 date.add(list.get(i));
             }
         }
-        Log.e(TAG,"data size is "+date.size()+"ispull"+isPull);
     }
-    public void changeToState(){
-        if(isPull){
+    public void changeParam(){
+        if(isPull)
             page = 2;
-        }
         else
-        {
             page++;
-        }
         changeRefreshState();
     }
     public void changeRefreshState(){
@@ -299,12 +254,10 @@ public class fragmentZP extends Fragment {
     //获取URL
     public String getUrl(){
     String str = "";
-        if(isPull){
+        if(isPull)
             str = url;
-        }
-        else {
+        else
             str = url +"?page="+page;
-        }
         return str;
     }
 
@@ -337,4 +290,5 @@ public class fragmentZP extends Fragment {
         Log.d(TAG,"onHiddenChanged");
 
     }
+
 }

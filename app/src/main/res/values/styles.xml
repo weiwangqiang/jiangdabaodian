@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="titleTextColor">@android:color/white</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+        <!-- 這裡可以設置window的背景 充当启动界面-->
     </style>
     //item menu 的Style
     <style name="OverflowMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
@@ -24,6 +25,7 @@
     //welcome的style
     <style name="StartAppTheme" parent="@style/BaseAppTheme">
         <item name="android:windowIsTranslucent">true</item>
+
     </style>
 
     <style name="LodingDialog" parent="@android:style/Theme.Dialog">
@@ -80,5 +82,8 @@
         <item name="android:background">@color/gray_little</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_width">match_parent</item>
+    </style>
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">18sp</item>
     </style>
 </resources>

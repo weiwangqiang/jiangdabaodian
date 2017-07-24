@@ -4,7 +4,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -64,6 +67,7 @@ public class gameOnline extends AppCompatActivity implements View.OnClickListene
         init();
         findid();
         setlister();
+        initToolbar();
         initWeb(url);
     }
     private void init(){
@@ -73,6 +77,15 @@ public class gameOnline extends AppCompatActivity implements View.OnClickListene
         tencent = Tencent.createInstance(APP_ID, gameOnline.this);
         dialog = sharedialog.getDialog(gameOnline.this);
     }
+    private Toolbar toolbar;
+    public void initToolbar(){
+        toolbar.setTitle("");
+//        toolbar.setNavigationIcon(R.drawable.menue);
+        setSupportActionBar(toolbar);
+//        toolbar.setOnMenuItemClickListener(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
     /**初始化微信
      */
     private void initWEi(){
@@ -80,13 +93,13 @@ public class gameOnline extends AppCompatActivity implements View.OnClickListene
         api.registerApp(WEI_ID);
     }
     public void findid(){
-        back = (Button)findViewById(R.id.gameOnline_back);
+//        back = (Button)findViewById(R.id.gameOnline_back);
         webView = (WebView)findViewById(R.id.gameOnline_WebView);
-        share = (Button)findViewById(R.id.gameOnline_share);
+//        share = (Button)findViewById(R.id.gameOnline_share);
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+
     }
     public void setlister(){
-        back.setOnClickListener(this);
-        share.setOnClickListener(this);
     }
     public void initWeb(String url){
         webView.loadUrl(url);
@@ -108,15 +121,29 @@ public class gameOnline extends AppCompatActivity implements View.OnClickListene
         });
     }
     @Override
-    public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.gameOnline_back:
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
                 finish();
                 overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-                break;
-            case R.id.gameOnline_share:
+                return true;
+            case R.id.nav_share:
                 showShare();
-                break;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+
             default:
                 break;
         }

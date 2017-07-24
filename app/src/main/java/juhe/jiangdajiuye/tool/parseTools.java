@@ -12,10 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import juhe.jiangdajiuye.entity.MessageItem;
+
 /**
  * Created by wangqiang on 2016/9/27.
  */
 public class parseTools {
+    private String TAG = "parseTools";
     public static parseTools parse;
     public static parseTools getparseTool(){
         if(parse==null){
@@ -24,80 +27,80 @@ public class parseTools {
         return parse;
     }
     //宣讲会
-     public ArrayList<HashMap<String,String>> parseXuanjiang(String response) {
-         ArrayList<HashMap<String, String>> list = new ArrayList<>();
+     public List<MessageItem> parseXuanjiang(String response) {
+         List<MessageItem> list = new ArrayList<>();
          if (response.length() <= 0) return null;
          Document doc = Jsoup.parse(response);
          Elements elements = doc.getElementsByClass("teachinList");
+         Log.i(TAG, "parseXuanjiang:  size ： "+elements.size());
          for (int i = 1; i < elements.size(); i++) {
-             HashMap<String, String> map = new HashMap<>();
+             MessageItem mes = new MessageItem();
              Elements e = elements.get(i).getElementsByClass("span1");
-             map.put("url", "http://ujs.91job.gov.cn"+e.select("a").attr("href"));
-             map.put("title", e.select("a").attr("title"));
-             map.put("company", elements.get(i).getElementsByClass("span2").text());
-             map.put("city", elements.get(i).getElementsByClass("span3").text());
-             map.put("place", elements.get(i).getElementsByClass("span4").text());
-             map.put("time", elements.get(i).getElementsByClass("span5").text());
-             list.add(map);
+             mes.setUrl("http://ujs.91job.gov.cn"+e.select("a").attr("href"));
+             mes.setTitle(e.select("a").attr("title"));
+             mes.setFrom(elements.get(i).getElementsByClass("span2").text());
+             mes.setCity(elements.get(i).getElementsByClass("span3").text());
+             mes.setLocate(elements.get(i).getElementsByClass("span4").text());
+             mes.setTime(elements.get(i).getElementsByClass("span5").text());
+             list.add(mes);
          }
          return list;
      }
     //招聘
-    public ArrayList<HashMap<String,String>> parseZhaopin(String response){
-        ArrayList<HashMap<String,String>> list = new ArrayList<>();
+    public List<MessageItem> parseZhaopin(String response){
+        List<MessageItem> list = new ArrayList<>();
         if(response.length()<=0) return null;
         Document doc = Jsoup.parse(response);
         Elements elements =  doc.getElementsByClass("infoList");
+        System.out.println("elements size : "+elements.size());
         for(int i = 0;i<elements.size();i++){
-            HashMap<String,String > map = new HashMap<>();
+            MessageItem mes = new MessageItem();
             Elements e = elements.get(i).getElementsByClass("span1");
-            map.put("url","http://ujs.91job.gov.cn"+e.select("a").attr("href"));
-            map.put("title",e.select("a").attr("title"));
-            map.put("company",elements.get(i).getElementsByClass("span2").select("a").text());
-            map.put("place",elements.get(i).getElementsByClass("span3").get(0).text());
-            map.put("work",elements.get(i).getElementsByClass("span3").get(1).text());
-            map.put("time",elements.get(i).getElementsByClass("span4").text());
-            list.add(map);
+            mes.setUrl("http://ujs.91job.gov.cn"+e.select("a").attr("href"));
+            mes.setTitle(e.select("a").attr("title"));
+            mes.setFrom(elements.get(i).getElementsByClass("span2").select("a").text());
+            mes.setLocate(elements.get(i).getElementsByClass("span3").get(0).text());
+            mes.setIndustry(elements.get(i).getElementsByClass("span3").get(1).text());
+            mes.setTime(elements.get(i).getElementsByClass("span4").text());
+            list.add(mes);
         }
-        Log.e("parse","return data");
         return list;
     }
     //信息速递
-    public ArrayList<HashMap<String,String>> parseShudi(String response){
-        ArrayList<HashMap<String,String>> list = new ArrayList<>();
+    public List<MessageItem> parseShudi(String response){
+        List<MessageItem> list = new ArrayList<>();
         if(response.length()<=0) return null;
         Document doc = Jsoup.parse(response);
         Elements elements =  doc.getElementsByClass("newsList");
+        Log.i(TAG, "parseShudi: size  "+elements.size());
         for(int i = 0;i<elements.size();i++){
-            HashMap<String,String > map = new HashMap<>();
+           MessageItem mes = new MessageItem();
             Elements e = elements.get(i).select("li");
-            map.put("time",e.get(0).text());
-            map.put("title",e.get(1).select("b").text()+e.get(1).select("a").text());
-            map.put("url","http://ujs.91job.gov.cn"+
+            mes.setTime(e.get(0).text());
+            mes.setTitle(e.get(1).select("b").text()+e.get(1).select("a").text());
+            mes.setUrl("http://ujs.91job.gov.cn"+
                     e.get(1).select("a").attr("href"));
-            list.add(map);
+            list.add(mes);
         }
-        Log.e("parse","return data");
         return list;
     }
     public int parseSearchNumber(String response){
         Document doc = Jsoup.parse(response);
         Elements number =  doc.getElementsByClass("bulk-actions");
         String n = number.select("p").select("strong").text();
-        int a = 0;
+        int num = 0;
         try{
-         a = Integer.parseInt(n);
+            num = Integer.parseInt(n);
         }catch(Exception e){
             e.printStackTrace();
         }
-        Log.e("parseLibrary","number is "+ a);
-        return  a;
+        return  num;
     }
 
     //解析图书馆搜索
-    public ArrayList<Map<String,String>> parseSearch(String response){
+    public List<Map<String,String>> parseSearch(String response){
         Log.e("parseLibrary","response is "+ response);
-        ArrayList<Map<String,String>> list = new ArrayList<>();
+        List<Map<String,String>> list = new ArrayList<>();
         if(response.length()<=0) return null;
         Document doc = Jsoup.parse(response);
         Elements elements =  doc.getElementsByClass("book_list_info");

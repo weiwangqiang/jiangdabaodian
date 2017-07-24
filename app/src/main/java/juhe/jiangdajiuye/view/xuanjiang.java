@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,19 +14,22 @@ import java.util.List;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.XJFragmentAdapter;
+import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.fragment.fragment;
+import juhe.jiangdajiuye.util.XuanJiangData;
 
 /**
  * Created by wangqiang on 2016/10/1.
  */
-public class xuanjiang extends AppCompatActivity implements View.OnClickListener {
+public class xuanjiang extends BaseActivity {
     private String TAG = "xuanjiang";
     private ViewPager viewPager;
     private Toolbar toolbar;
     private TabLayout  tabLayout;
     private List<Fragment> list = new ArrayList<>();
     private XJFragmentAdapter adapter;
-    public String[] college = {"南京邮电","何海大学","江南大学","南京理工","东南大学"};
+    public String[] college ;
+    public String[] urls ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,21 +42,17 @@ public class xuanjiang extends AppCompatActivity implements View.OnClickListener
         viewPager = (ViewPager) findViewById(R.id.xuanjiang_viewpager);
         toolbar = (Toolbar)findViewById(R.id.xuanjiang_toolbar);
         tabLayout = (TabLayout) findViewById(R.id.xuanjiang_tabLayout);
+
     }
     public void initList(){
-        fragment f1 = fragment.newInstance("http://njupt.91job.gov.cn/teachin/index",college[0],1);
-        fragment f2 = fragment.newInstance("http://hhu.91job.gov.cn/teachin/index",college[1],2);
-        fragment f3 = fragment.newInstance("http://jiangnan.91job.gov.cn/teachin/index",college[2],3);
-        fragment f4 = fragment.newInstance("http://njust.91job.gov.cn/teachin/index",college[3],4);
-        fragment f5 = fragment.newInstance("http://seu.91job.gov.cn/teachin/index",college[4],5);
-//      南京大学  fragment f6 = fragment.newInstance("http://job.nju.edu.cn:9081/login/nju/home.jsp",college[5],6);
-//        http://job.nju.edu.cn:9081/login/nju/home.jsp?type=zph&pageNow=2&pageSearch=2
-        list.add(f1);
-        list.add(f2);
-        list.add(f3);
-        list.add(f4);
-        list.add(f5);
-//        list.add(f6);
+        XuanJiangData xuanJiangData = new XuanJiangData();
+        college = xuanJiangData.getTitle();
+        urls = xuanJiangData.getUrls();
+        for(int i =0;i<college.length;i++){
+            fragment f = fragment.newInstance(urls[i],college[0],i);
+//            fragmentSD f = new fragmentSD();
+            list.add(f);
+        }
         adapter  = new XJFragmentAdapter(getSupportFragmentManager(), list,college);
         viewPager.setAdapter(adapter);
 //        viewPager.setOffscreenPageLimit(3);
