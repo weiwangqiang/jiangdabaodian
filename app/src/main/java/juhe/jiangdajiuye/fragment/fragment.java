@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,6 +195,7 @@ public class fragment extends Fragment  {
 
             @Override
             public void failure(Exception e, String Error, int code) {
+                Toast.makeText(getActivity(),"网络不太顺畅哦！",Toast.LENGTH_SHORT).show();
                 changeRefreshState();
             }
         });

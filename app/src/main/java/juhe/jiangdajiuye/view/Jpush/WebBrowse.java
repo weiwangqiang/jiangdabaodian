@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view;
+package juhe.jiangdajiuye.view.Jpush;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -11,12 +11,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
@@ -33,6 +37,7 @@ import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.entity.JPushMes;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.shareDialog;
@@ -40,7 +45,7 @@ import juhe.jiangdajiuye.tool.shareDialog;
 /**
  * Created by wangqiang on 2016/10/1.
  */
-public class browse extends BaseActivity {
+public class WebBrowse extends BaseActivity {
     private String TAG = "WebBrowse";
     private String title,company,location,time;
     private int from;
@@ -76,11 +81,11 @@ public class browse extends BaseActivity {
         myprogress.show();
         init();
         findid();
-        initToolbar();
         getParam();
-        setlister();
+        initToolbar();
         initView();
         initWeb(url);
+        WebTitle.setText("推送详情");
     }
     private Toolbar toolbar;
     public void initToolbar(){
@@ -93,8 +98,8 @@ public class browse extends BaseActivity {
         initWEi();
         sharedialog = new shareDialog();
         baseuiLister = new baseUiLister();
-        tencent = Tencent.createInstance(APP_ID, browse.this);
-        dialog = sharedialog.getDialog(browse.this);
+        tencent = Tencent.createInstance(APP_ID, WebBrowse.this);
+        dialog = sharedialog.getDialog(WebBrowse.this);
     }
     /**初始化微信
      */
@@ -102,15 +107,11 @@ public class browse extends BaseActivity {
         api = WXAPIFactory.createWXAPI(this,WEI_ID,true);
         api.registerApp(WEI_ID);
     }
+    private TextView WebTitle ;
     public void findid(){
         webView = (WebView)findViewById(R.id.webView);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-    }
-    public void setlister(){
-//        back.setOnClickListener(this);
-//        collect.setOnClickListener(this);
-//        share.setOnClickListener(this);
-
+        WebTitle = (TextView)findViewById(R.id.WebTitle);
     }
     public void initView(){
         ischeck = helper.hasURL(url);
@@ -121,34 +122,40 @@ public class browse extends BaseActivity {
      */
     public void getParam(){
         Intent intent = getIntent();
-        url  =  intent.getStringExtra("url");
-        title = intent.getStringExtra("title");
-        time = intent.getStringExtra("time");
-        //1是从招聘会，宣讲会来的，2是从信息速递来的，3是从收藏栏来的
-        from = intent.getIntExtra("from",-1);
-        if(from != 2){
-            company = intent.getStringExtra("company");
-            location = intent.getStringExtra("location");
-        }
-       Log.e(TAG,"url is "+url+" title is "+title+ " time is "+time+" company is "+company+" location is "+location);
+        Bundle bundle = intent.getExtras();
+        Gson gson = new Gson();
+        JPushMes jp = gson.fromJson(bundle.getString("cn.jpush.android.EXTRA"),JPushMes.class);
+        url = jp.getUrl();
     }
     public void initWeb(String url){
+        if(url==null)
+            return ;
         WebSettings wSet = webView.getSettings();
         wSet.setJavaScriptEnabled(true);
 //        wSet.setAppCacheEnabled(true);
         wSet.setSupportZoom(true);
         wSet.setBuiltInZoomControls(true);
+
         wSet.setDisplayZoomControls(false);
+        wSet.setAllowFileAccess(true);//资源加载超时操作
         wSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN );//适应屏幕，内容将自动缩放
         wSet.setLoadWithOverviewMode(true);
         wSet.setUseWideViewPort(true);
         webView.loadUrl(url);
 //        webView.setInitialScale(100);   //100代表不缩放
+        webView.setDownloadListener(new MyWebViewDownLoadListener());
         webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url)
-            { //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+            {
                 view.loadUrl(url);
                 return true;
+            }
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                webView.setVisibility(View.VISIBLE);
+                myprogress.cancel();
+//                Toast.makeText(WebBrowse.this,"加载失败",Toast.LENGTH_SHORT).show();
             }
         });
         webView.setWebChromeClient(new WebChromeClient(){
@@ -161,22 +168,24 @@ public class browse extends BaseActivity {
                     myprogress.cancel();
                 }
             }
+
+            @Override
+            public boolean onJsTimeout() {
+                webView.setVisibility(View.VISIBLE);
+                myprogress.cancel();
+                return super.onJsTimeout();
+
+            }
         });
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.browseitem, menu);
+        getMenuInflater().inflate(R.menu.webbrowse, menu);
         return true;
     }
-    private Menu menu ;
-    private static String Menutitle = "";
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        this.menu = menu;
-        Menutitle = helper.hasURL(url) ? "取消收藏":"收藏";
-        menu.findItem(R.id.browse_collect).setTitle(Menutitle);
-        invalidateOptionsMenu();
         return true;
     }
     @Override
@@ -186,9 +195,6 @@ public class browse extends BaseActivity {
          case android.R.id.home:
              finish();
              overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-             return true;
-         case R.id.browse_collect:
-             showCollect();
              return true;
          case R.id.browse_share:
              showShare();
@@ -216,26 +222,6 @@ public class browse extends BaseActivity {
     private void showShare(){
         dialog.show();
         sharedialog.setItemlister(new myItemlist());
-    }
-    private void showCollect(){
-        if(ischeck){
-            Log.e(TAG,"is false");
-//            collect.setChecked(false);
-            uiutils.showToast("取消成功");
-            Menutitle = "收藏";
-            menu.findItem(R.id.browse_collect).setTitle("收藏");
-
-        }
-        else if(!ischeck){
-//            collect.setChecked(true);
-            uiutils.showToast("收藏成功");
-            Menutitle = "取消收藏";
-            Log.i(TAG, "showCollect: 取消收藏");
-            menu.findItem(R.id.browse_collect).setTitle("取消收藏");
-
-        }
-        invalidateOptionsMenu();
-        ischeck = !ischeck;
     }
     /**
      * popupwind的Item 监听
@@ -276,7 +262,6 @@ public class browse extends BaseActivity {
         req.transaction = "webPager";
         req.message = message;
         Boolean get = api.sendReq(req);
-//        api.handleIntent(getIntent(),this);
         dialog.cancel();
         Log.e(TAG,"share return is "+get);
     }
@@ -289,7 +274,7 @@ public class browse extends BaseActivity {
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,IcnUrl);
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "江大宝典");
         dialog.cancel();
-        tencent.shareToQQ(browse.this, params,baseuiLister);
+        tencent.shareToQQ(WebBrowse.this, params,baseuiLister);
     }
     private void  ToQzone(){
         Bundle params = new Bundle();
@@ -301,7 +286,7 @@ public class browse extends BaseActivity {
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL,list);
         dialog.cancel();
-        tencent.shareToQzone(browse.this, params,baseuiLister);
+        tencent.shareToQzone(WebBrowse.this, params,baseuiLister);
     }
     /**
      * 腾讯的监听回调
@@ -310,7 +295,7 @@ public class browse extends BaseActivity {
 
         @Override
         public void onComplete(Object o) {
-            Toast.makeText(browse.this,"分享成功！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(WebBrowse.this,"分享成功！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -319,7 +304,7 @@ public class browse extends BaseActivity {
 
         @Override
         public void onCancel() {
-            Toast.makeText(browse.this,"取消分享！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(WebBrowse.this,"取消分享！", Toast.LENGTH_SHORT).show();
         }
     }
     //    //要想调用IUiListener 必须重写此函数

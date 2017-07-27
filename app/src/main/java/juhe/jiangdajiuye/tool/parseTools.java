@@ -32,7 +32,6 @@ public class parseTools {
          if (response.length() <= 0) return null;
          Document doc = Jsoup.parse(response);
          Elements elements = doc.getElementsByClass("teachinList");
-         Log.i(TAG, "parseXuanjiang:  size ： "+elements.size());
          for (int i = 1; i < elements.size(); i++) {
              MessageItem mes = new MessageItem();
              Elements e = elements.get(i).getElementsByClass("span1");
@@ -52,7 +51,6 @@ public class parseTools {
         if(response.length()<=0) return null;
         Document doc = Jsoup.parse(response);
         Elements elements =  doc.getElementsByClass("infoList");
-        System.out.println("elements size : "+elements.size());
         for(int i = 0;i<elements.size();i++){
             MessageItem mes = new MessageItem();
             Elements e = elements.get(i).getElementsByClass("span1");
@@ -72,7 +70,6 @@ public class parseTools {
         if(response.length()<=0) return null;
         Document doc = Jsoup.parse(response);
         Elements elements =  doc.getElementsByClass("newsList");
-        Log.i(TAG, "parseShudi: size  "+elements.size());
         for(int i = 0;i<elements.size();i++){
            MessageItem mes = new MessageItem();
             Elements e = elements.get(i).select("li");
@@ -99,12 +96,10 @@ public class parseTools {
 
     //解析图书馆搜索
     public List<Map<String,String>> parseSearch(String response){
-        Log.e("parseLibrary","response is "+ response);
         List<Map<String,String>> list = new ArrayList<>();
         if(response.length()<=0) return null;
         Document doc = Jsoup.parse(response);
         Elements elements =  doc.getElementsByClass("book_list_info");
-                Log.e("parse","elements size  is "+elements.size());
         for(int i = 0;i<elements.size();i++){
             HashMap<String,String > map = new HashMap<>();
             Element h = elements.get(i).select("h3").get(0);

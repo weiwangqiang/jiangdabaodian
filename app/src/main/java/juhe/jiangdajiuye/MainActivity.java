@@ -2,6 +2,7 @@ package juhe.jiangdajiuye;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -23,11 +24,11 @@ import android.widget.Toast;
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
-import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -35,14 +36,16 @@ import com.tencent.tauth.UiError;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
 import juhe.jiangdajiuye.adapter.FragmentAdapter;
+import juhe.jiangdajiuye.broadCast.MyJushReceiver;
 import juhe.jiangdajiuye.fragment.fragmentSD;
 import juhe.jiangdajiuye.fragment.fragmentXJ;
 import juhe.jiangdajiuye.fragment.fragmentZP;
 import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.tool.toast;
 import juhe.jiangdajiuye.util.TabLayoutUtils;
-import juhe.jiangdajiuye.view.aboute;
+import juhe.jiangdajiuye.view.about;
 import juhe.jiangdajiuye.view.collect;
 import juhe.jiangdajiuye.view.game;
 import juhe.jiangdajiuye.view.library;
@@ -96,6 +99,18 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         initView();
+        initPush();
+    }
+    public static final String MESSAGE_RECEIVED_ACTION = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
+    MyJushReceiver receiver ;
+    private void initPush(){
+        Log.i(TAG, "initPush: ");
+        JPushInterface.init(MainActivity.this);
+        receiver = new MyJushReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        filter.addAction(MESSAGE_RECEIVED_ACTION);
+        registerReceiver(receiver, filter);
     }
     public void initView(){
         sharedialog = new shareDialog();
@@ -198,7 +213,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this,game.class));
                 break;
             case R.id.nav_about:
-                startActivity(new Intent(MainActivity.this,aboute.class));
+                startActivity(new Intent(MainActivity.this,about.class));
                 break;
             default:
                 break;
@@ -411,6 +426,8 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: ");
+        unregisterReceiver(receiver);
+
     }
 //*******************异常退出保留数据方法*******************************
     /** 异常退出保留数据

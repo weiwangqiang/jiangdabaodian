@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -196,7 +197,6 @@ public class fragmentZP extends Fragment {
 
             @Override
             public void success(String response, int code) {
-                Log.i(TAG, "success: code "+code);
                 upDate(parsetools.parseZhaopin(response.trim()));
                 MySuccess();
                 swipeRefreshLayout.setRefreshing(false);
@@ -207,6 +207,7 @@ public class fragmentZP extends Fragment {
             public void failure(Exception e, String Error, int code) {
                 changeRefreshState();
                 swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(getActivity(),"网络不太顺畅哦！",Toast.LENGTH_SHORT).show();
 
             }
         });

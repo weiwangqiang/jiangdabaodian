@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,6 @@ public class fragmentXJ extends Fragment  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e("onCreateView","fragmentJS  is onCreateView");
         view = inflater.inflate(R.layout.fragment,container,false);
 
         init();
@@ -117,9 +117,7 @@ public class fragmentXJ extends Fragment  {
         initRefresh();
     }
     public void initRefresh(){
-        Log.e(TAG,"initRefesh");
         swipeRefreshLayout.setSize(SwipeRefreshLayout.MEASURED_STATE_TOO_SMALL);
-        // 设置下拉多少距离之后开始刷新数据
         swipeRefreshLayout.setDistanceToTriggerSync(200);
         // 设置进度条背景颜色
         swipeRefreshLayout.setOverScrollMode( View.OVER_SCROLL_NEVER );
@@ -131,7 +129,6 @@ public class fragmentXJ extends Fragment  {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.e(TAG,"init swiprefreshlayout getMessage");
                 isPull = true;
                 getMessage();
             }
@@ -177,7 +174,6 @@ public class fragmentXJ extends Fragment  {
                 int lastVisibleItemPosition = manager.findLastVisibleItemPosition();
                 int itemCount = manager.getItemCount();
                 // 如果最后一个可见的View的position 等于 itemCount-1 代表滚动到底部
-                Log.i(TAG, "onScrolled: "+itemCount+"  :  "+lastVisibleItemPosition);
                 if((itemCount-1)==lastVisibleItemPosition){
                     getMessage();
                 }
@@ -197,19 +193,16 @@ public class fragmentXJ extends Fragment  {
 
             @Override
             public void success(String response, int code) {
-                Log.i(TAG, "success: use time is "+(System.currentTimeMillis() - lastTime));
-                System.out.println(""+response);
-                Log.i(TAG, "success: code "+code);
                 upDate(parsetools.parseXuanjiang(response.trim()));
                 MySuccess();
                 swipeRefreshLayout.setRefreshing(false);
-                Log.i(TAG, "success: use time is "+(System.currentTimeMillis() - lastTime));
             }
 
             @Override
             public void failure(Exception e, String Error, int code) {
                 changeRefreshState();
                 swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(getActivity(),"网络不太顺畅哦！",Toast.LENGTH_SHORT).show();
 
 
             }

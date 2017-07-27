@@ -84,6 +84,7 @@ public class CollectSqlHelper extends SQLiteOpenHelper{
         return list;
     }
     public boolean hasURL(String url){
+        if(url == null) return false;
         Cursor cursor = sd.rawQuery("select * from "+
                 collectTable.tableName+" where "
                 + collectTable.url+" =?",
