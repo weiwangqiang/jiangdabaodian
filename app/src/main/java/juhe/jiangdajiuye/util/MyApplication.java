@@ -1,7 +1,6 @@
 package juhe.jiangdajiuye.util;
 
 import android.app.Application;
-import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -21,7 +20,7 @@ public class MyApplication extends Application {
     private static final String TAG = "MyApplication";
     public static final String APP_ID = "19ecb1a49a"; // TODO 替换成bugly上注册的appid
 
-    protected static Context context;
+    protected static MyApplication context;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -43,7 +42,7 @@ public class MyApplication extends Application {
         Bugly.init(getApplicationContext(),APP_ID , true);
     }
 
-    public static Context getApplication(){
+    public static MyApplication getApplication(){
         return context;
     }
 }

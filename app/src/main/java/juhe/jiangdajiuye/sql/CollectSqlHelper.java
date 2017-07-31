@@ -48,7 +48,8 @@ public class CollectSqlHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("drop table if exists "+ collectTable.tableName);
+            sqLiteDatabase.execSQL("drop table if exists "+ collectTable.tableName);
+        onCreate(sqLiteDatabase);
         sqLiteDatabase.close();
     }
    public long addCollect(String title, String company,String location,String time,String url){
@@ -58,7 +59,6 @@ public class CollectSqlHelper extends SQLiteOpenHelper{
         cv.put(collectTable.location,location);
         cv.put(collectTable.time,time);
         cv.put(collectTable.url,url);
-//       sb.execSQL("insert into person("+name, age+") values(?,?)", new Object[]{"炸死特", 4});
        long result = sd.insert(collectTable.tableName, collectTable.title,cv);
        return result;
     }

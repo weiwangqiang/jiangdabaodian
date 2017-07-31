@@ -1,5 +1,6 @@
 package juhe.jiangdajiuye;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -44,7 +45,9 @@ import juhe.jiangdajiuye.fragment.fragmentXJ;
 import juhe.jiangdajiuye.fragment.fragmentZP;
 import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.tool.toast;
+import juhe.jiangdajiuye.util.MyApplication;
 import juhe.jiangdajiuye.util.TabLayoutUtils;
+import juhe.jiangdajiuye.util.lifecycle.AppLifeCycle;
 import juhe.jiangdajiuye.view.about;
 import juhe.jiangdajiuye.view.collect;
 import juhe.jiangdajiuye.view.game;
@@ -90,6 +93,18 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AppLifeCycle appLifeCycle =  AppLifeCycle.getInstance(MyApplication.getApplication());
+        appLifeCycle.addListener(new AppLifeCycle.Listener() {
+            @Override
+            public void onBecameForeground(Activity activity) {
+                Log.i(TAG, "onBecameForeground: ");
+            }
+
+            @Override
+            public void onBecameBackground(Activity activity) {
+                Log.i(TAG, "onBecameBackground: ");
+            }
+        });
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
         //实现左右滑动
