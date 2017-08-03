@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,13 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.IOException;
-
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.entity.LeaveMes;
 import juhe.jiangdajiuye.tool.ProgressDialog;
-import okhttp3.Call;
-import okhttp3.Callback;
+import juhe.jiangdajiuye.util.Uiuilts;
 import okhttp3.OkHttpClient;
 
 /**
@@ -105,41 +104,36 @@ public class suggest extends BaseActivity {
     }
     public void sendContent(){
         if(getemail.getText().toString().length()==0){
-            Toast.makeText(this,"联系方式不能为空",0).show();
+            Uiuilts.showToast("联系方式不能为空");
             return;
         }
         if(getcontent.getText().toString().length()==0){
-            Toast.makeText(this,"内容不能为空",0).show();
+            Uiuilts.showToast("内容不能为空");
             return;
         }
-        email = getemail.getText().toString().trim();
-        content = getcontent.getText().toString().trim();
-        putMes();
+        LeaveMes mes = new LeaveMes() ;
+        mes.setEmail(getemail.getText().toString().trim());
+        mes.setContent(getcontent.getText().toString().trim());
+        try {
+            onRequestYun(mes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
-    private void putMes(){
-       dialog.show();
-        String u = url+"?email="+email+"&content="+content;
-        Log.w(TAG,"url is "+u);
-        final okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(u)
-                .get()
-                .build();
-        mOkHttpClient.newCall(request).enqueue(new Callback(){
+    private void onRequestYun(LeaveMes mes) throws Exception{
+        mes.save(new SaveListener<String>() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                Log.e(TAG,"error!");
-                handler.sendEmptyMessage(0x3);
-            }
-            @Override
-            public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                Log.i(TAG," postJson response code is "+response.code()+" body is  "+response.body().string());
-                handler.sendEmptyMessage(0x1);
+            public void done(String s, BmobException e) {
+                if(e == null)
+                    Uiuilts.showToast("添加成功 ：\n "+s);
+                else{
+                    Uiuilts.showToast("添加失败");
+                    e.printStackTrace();
+                }
             }
         });
-    }
 
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

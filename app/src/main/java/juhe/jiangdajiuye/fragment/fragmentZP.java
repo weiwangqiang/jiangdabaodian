@@ -47,7 +47,7 @@ public class fragmentZP extends Fragment {
     private Boolean swipInit = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private parseTools parsetools =  parseTools.getparseTool() ;
-
+    private boolean isVisibleToUser = false ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.e("onCreateView","fragmentJS  is onCreateView");
@@ -73,6 +73,8 @@ public class fragmentZP extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        Log.i(TAG, "setUserVisibleHint: "+isVisibleToUser);
+        this.isVisibleToUser = isVisibleToUser ;
         if(isfirst&&!swipInit &&isVisibleToUser ){
             if(swipeRefreshLayout!=null){
                 swipInit = true;
@@ -158,7 +160,8 @@ public class fragmentZP extends Fragment {
                 // 如果最后一个可见的View的position 等于 itemCount-1 代表滚动到底部
                 Log.i(TAG, "onScrolled: "+itemCount+"  :  "+lastVisibleItemPosition);
                 if((itemCount-1)==lastVisibleItemPosition){
-                    getMessage();
+                    if(isVisibleToUser)
+                       getMessage();
                 }
             }
         });

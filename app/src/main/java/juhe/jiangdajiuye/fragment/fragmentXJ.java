@@ -70,6 +70,7 @@ public class fragmentXJ extends Fragment  {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        Log.i(TAG, "setUserVisibleHint: "+isVisibleToUser);
         if(isfirst&&!swipInit &&isVisibleToUser ){
             if(swipeRefreshLayout!=null){
                 swipInit = true;

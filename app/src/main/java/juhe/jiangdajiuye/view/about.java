@@ -38,6 +38,12 @@ public class about extends BaseActivity {
         init();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUpgradeInfo();
+    }
+
     public void init() {
         findId();
         initToolbar();

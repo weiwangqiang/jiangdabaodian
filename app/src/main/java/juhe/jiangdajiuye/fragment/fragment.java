@@ -171,7 +171,8 @@ public class fragment extends Fragment  {
                 int itemCount = manager.getItemCount();
                 // 如果最后一个可见的View的position 等于 itemCount-1 代表滚动到底部
                 if((itemCount-1)==lastVisibleItemPosition){
-                    getMessage();
+                    if(isVisibleToUser)
+                        getMessage();
                 }
             }
         });
@@ -299,10 +300,11 @@ public class fragment extends Fragment  {
     public void onHiddenChanged (boolean hidden){
     }
 
-
+    private boolean isVisibleToUser = false ;
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        this.isVisibleToUser  = isVisibleToUser ;
         if(isfirst&&!swipInit &&isVisibleToUser){
             if(swipeRefreshLayout!=null){
                 swipInit = true;

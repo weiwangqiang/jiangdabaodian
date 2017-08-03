@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import org.xutils.x;
 
 import juhe.jiangdajiuye.util.MyApplication;
 import juhe.jiangdajiuye.util.Uiuilts;
@@ -71,8 +70,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * 初始化xUtils
      */
     private void initXUtils() {
-        x.view().inject(this);
-        x.Ext.init(getApplication());
     }
 
     /**

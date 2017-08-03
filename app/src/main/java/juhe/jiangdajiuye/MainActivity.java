@@ -419,7 +419,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
-
     }
     /**
      * 方法必须重写

@@ -46,7 +46,9 @@ public class fragmentSD extends Fragment  {
     private Boolean refreshing = false;
     private Boolean isfirst = true;
     private Boolean swipInit = false;
+    private boolean isVisibleToUser = false ;
     private int page = 1;
+
     private SwipeRefreshLayout swipeRefreshLayout;
     private parseTools parsetools =  parseTools.getparseTool() ;
     @Override
@@ -127,7 +129,8 @@ public class fragmentSD extends Fragment  {
                 // 如果最后一个可见的View的position 等于 itemCount-1 代表滚动到底部
                 Log.i(TAG, "onScrolled: "+itemCount+"  :  "+lastVisibleItemPosition);
                 if((itemCount-1)==lastVisibleItemPosition){
-                    getMessage();
+                    if(isVisibleToUser)
+                       getMessage();
                 }
             }
         });
@@ -249,6 +252,8 @@ public class fragmentSD extends Fragment  {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        this.isVisibleToUser = isVisibleToUser ;
+        Log.i(TAG, "setUserVisibleHint: "+isVisibleToUser);
         if(isfirst&&!swipInit &&isVisibleToUser ){
             if(swipeRefreshLayout!=null){
                 swipInit = true;
