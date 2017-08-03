@@ -4,7 +4,6 @@
     <color name="colorPrimaryDark">#99228B22</color>
     <color name="colorAccent">#FF4081</color>
     <color name="red">#FF0000</color>
-    <color name="baseColor">#228B22	</color>
     <color name="baseColorLittle">#99228B22</color>
     <color name="white">#F9F9FA</color>
     <color name="gray">#AAAAAA</color>
@@ -20,5 +19,25 @@
     <color name="relative_back_on">#DEDEDE</color>
     <color name="searchEditeTextbg">#E5E5E5</color>
 
-
+    <!-- green_transparency -->
+    <color name="green_transparency_0">#0037c763</color>
+    <color name="green_transparency_50">#0D37c763</color>
+    <color name="green_transparency_100">#1A37c763</color>
+    <color name="green_transparency_150">#2637c763</color>
+    <color name="green_transparency_200">#3337c763</color>
+    <color name="green_transparency_250">#4037c763</color>
+    <color name="green_transparency_300">#4D37c763</color>
+    <color name="green_transparency_350">#5A37c763</color>
+    <color name="green_transparency_400">#6637c763</color>
+    <color name="green_transparency_450">#7337c763</color>
+    <color name="green_transparency_500">#8037c763</color>
+    <color name="green_transparency_550">#8C37c763</color>
+    <color name="green_transparency_600">#9A37c763</color>
+    <color name="green_transparency_650">#A637c763</color>
+    <color name="green_transparency_700">#B437c763</color>
+    <color name="green_transparency_750">#C037c763</color>
+    <color name="green_transparency_800">#CD37c763</color>
+    <color name="green_transparency_850">#D937c763</color>
+    <color name="green_transparency_900">#E637c763</color>
+    <color name="green_transparency_950">#F337c763</color>
 </resources>

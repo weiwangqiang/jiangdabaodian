@@ -81,7 +81,6 @@ public class MyApplication extends Application {
         Beta.upgradeDialogLayoutId = R.layout.upgrade_dialog;
 //        CrashReport.initCrashReport(getApplicationContext(), APP_ID, true);
         Bugly.init(this, APP_ID, true, strategy);
-
     }
 
     public static MyApplication getApplication(){

@@ -2,9 +2,8 @@ package juhe.jiangdajiuye.view;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -18,41 +17,19 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.entity.LeaveMes;
 import juhe.jiangdajiuye.tool.ProgressDialog;
-import juhe.jiangdajiuye.util.Uiuilts;
-import okhttp3.OkHttpClient;
+import juhe.jiangdajiuye.util.AppUtils;
+import juhe.jiangdajiuye.util.ToastUtils;
 
 /**
  * Created by wangqiang on 2016/10/6.
  */
 public class suggest extends BaseActivity {
     private String TAG = "fragmentCollect";
-    private String url = "http://123.206.104.107/asaad/selectData";
-//    private String url = "http://192.168.0.103:8080/asaad/selectData";
     private Toolbar toolbar;
     private EditText getemail ,getcontent;
     private Button send;
-    private String email,content;
     private ProgressDialog dialog;
     private InputMethodManager imm;
-    private OkHttpClient mOkHttpClient ;
-    private Handler handler = new Handler(){
-        public void handleMessage(Message mes){
-            switch (mes.what){
-                case 0x1:
-                    dialog.cancel();
-                    Toast.makeText(suggest.this,"谢谢你的反馈！！",Toast.LENGTH_SHORT).show();
-                    getemail.setText("");
-                    getcontent.setText("");
-                    break;
-                case 0x2:
-                    break;
-                case 0x3:
-                    dialog.cancel();
-                    Toast.makeText(suggest.this,"服务器去火星咯！",Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -62,7 +39,6 @@ public class suggest extends BaseActivity {
     }
 
     public void initView(){
-        mOkHttpClient = new OkHttpClient();
         imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
         findid();
@@ -104,16 +80,19 @@ public class suggest extends BaseActivity {
     }
     public void sendContent(){
         if(getemail.getText().toString().length()==0){
-            Uiuilts.showToast("联系方式不能为空");
+            ToastUtils.showToast("联系方式不能为空");
             return;
         }
         if(getcontent.getText().toString().length()==0){
-            Uiuilts.showToast("内容不能为空");
+            ToastUtils.showToast("内容不能为空");
             return;
         }
         LeaveMes mes = new LeaveMes() ;
         mes.setEmail(getemail.getText().toString().trim());
         mes.setContent(getcontent.getText().toString().trim());
+        mes.setAppLevel(AppUtils.getVersionName());
+        mes.setDevice(AppUtils.getDevice());
+        mes.setDeviceLevel(AppUtils.getDeviceLevel());
         try {
             onRequestYun(mes);
         } catch (Exception e) {
@@ -121,15 +100,22 @@ public class suggest extends BaseActivity {
         }
     }
     private void onRequestYun(LeaveMes mes) throws Exception{
+        dialog.show();
+        Log.i(TAG, "onRequestYun: "+mes.getContent());
         mes.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
-                if(e == null)
-                    Uiuilts.showToast("添加成功 ：\n "+s);
+                Log.i(TAG, "done: "+s);
+                if(e == null){
+                    ToastUtils.showToast("提交成功 ：\n "+s);
+                    getemail.setText("");
+                    getcontent.setText("");
+                }
                 else{
-                    Uiuilts.showToast("添加失败");
+                    ToastUtils.showToast("提交失败");
                     e.printStackTrace();
                 }
+                dialog.cancel();
             }
         });
 

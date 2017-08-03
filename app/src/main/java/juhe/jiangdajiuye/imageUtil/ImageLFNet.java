@@ -8,12 +8,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
-import org.xutils.common.Callback;
-import org.xutils.common.util.DensityUtil;
-import org.xutils.image.ImageOptions;
-import org.xutils.x;
-
-import juhe.jiangdajiuye.R;
+import com.bumptech.glide.Glide;
 
 
 /**
@@ -32,64 +27,65 @@ public class ImageLFNet {
     public  void getBitmapFromNet(ImageView imageView, String url ){
         Log.i(TAG, "downLoadImage: url "+url);
         this.url = url ;
-        ImageOptions imageOptions = new ImageOptions.Builder()
-                .setSize(DensityUtil.dip2px(80), DensityUtil.dip2px(80))
-                .setRadius(DensityUtil.dip2px(5))
-                // 如果ImageView的大小不是定义为wrap_content, 不要crop.
-//                .setCrop(true) // 很多时候设置了合适的scaleType也不需要它.
-                // 加载中或错误图片的ScaleType
-                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-                .setLoadingDrawableId(R.drawable.load_waiting)
-                .setFailureDrawableId(R.drawable.load_waiting)
-                .build();
-
-        x.image().bind(imageView,
-                url,
-                imageOptions,
-                new CustomBitmapLoadCallBack());
+        Glide.with(imageView.getContext()).load(url).into(imageView);
+//        ImageOptions imageOptions = new ImageOptions.Builder()
+//                .setSize(DensityUtil.dip2px(80), DensityUtil.dip2px(80))
+//                .setRadius(DensityUtil.dip2px(5))
+//                // 如果ImageView的大小不是定义为wrap_content, 不要crop.
+////                .setCrop(true) // 很多时候设置了合适的scaleType也不需要它.
+//                // 加载中或错误图片的ScaleType
+//                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+//                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+//                .setLoadingDrawableId(R.drawable.load_waiting)
+//                .setFailureDrawableId(R.drawable.load_waiting)
+//                .build();
+//
+//        x.image().bind(imageView,
+//                url,
+//                imageOptions,
+//                new CustomBitmapLoadCallBack());
     }
-    public class CustomBitmapLoadCallBack implements Callback.ProgressCallback<Drawable> {
-
-        public CustomBitmapLoadCallBack() {
-
-        }
-
-        @Override
-        public void onWaiting() {
-
-        }
-
-        @Override
-        public void onStarted() {
-
-        }
-
-        @Override
-        public void onLoading(long total, long current, boolean isDownloading) {
-            Log.i(TAG, "onLoading: total "+total+
-                    " current "+current+" isDownLoading "+isDownloading);
-        }
-
-        @Override
-        public void onSuccess(Drawable result) {
-            saveBitmap(result);
-        }
-
-        @Override
-        public void onError(Throwable ex, boolean isOnCallback) {
-        }
-
-        @Override
-        public void onCancelled(CancelledException cex) {
-
-        }
-
-        @Override
-        public void onFinished() {
-
-        }
-    }
+//    public class CustomBitmapLoadCallBack implements Callback.ProgressCallback<Drawable> {
+//
+//        public CustomBitmapLoadCallBack() {
+//
+//        }
+//
+//        @Override
+//        public void onWaiting() {
+//
+//        }
+//
+//        @Override
+//        public void onStarted() {
+//
+//        }
+//
+//        @Override
+//        public void onLoading(long total, long current, boolean isDownloading) {
+//            Log.i(TAG, "onLoading: total "+total+
+//                    " current "+current+" isDownLoading "+isDownloading);
+//        }
+//
+//        @Override
+//        public void onSuccess(Drawable result) {
+//            saveBitmap(result);
+//        }
+//
+//        @Override
+//        public void onError(Throwable ex, boolean isOnCallback) {
+//        }
+//
+//        @Override
+//        public void onCancelled(CancelledException cex) {
+//
+//        }
+//
+//        @Override
+//        public void onFinished() {
+//
+//        }
+//    }
 
     private void saveBitmap(final Drawable result) {
         Log.i(TAG, "saveBitmap: ");

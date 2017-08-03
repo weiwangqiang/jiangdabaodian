@@ -20,12 +20,12 @@
 -keep class * {
     public private *;
 }
--dontoptimize
--dontpreverify
-
--dontwarn java.nio.file.*
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
--dontwarn okio.**
+#-dontoptimize
+#-dontpreverify
+#
+#-dontwarn java.nio.file.*
+#-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+#-dontwarn okio.**
 
 -dontwarn cn.jpush.**
 -keep class cn.jpush.** { *; }

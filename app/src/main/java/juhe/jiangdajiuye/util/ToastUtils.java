@@ -12,11 +12,11 @@ import android.widget.Toast;
  * @project jiangdajiuye
  * @since 2017-04-23
  */
-public class Uiuilts {
-    private String TAG = "Uiuilts";
+public class ToastUtils {
+    private String TAG = "ToastUtils";
 
     public static Toast toast ;
-    public Uiuilts(Context context){
+    public ToastUtils(Context context){
         toast = Toast.makeText(context,"",Toast.LENGTH_SHORT);
     }
     public static void showToast(String content){

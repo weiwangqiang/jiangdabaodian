@@ -1,8 +1,6 @@
 package juhe.jiangdajiuye.view;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,10 +12,9 @@ import android.widget.Toast;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 
-import org.xutils.view.annotation.ContentView;
-
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.util.AppUtils;
 
 /**
  * class description here
@@ -27,7 +24,6 @@ import juhe.jiangdajiuye.core.BaseActivity;
  * @project jiangdajiuye
  * @since 2017-03-27
  */
-@ContentView(R.layout.about)
 public class about extends BaseActivity {
     private static final String TAG = "about";
     private Toolbar toolbar;
@@ -35,6 +31,7 @@ public class about extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.about);
         init();
     }
 
@@ -102,22 +99,14 @@ public class about extends BaseActivity {
         TvUp = (TextView) findViewById(R.id.textViewUp);
         String s = "";
             try{
-                s = "当前版本："+getVersionName()+getResources().getString(R.string.aboute);
+                s = "当前版本："+ AppUtils.getVersionName()+getResources().getString(R.string.aboute);
             }catch(Exception e){
                 e.printStackTrace();
                 s = getResources().getString(R.string.aboute);
             }
         tv.setText(s);
     }
-    private String getVersionName() throws Exception
-    {
-        // 获取packagemanager的实例
-        PackageManager packageManager = getPackageManager();
-        // getPackageName()是你当前类的包名，0代表是获取版本信息
-        PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
-        String version = packInfo.versionName;
-        return version;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

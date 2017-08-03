@@ -14,10 +14,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +24,7 @@ import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.sql.LibrarySqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.parseTools;
+import juhe.jiangdajiuye.util.urlConnection;
 
 /**图书详情
  * Created by wangqiang on 2016/10/2.
@@ -106,10 +103,11 @@ public class searchBook extends BaseActivity{
         Log.e(TAG,book + " "+ url +" "+editor+" "+available+" "+number);
     }
     public void getSearch(){
-        RequestParams params = new RequestParams(url);
-        x.http().get(params,new Callback.CommonCallback<String>() {
+        urlConnection connection = new urlConnection(this);
+        connection.setgetLister(new urlConnection.getLister(){
+
             @Override
-            public void onSuccess(String result) {
+            public void success(String result, int code) {
                 Log.d(TAG, "onSuccess: "+result);
                 map = parsetools.parseBookMessage(result);
                 list = parsetools.parseSearchBookAvailabale(result);
@@ -117,24 +115,37 @@ public class searchBook extends BaseActivity{
             }
 
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-//                Log.e(TAG," Error response is "+ Error+"code is "+code);
+            public void failure(Exception e, String Error, int code) {
                 Toast.makeText(searchBook.this,"失败，请重试",Toast.LENGTH_SHORT).show();
                 handler.sendEmptyMessage(0x2);
             }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                handler.sendEmptyMessage(0x2);
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
         });
+        connection.get(url);
+//        RequestParams params = new RequestParams(url);
+//        x.http().get(params,new Callback.CommonCallback<String>() {
+//            @Override
+//            public void onSuccess(String result) {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable ex, boolean isOnCallback) {
+//                ex.printStackTrace();
+////                Log.e(TAG," Error response is "+ Error+"code is "+code);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(CancelledException cex) {
+//                handler.sendEmptyMessage(0x2);
+//
+//            }
+//
+//            @Override
+//            public void onFinished() {
+//
+//            }
+//        });
 
 
 

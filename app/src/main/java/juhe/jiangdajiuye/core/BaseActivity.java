@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-
 import juhe.jiangdajiuye.util.MyApplication;
-import juhe.jiangdajiuye.util.Uiuilts;
+import juhe.jiangdajiuye.util.ToastUtils;
 
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
@@ -16,11 +15,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public final int NET_SUCCESS = 0x1;
     public final int NET_ERROR = 0x2;
     private String TAG = "BaseActivity";
-    public static Uiuilts uiutils;
+    public static ToastUtils uiutils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uiutils = new Uiuilts(MyApplication.getApplication());
+        uiutils = new ToastUtils(MyApplication.getApplication());
         initScreen();
         initXUtils();
         initReceiver();

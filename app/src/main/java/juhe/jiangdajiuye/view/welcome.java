@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.util.NetMesManager;
+import juhe.jiangdajiuye.util.UserActionRecord;
 
 /**
  * Created by wangqiang on 2016/7/3.
@@ -42,7 +44,13 @@ public class welcome extends BaseActivity {
         sharedPreferences = getSharedPreferences("welcome", Context.MODE_PRIVATE);
         isfirst = sharedPreferences.getBoolean("first",true);
         init();
+        UserActionRecord.setComeTime(System.currentTimeMillis());
+        NetMesManager.setIP(this);
     }
+
+
+
+
     private void init(){
         welcome  = (ImageView)findViewById(R.id.welcome_image);
         float math = (float) Math.random();

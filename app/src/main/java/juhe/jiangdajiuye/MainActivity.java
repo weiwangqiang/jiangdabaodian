@@ -47,6 +47,7 @@ import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.tool.toast;
 import juhe.jiangdajiuye.util.MyApplication;
 import juhe.jiangdajiuye.util.TabLayoutUtils;
+import juhe.jiangdajiuye.util.UserActionRecord;
 import juhe.jiangdajiuye.util.lifecycle.AppLifeCycle;
 import juhe.jiangdajiuye.view.about;
 import juhe.jiangdajiuye.view.collect;
@@ -369,12 +370,12 @@ public class MainActivity extends AppCompatActivity
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
         Log.d(TAG, "onKeyUp: ");
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.HOME");
-        intent.addCategory("android.intent.category.DEFAULT");
-        intent.addCategory("android.intent.category.MONKEY");
-        startActivity(intent);
+//        Intent intent = new Intent();
+//        intent.setAction("android.intent.action.MAIN");
+//        intent.addCategory("android.intent.category.HOME");
+//        intent.addCategory("android.intent.category.DEFAULT");
+//        intent.addCategory("android.intent.category.MONKEY");
+//        startActivity(intent);
 
         switch(keyCode)
         {
@@ -441,7 +442,7 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         Log.i(TAG, "onDestroy: ");
         unregisterReceiver(receiver);
-
+        UserActionRecord.setOutTime(System.currentTimeMillis());
     }
 //*******************异常退出保留数据方法*******************************
     /** 异常退出保留数据

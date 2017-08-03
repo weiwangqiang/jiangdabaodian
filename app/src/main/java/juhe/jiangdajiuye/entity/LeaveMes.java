@@ -22,6 +22,29 @@ public class LeaveMes extends BmobObject{
 
     private String content ;
 
+    public String getDeviceLevel() {
+        return deviceLevel;
+    }
+    private String deviceLevel; //android 系统级别
+
+    public void setDevice(String device) {
+        this.device = device;
+    }
+
+    public void setDeviceLevel(String deviceLevel) {
+        this.deviceLevel = deviceLevel;
+    }
+
+    public String getAppLevel() {
+        return appLevel;
+    }
+
+    public void setAppLevel(String appLevel) {
+        this.appLevel = appLevel;
+    }
+
+    private String appLevel ;//软件级别
+    private String device; //手机厂家
 
     public String getEmail() {
         return email;

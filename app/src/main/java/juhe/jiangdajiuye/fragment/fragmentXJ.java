@@ -275,7 +275,7 @@ public class fragmentXJ extends Fragment  {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG,"onDestroy");
-
+        getActivity().unregisterReceiver(netState);
     }
     @Override
     public void onHiddenChanged (boolean hidden){
