@@ -6,24 +6,26 @@
     android:gravity="center">
 
     <LinearLayout
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFF"
+        android:layout_margin="20dp"
+        android:background="@drawable/rectangle_5dp_white"
         android:gravity="center"
         android:orientation="vertical">
 
         <!-- 通过id设置的控件 -->
         <ImageView
             android:id="@+id/imageview"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@mipmap/logo" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/news_inapp_icon" />
         <!--通过tag设置的控件 -->
         <TextView
             android:tag="textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="宝典更新啦"/>
+            android:textColor="@color/light_blue_transparency_900"
+            android:text="更新啦!"/>
 
         <!-- 【必设】升级标题控件tag：beta_title-->
         <TextView
@@ -66,6 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="8dp"
+                    android:visibility="gone"
                     android:text="@string/strUpgradeDialogFeatureLabel"
                     android:textColor="#273238"
                     android:textSize="14sp" />
@@ -75,6 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="feature"
+                    android:visibility="gone"
                     android:textColor="#273238"
                     android:textSize="14sp" />
             </LinearLayout>

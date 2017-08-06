@@ -9,11 +9,10 @@ import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import java.io.File;
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 import java.util.Map;
-
-import juhe.jiangdajiuye.imageUtil.ImageManager;
 
 
 /**
@@ -51,22 +50,16 @@ public class gameAdapter extends SimpleAdapter
             holder.visit  = (TextView) convertView.findViewById(to[3]);
             convertView.setTag(holder);
         }
+
         else
             holder = (ViewHolder) convertView.getTag();
         String url = this.data.get(position).get(from[0]).toString();
-        holder.imageView.setTag(url);
-        String tag = (String)holder.imageView.getTag();
-        File f = new File(filePath);
-        if(!f.exists()){
-            f.mkdirs();
-        }
-        if(tag!=null&&tag.equals(url)){
-            ImageManager.bindImageWithBitmap(holder.imageView,url);
-        }
+        Glide.with(context).load(url).into(holder.imageView);
         holder.title.setText(this.data.get(position).get(from[1]).toString());
         holder.message.setText(this.data.get(position).get(from[2]).toString());
         holder.visit.setText(this.data.get(position).get(from[3]).toString());
         return convertView;
+
     }
     private class ViewHolder{
         ImageView imageView;

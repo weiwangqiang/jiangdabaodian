@@ -1,6 +1,7 @@
 package juhe.jiangdajiuye.fragment;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+
 
 /**
  * @author wangqiang

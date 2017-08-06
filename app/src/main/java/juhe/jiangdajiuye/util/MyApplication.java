@@ -44,16 +44,16 @@ public class MyApplication extends Application {
         /**
          * true表示初始化时自动检查升级; false表示不会自动检查升级,需要手动调用Beta.checkUpgrade()方法;
          */
-        Beta.autoCheckUpgrade = false;
+        Beta.autoCheckUpgrade = true;
 
         /**
          * 设置升级检查周期为60s(默认检查周期为0s)，60s内SDK不重复向后台请求策略);
          */
-        Beta.upgradeCheckPeriod = 60 * 1000;
+//        Beta.upgradeCheckPeriod = 60 * 1000;
         /**
          * 设置启动延时为1s（默认延时3s），APP启动1s后初始化SDK，避免影响APP启动速度;
          */
-        Beta.initDelay = 10 * 1000;
+        Beta.initDelay = 5 * 1000;
         /**
          * 设置通知栏大图标，largeIconId为项目中的图片资源;
          */

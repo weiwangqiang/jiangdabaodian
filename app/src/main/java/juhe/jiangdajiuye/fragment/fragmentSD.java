@@ -26,7 +26,7 @@ import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.tool.NetState;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.NetMesManager;
-import juhe.jiangdajiuye.util.UserActionRecord;
+import juhe.jiangdajiuye.util.UserActionRecordUtils;
 import juhe.jiangdajiuye.util.urlConnection;
 import juhe.jiangdajiuye.view.browse;
 
@@ -91,7 +91,7 @@ public class fragmentSD extends Fragment  {
             public void GetInternet() {
                 Log.e(TAG,"error is gone");
                 error.setVisibility(View.GONE);
-                if(UserActionRecord.ipbean == null){
+                if(UserActionRecordUtils.ipbean == null){
                     NetMesManager.setIP(getActivity());
                 }
             }

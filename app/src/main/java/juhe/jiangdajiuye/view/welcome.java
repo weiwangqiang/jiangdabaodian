@@ -18,7 +18,7 @@ import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.util.NetMesManager;
-import juhe.jiangdajiuye.util.UserActionRecord;
+import juhe.jiangdajiuye.util.UserActionRecordUtils;
 
 /**
  * Created by wangqiang on 2016/7/3.
@@ -44,7 +44,7 @@ public class welcome extends BaseActivity {
         sharedPreferences = getSharedPreferences("welcome", Context.MODE_PRIVATE);
         isfirst = sharedPreferences.getBoolean("first",true);
         init();
-        UserActionRecord.setComeTime(System.currentTimeMillis());
+        UserActionRecordUtils.setComeTime(System.currentTimeMillis());
         NetMesManager.setIP(this);
     }
 

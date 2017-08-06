@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.entity;
+package juhe.jiangdajiuye.entity.recordEntity;
 
 import cn.bmob.v3.BmobObject;
 

@@ -12,7 +12,7 @@
         android:titleTextColor="@color/white" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal|center_vertical"
         >
@@ -29,27 +29,54 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20sp"
             android:gravity="center"
             android:text="@string/app_name"
             android:textSize="20sp" />
+        <TextView
+            android:id="@+id/currentVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/app_name"
+             />
     </LinearLayout>
 
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textColor="@color/black_transparency_900"
+        android:text="升级日志:"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewUp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text=""/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="更新"
+        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:background="@drawable/rectangle_5dp_basecolor"
+        android:onClick="checkUpData"/>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
         android:gravity="center"
         android:text="@string/aboute" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="检查更新"
-        android:onClick="checkUpData"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:id="@+id/textViewUp"
-        android:text="新版本"/>
+</RelativeLayout>
+
+
 </LinearLayout>

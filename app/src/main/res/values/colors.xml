@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#99228B22</color>
-    <color name="colorPrimaryDark">#99228B22</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/baseColor</color>
+    <color name="colorPrimaryDark">@color/baseColor</color>
+    <color name="colorAccent">@color/baseColor</color>
     <color name="red">#FF0000</color>
     <color name="baseColorLittle">#99228B22</color>
     <color name="white">#F9F9FA</color>
@@ -18,6 +18,18 @@
     <color name="relative_back_off">#FFFFFF</color>
     <color name="relative_back_on">#DEDEDE</color>
     <color name="searchEditeTextbg">#E5E5E5</color>
+
+    <!-- green -->
+    <color name="green_50">#cdf1d8</color>
+    <color name="green_100">#afe9c1</color>
+    <color name="green_200">#91e0a9</color>
+    <color name="green_300">#73d892</color>
+    <color name="green_400">#55cf7a</color>
+    <color name="green_500">#37c763</color>
+    <color name="green_600">#31b359</color>
+    <color name="green_700">#2c9f4f</color>
+    <color name="green_800">#268b45</color>
+    <color name="green_900">#21773b</color>
 
     <!-- green_transparency -->
     <color name="green_transparency_0">#0037c763</color>
@@ -40,4 +52,26 @@
     <color name="green_transparency_850">#D937c763</color>
     <color name="green_transparency_900">#E637c763</color>
     <color name="green_transparency_950">#F337c763</color>
+
+    <!-- light_blue_transparency -->
+    <color name="light_blue_transparency_50">#0D03a9f4</color>
+    <color name="light_blue_transparency_100">#1A03a9f4</color>
+    <color name="light_blue_transparency_150">#2603a9f4</color>
+    <color name="light_blue_transparency_200">#3303a9f4</color>
+    <color name="light_blue_transparency_250">#4003a9f4</color>
+    <color name="light_blue_transparency_300">#4D03a9f4</color>
+    <color name="light_blue_transparency_350">#5A03a9f4</color>
+    <color name="light_blue_transparency_400">#6603a9f4</color>
+    <color name="light_blue_transparency_450">#7303a9f4</color>
+    <color name="light_blue_transparency_500">#8003a9f4</color>
+    <color name="light_blue_transparency_550">#8C03a9f4</color>
+    <color name="light_blue_transparency_600">#9A03a9f4</color>
+    <color name="light_blue_transparency_650">#A603a9f4</color>
+    <color name="light_blue_transparency_700">#B403a9f4</color>
+    <color name="light_blue_transparency_750">#C003a9f4</color>
+    <color name="light_blue_transparency_800">#CD03a9f4</color>
+    <color name="light_blue_transparency_850">#D903a9f4</color>
+    <color name="light_blue_transparency_900">#E603a9f4</color>
+    <color name="light_blue_transparency_950">#F303a9f4</color>
+
 </resources>

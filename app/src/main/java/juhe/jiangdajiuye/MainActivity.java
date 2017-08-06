@@ -47,7 +47,9 @@ import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.tool.toast;
 import juhe.jiangdajiuye.util.MyApplication;
 import juhe.jiangdajiuye.util.TabLayoutUtils;
-import juhe.jiangdajiuye.util.UserActionRecord;
+import juhe.jiangdajiuye.util.UserActionRecordUtils;
+import juhe.jiangdajiuye.util.UserBrowseRecordUtils;
+import juhe.jiangdajiuye.util.UserShareUtils;
 import juhe.jiangdajiuye.util.lifecycle.AppLifeCycle;
 import juhe.jiangdajiuye.view.about;
 import juhe.jiangdajiuye.view.collect;
@@ -212,7 +214,7 @@ public class MainActivity extends AppCompatActivity
                 drawer.closeDrawer(Gravity.LEFT);
                 break;
             case R.id.nav_library:
-
+                UserBrowseRecordUtils.setmLibrary(1);
                 startActivity(new Intent(MainActivity.this,library.class));
                 break;
             case R.id.nav_favorite:
@@ -220,21 +222,23 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this,collect.class));
                 break;
             case R.id.nav_xuanjianghui:
+                UserBrowseRecordUtils.setmXuanJiangCollect(1);
                 startActivity(new Intent(MainActivity.this,xuanjiang.class));
                 break;
             case R.id.nav_send:
                 startActivity(new Intent(MainActivity.this,suggest.class));
                 break;
             case R.id.nav_game:
+                UserBrowseRecordUtils.setmOffLineGame(1);
                 startActivity(new Intent(MainActivity.this,game.class));
                 break;
             case R.id.nav_about:
+                UserBrowseRecordUtils.setmAboute(1);
                 startActivity(new Intent(MainActivity.this,about.class));
                 break;
             default:
                 break;
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -331,6 +335,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onComplete(Object o) {
             mytoast.makeText(MainActivity.this,"分享成功！");
+            UserShareUtils.setQQ(1);
         }
 
         @Override
@@ -388,8 +393,7 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG," toast time is "+Toast.LENGTH_SHORT);
                 if (secondTime - exitTime > 2500) {
                     //如果两次按键时间间隔大于2秒，则不退出
-//                    mytoast.makeText(MainActivity.this,"再按一次退出");
-
+                    mytoast.makeText(MainActivity.this,"再按一次退出");
                     exitTime = secondTime;
                     //更新firstTime
                     return true;
@@ -442,7 +446,9 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         Log.i(TAG, "onDestroy: ");
         unregisterReceiver(receiver);
-        UserActionRecord.setOutTime(System.currentTimeMillis());
+        UserActionRecordUtils.setOutTime(System.currentTimeMillis());
+        UserBrowseRecordUtils.save();
+        UserShareUtils.save();
     }
 //*******************异常退出保留数据方法*******************************
     /** 异常退出保留数据
@@ -454,6 +460,8 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         Log.i(TAG, "onSaveInstanceState: ");
         outState.putInt("IntTest", 0);
+//        unregisterReceiver(receiver);
+        UserActionRecordUtils.setOutTime(System.currentTimeMillis());
     }
 
     @Override

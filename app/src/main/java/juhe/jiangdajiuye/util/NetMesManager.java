@@ -102,7 +102,7 @@ public class NetMesManager {
                 if(code == 200){
                     Gson gson = new Gson();
                     IPBean ipbean = gson.fromJson(response,IPBean.class);
-                    UserActionRecord.setIpbean(ipbean);
+                    UserActionRecordUtils.setIpbean(ipbean);
                     Log.i(TAG, "success: "+ipbean.getIp()+"　: " +ipbean.getAddress());
                 }
             }

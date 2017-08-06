@@ -1,4 +1,4 @@
-package com.joshua.a51bike.Interface;
+package juhe.jiangdajiuye.util.getImageUtils.api;
 
 /**
  * 控制dialog 显示的接口
