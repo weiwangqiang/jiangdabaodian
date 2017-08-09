@@ -23,12 +23,7 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
  * @since 2017-08-08
  */
 
-public class ImpAdapter extends AbsAdapter<MessageItem> {
-    public static final int STATUS_DEFAULT = 0;//不在刷新或者end状态
-    public static final int STATUS_REFRESHING = 1 ;
-    public static final int STATUS_PULLTOREFRESH = 2;
-    public static final int STATUS_END = 3;
-    public static final int STATUS_ERROR = 4;
+public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
 
     public mItemViewHodler itemViewHodler ;
     public mFooterViewHolder footerViewHolder ;
@@ -42,7 +37,7 @@ public class ImpAdapter extends AbsAdapter<MessageItem> {
         void OnItemClick(MessageItem item);
     }
 
-    public ImpAdapter(@LayoutRes int layout) {
+    public IndexFragmentAdapter(@LayoutRes int layout) {
         super(layout);
     }
 
@@ -150,9 +145,10 @@ public class ImpAdapter extends AbsAdapter<MessageItem> {
             progressBar = getView(footerProgressBar);
         }
     }
-    public void setStatus(int status){
+    @Override
+    public void stateChange(int state) {
         if(footerViewHolder == null) return;
-        switch (status){
+        switch (state){
             case STATUS_DEFAULT:
                 footerViewHolder.tv.setText("上拉加载更多");
                 footerViewHolder.progressBar.setVisibility(View.INVISIBLE);
@@ -172,4 +168,5 @@ public class ImpAdapter extends AbsAdapter<MessageItem> {
                 break;
         }
     }
+
 }

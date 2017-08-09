@@ -3,10 +3,7 @@ package juhe.jiangdajiuye.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,16 +14,17 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.ly_recyclerAdapter;
+import juhe.jiangdajiuye.adapter.SearchLibraryAdapter;
+import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
+import juhe.jiangdajiuye.consume.recyclerView.mRecyclerView;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.tool.NetState;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.urlConnection;
@@ -37,135 +35,96 @@ import okhttp3.OkHttpClient;
  * Created by wangqiang on 2016/10/6.
  */
 public class library extends BaseActivity implements
-        Toolbar.OnMenuItemClickListener{
-    private View view,main;
+        Toolbar.OnMenuItemClickListener,OnLoadMoreListener {
     public EditText edit;
     private String TAG = "fragmentLibrary";
     private OkHttpClient mOkHttpClient ;
     public ExecutorService service;
 
-    //下拉刷新
-    private Boolean isSearch = false;//是否是重新搜索
-    private Boolean refreshing = false;
-    private Boolean isfirst = true;//第一次加载数据
     private int page = 1;
+    private String title = "";
     private int totalPage = 0 ;//搜索返回的结果数
     public TextView search;
     private ProgressDialog myprogress;
-    public RecyclerView recyclerView;
+    public mRecyclerView recyclerView;
     private LinearLayoutManager manager;
     private Toolbar toolbar;
     private InputMethodManager imm;
-    private ly_recyclerAdapter adapter;
+    private SearchLibraryAdapter adapter;
     private parseTools parsetools =  parseTools.getparseTool() ;
     public static String url = "http://huiwen.ujs.edu.cn:8080/opac/openlink.php?" +
             "location=ALL&doctype=ALL&lang_code=ALL&match_flag=forward" +
             "&displaypg=10&showmode=list&orderby=DESC&sort=CATA_DATE&onlylendable=no";
-
-    private ArrayList<Map<String,String>> data = new ArrayList<>();
-
-    private Handler handler = new Handler(){
-        public void handleMessage(Message message){
-            switch (message.what){
-                case 0x1:
-                    if(isfirst){
-                        recyclerView.setAdapter(adapter);
-                        isfirst = false;
-                    }
-                    adapter.RefreshDate(data);
-                    if(isSearch){
-                        isSearch = false;
-                        try{
-                            recyclerView.scrollToPosition(0);
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                    refreshing = false;
-                    myprogress.cancel();
-                    break;
-                case 0x2:
-                    refreshing = false;
-                    myprogress.cancel();
-                    break;
-                case 0x3:
-                    uiutils.showToast("没有你要找的书哦!");
-                    refreshing = false;
-                    myprogress.cancel();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_fragment);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mOkHttpClient = new OkHttpClient();
-        service = Executors.newFixedThreadPool (Runtime.getRuntime().availableProcessors());//线程池50
+        service = Executors.newFixedThreadPool (Runtime.getRuntime().availableProcessors());
         initView();
     }
     public void initView(){
         imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         findid();
-        initlist();
+        initList();
         initToolbar();
-//        initTabLayout();
         setLister();
+        bindNetState();
     }
     public void findid(){
         edit = (EditText) findViewById(R.id.library_edit);
         search = (TextView)findViewById(R.id.library_search);
-        recyclerView = (RecyclerView)findViewById(R.id.library_listView);
+        recyclerView = (mRecyclerView)findViewById(R.id.library_listView);
         toolbar = (Toolbar)findViewById(R.id.Library_toolbar);
     }
-    public void initlist(){
-        adapter = new ly_recyclerAdapter(this,R.layout.library_listitem,data);
+    public void initList(){
+        adapter = new SearchLibraryAdapter(R.layout.library_listitem);
         manager =  new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-        adapter.setLister(new myitemLister() {
+        recyclerView.setAdapter(adapter);
+        recyclerView.setmOnLoadMoreListener(this);
+        adapter.setOnItemClickListener(new SearchLibraryAdapter.OnItemClickListener() {
             @Override
-            public void ItemLister(int position) {
-                if(position<data.size()){
+            public void OnItemClick(Map<String,String> data) {
                     Intent intent = new Intent(library.this,searchBook.class);
-                    intent.putExtra("url",data.get(position).get("url"));
-                    intent.putExtra("book",data.get(position).get("book"));
-                    intent.putExtra("editor",data.get(position).get("editor"));
-                    intent.putExtra("available",data.get(position).get("available"));
-                    intent.putExtra("number",data.get(position).get("number"));
+                    intent.putExtra("url",data.get("url"));
+                    intent.putExtra("book",data.get("book"));
+                    intent.putExtra("editor",data.get("editor"));
+                    intent.putExtra("available",data.get("available"));
+                    intent.putExtra("number",data.get("number"));
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
+            }
+        });
+    }
+    /**
+     * 绑定网络监听
+     */
+    public void bindNetState(){
+        NetState.addNetLister(new NetState.NetLister() {
+            @Override
+            public void OutInternet() {
+                Log.i(TAG, "OutInternet: ");
+            }
+            @Override
+            public void GetInternet(int type) {
+                Log.i(TAG, "GetInternet: ----------------");
+                if(recyclerView != null){
+                    if(recyclerView.getmStatus() == mRecyclerView.STATUS_ERROR){
+                        Log.i(TAG, "GetInternet: set default value ");
+                        recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
+                    }
                 }
             }
         });
     }
     public void setLister(){
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                // dy>0 代表向下滚动
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItemPosition = manager.findLastVisibleItemPosition();
-                int itemCount = manager.getItemCount();
-                // 如果最后一个可见的View的position 等于 itemCount-1 代表滚动到底部
-                if((itemCount-1)==lastVisibleItemPosition){
-                    getSearch();
-                }
-            }
-        });
         search.setOnClickListener(this);
     }
 
     public void initToolbar(){
         toolbar.setTitle("图书馆");
-//        toolbar.setNavigationIcon(R.drawable.menue);
         setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -187,11 +146,10 @@ public class library extends BaseActivity implements
                     uiutils.showToast("请输入搜索词");
                     return;
                 }
-                page=1;
-                isSearch = true;
-                changeView();
+                title = edit.getText().toString() ;
+                recyclerView.setStatus(mRecyclerView.STATUS_PULLTOREFRESH);
+                showProgress();
                 getSearch();
-//                getMessage();
                 break;
             default:
                 break;
@@ -208,20 +166,20 @@ public class library extends BaseActivity implements
     }
 
     public void getSearch(){
-        if(refreshing)
-            return;
-        if(!isSearch&& (page * 10)>=totalPage){
-            uiutils.showToast("没有更多了");
-            return;
+        if(recyclerView.getmStatus() != mRecyclerView.STATUS_PULLTOREFRESH){
+            if((page * 10)>=totalPage && adapter.getDataSize() != 0 ){
+                recyclerView.setStatus(mRecyclerView.STATUS_END);
+                uiutils.showToast("没有更多了");
+                return;
+            }
         }
-        refreshing = true;
         //解决中文乱码问题
         HttpUrl parsed = HttpUrl.parse(getUrl());
         final urlConnection connection= new urlConnection(this);
         connection.setNetListener(new urlConnection.NetListener() {
             @Override
             public void success(final String response, int code) {
-                if(isSearch){
+                if(recyclerView.getmStatus() == mRecyclerView.STATUS_PULLTOREFRESH){
                     service.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -234,42 +192,49 @@ public class library extends BaseActivity implements
             @Override
             public void failure(Exception e,String Error, int code) {
                 e.printStackTrace();
-                Log.e(TAG," Error response is "+ Error+"code is "+code);
-                uiutils.showToast("出错，请重试");
-                handler.sendEmptyMessage(0x2);
+                recyclerView.setStatus(mRecyclerView.STATUS_ERROR);
+                uiutils.showToast("网络不在服务区哦！请重试");
+                myprogress.cancel();
             }
         });
         connection.get(parsed.toString());
     }
-    public void changeView(){
+    public void showProgress(){
         myprogress = new ProgressDialog(this,R.drawable.waiting);
         myprogress.show();
     }
     public void upData(List<Map<String,String>> d){
         if(d.size()==0){
-            handler.sendEmptyMessage(0x3);
-            return ;
+            if(recyclerView.getmStatus() == mRecyclerView.STATUS_PULLTOREFRESH){
+                uiutils.showToast("没有你要找的书哦!");
+                myprogress.cancel();
+                recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
+            }else
+                recyclerView.setStatus(mRecyclerView.STATUS_END);
+            return;
         }
-        if(isSearch){
-            data.clear();
-            data.addAll(d);
+        if(recyclerView.getmStatus() == mRecyclerView.STATUS_PULLTOREFRESH){
+            adapter.upDate(d);
+            recyclerView.scrollToPosition(0);
         }
         else{
-            for(int i = 0;i<d.size();i++){
-                data.add(d.get(i));
-            }
+          adapter.appendDate(d);
         }
-        handler.sendEmptyMessage(0x1);
+        page++;
+        myprogress.cancel();
+        if(totalPage != 0 && (recyclerView.getmStatus() == mRecyclerView.STATUS_PULLTOREFRESH)
+                && adapter.getDataSize() >= totalPage){
+            recyclerView.setStatus(mRecyclerView.STATUS_END);
+            return;
+        }
+         recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
     }
     public String  getUrl(){
         String str = "";
-        if(isSearch){
-            str = url +"&page="+page+"&title="+edit.getText().toString();
-        }else
-        {
-            page++;
-            str = url +"&page="+page+"&title="+edit.getText().toString();
+        if(recyclerView.getmStatus() == mRecyclerView.STATUS_PULLTOREFRESH){
+            page = 1 ;
         }
+        str = url +"&page="+page+"&title="+title;
         return str;
     }
 
@@ -299,5 +264,14 @@ public class library extends BaseActivity implements
     public void onResume(){
         super.onResume();
         imm.hideSoftInputFromWindow(edit.getWindowToken(), 0); //强制隐藏键盘
+    }
+
+    @Override
+    public void onLoadMore() {
+        if(recyclerView.getmStatus() == mRecyclerView.STATUS_DEFAULT){
+            recyclerView.setStatus(mRecyclerView.STATUS_REFRESHING);
+            getSearch();
+
+        }
     }
 }

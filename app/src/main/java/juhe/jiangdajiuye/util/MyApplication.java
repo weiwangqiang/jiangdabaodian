@@ -88,7 +88,7 @@ public class MyApplication extends Application {
         Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         Beta.upgradeDialogLayoutId = R.layout.upgrade_dialog;
 //        CrashReport.initCrashReport(getApplicationContext(), APP_ID, true);
-        Bugly.init(this, APP_ID, true, strategy);
+        Bugly.init(this, APP_ID, false, strategy);
     }
 
     public static MyApplication getApplication(){

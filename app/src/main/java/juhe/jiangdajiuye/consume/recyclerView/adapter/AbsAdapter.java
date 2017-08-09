@@ -25,6 +25,11 @@ public abstract class AbsAdapter<T extends Object>  extends  RecyclerView.Adapte
     protected  final int TYPE_ITEM = 1;
     protected  final int TYPE_FOOTER = 2;
 
+    public static final int STATUS_DEFAULT = 0;//不在刷新或者end状态
+    public static final int STATUS_REFRESHING = 0x10 ;
+    public static final int STATUS_PULLTOREFRESH = 0x11;
+    public static final int STATUS_END = 0x12;
+    public static final int STATUS_ERROR = 0x13;
     public int getDataSize() {
         if(data != null )
             return data.size();
@@ -124,6 +129,8 @@ public abstract class AbsAdapter<T extends Object>  extends  RecyclerView.Adapte
             return v ;
         }
     }
+    public abstract void stateChange(int state);
+
 
     /**
      * 获取ItemViewHolder

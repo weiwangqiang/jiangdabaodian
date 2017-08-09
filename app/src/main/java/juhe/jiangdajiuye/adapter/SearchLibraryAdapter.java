@@ -7,10 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Map;
+
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.util.MyApplication;
 import juhe.jiangdajiuye.util.SkinManager;
+
+import static juhe.jiangdajiuye.R.id.footerProgressBar;
 
 
 /**
@@ -20,10 +24,7 @@ import juhe.jiangdajiuye.util.SkinManager;
  * @since 2017-08-08
  */
 
-public class SDImpAdapter extends AbsAdapter<MessageItem> {
-    public static final int  STATUS_DEFAULT = 0 ;
-    public static final int STATUS_REFRESHING  = 1;
-    public static final int STATUS_END  = 2;
+public class SearchLibraryAdapter extends AbsAdapter<Map<String,String>> {
 
     public mItemViewHodler itemViewHodler ;
     public mFooterViewHolder footerViewHolder ;
@@ -34,10 +35,10 @@ public class SDImpAdapter extends AbsAdapter<MessageItem> {
 
     public OnItemClickListener itemClickListener ;
     public interface  OnItemClickListener{
-        void OnItemClick(MessageItem item);
+        void OnItemClick(Map<String,String> item);
     }
 
-    public SDImpAdapter(@LayoutRes int layout) {
+    public SearchLibraryAdapter(@LayoutRes int layout) {
         super(layout);
     }
 
@@ -50,7 +51,7 @@ public class SDImpAdapter extends AbsAdapter<MessageItem> {
     @NonNull
     @Override
     public ItemViewHolder getItemViewHolder(ViewGroup parent) {
-        return new mItemViewHodler(SkinManager.inflater(mLayout));
+        return new mItemViewHodler(SkinManager.inflater(MyApplication.getContext(),mLayout,parent,false));
     }
 
     /**
@@ -63,7 +64,8 @@ public class SDImpAdapter extends AbsAdapter<MessageItem> {
     @Override
     public FooterViewHolder getFooterViewHolder(ViewGroup parent) {
         if(footerViewHolder == null)
-            footerViewHolder = new mFooterViewHolder(SkinManager.inflater(R.layout.footer));
+            footerViewHolder = new mFooterViewHolder(SkinManager.inflater(MyApplication.getContext(),
+                    R.layout.footer,parent,false));
         return footerViewHolder ;
     }
 
@@ -75,27 +77,24 @@ public class SDImpAdapter extends AbsAdapter<MessageItem> {
      * @param data
      */
     @Override
-    public void bindItemViewHolder(RecyclerView.ViewHolder holder, int position, MessageItem data) {
+    public void bindItemViewHolder(RecyclerView.ViewHolder holder, int position, final Map<String,String> data) {
         if(!(holder instanceof mItemViewHodler)) return;
-        try{
-            ((mItemViewHodler)holder).title.setText(data.getTitle());
-            ((mItemViewHodler)holder).time.setText(data.getTime());
-            if(null != data.getLocate()){
-                ((mItemViewHodler)holder).place.setVisibility(View.VISIBLE);
-                ((mItemViewHodler)holder).place.setText(data.getLocate());
-            }
-            if(data.getFrom() != null){
-                ((mItemViewHodler)holder).company.setText(data.getFrom());
-                ((mItemViewHodler)holder).company.setVisibility(View.VISIBLE);
-            }
-            if(data.getIndustry()!= null){
-                ((mItemViewHodler)holder).work.setVisibility(View.VISIBLE);
-                ((mItemViewHodler)holder).work.setText(data.getIndustry());
-            }
-
+        try
+        {
+            ((mItemViewHodler) holder).book.setText(data.get("book").toString());
+            ((mItemViewHodler) holder).editor.setText(data.get("editor").toString());
+            ((mItemViewHodler) holder).available.setText(data.get("available").toString());
+            ((mItemViewHodler) holder).number.setText(data.get("number").toString());
         }catch(Exception e){
             e.printStackTrace();
         }
+        ((mItemViewHodler)holder).root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(null!= itemClickListener )
+                    itemClickListener.OnItemClick(data);
+            }
+        });
     }
 
 
@@ -115,38 +114,44 @@ public class SDImpAdapter extends AbsAdapter<MessageItem> {
     }
 
     public class mItemViewHodler extends ItemViewHolder{
-        TextView title,time,place,company,work;
-
-        private mItemViewHodler(View itemView) {
+        TextView book,editor,available,number;
+        public mItemViewHodler(View itemView) {
             super(itemView);
-            title = (TextView) getView(R.id.title);
-            time = (TextView) getView(R.id.time);
-            place = (TextView)getView(R.id.place);
-            company = (TextView)getView(R.id.company);
-            work = (TextView)getView(R.id.work);
-            place.setVisibility(View.GONE);
-            company.setVisibility(View.GONE);
-            work.setVisibility(View.GONE);
+            book = (TextView) itemView.findViewById(R.id.search_book);
+            editor = (TextView)itemView.findViewById(R.id.search_editor);
+            available = (TextView)itemView.findViewById(R.id.search_available);
+            number = (TextView)itemView.findViewById(R.id.search_number);
         }
     }
     public class mFooterViewHolder extends FooterViewHolder{
         public TextView tv;
+        public View progressBar ;
         public mFooterViewHolder(View itemView) {
             super(itemView);
             tv = (TextView) getView(R.id.footerTitle);
+            progressBar = getView(footerProgressBar);
         }
     }
-    public void setStatus(int status){
+    @Override
+    public void stateChange(int state) {
         if(footerViewHolder == null) return;
-        switch (status){
+        switch (state){
             case STATUS_DEFAULT:
-                footerViewHolder.tv.setText("上卡加载更多");
+                footerViewHolder.tv.setText("上拉加载更多");
+                footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case STATUS_REFRESHING:
                 footerViewHolder.tv.setText("正在加载");
+                footerViewHolder.progressBar.setVisibility(View.VISIBLE);
+
                 break;
             case STATUS_END:
                 footerViewHolder.tv.setText("没有更多了");
+                footerViewHolder.progressBar.setVisibility(View.GONE);
+                break;
+            case STATUS_ERROR:
+                footerViewHolder.tv.setText("网络出错，请连接后再试");
+                footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
         }
     }

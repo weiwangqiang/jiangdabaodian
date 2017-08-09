@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import juhe.jiangdajiuye.adapter.ImpAdapter;
+import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
 
 
 /**
@@ -27,8 +27,9 @@ public class mRecyclerView extends RecyclerView {
     public static final int STATUS_DEFAULT = 0;//不在刷新或者end状态
     public static final int STATUS_REFRESHING = 1 ;
     public static final int STATUS_PULLTOREFRESH = 2;
-    public static final int STATUS_END = 3;
-    public static final int STATUS_ERROR = 4;
+    public static final int STATUS_LOADMORE = 3;
+    public static final int STATUS_END = 4;
+    public static final int STATUS_ERROR = 5;
 
     @Override
     public void addOnAttachStateChangeListener(OnAttachStateChangeListener listener) {
@@ -69,19 +70,19 @@ public class mRecyclerView extends RecyclerView {
 
     public void setStatus(int status){
         mStatus = status ;
-        if(getAdapter() instanceof ImpAdapter){
+        if(getAdapter() instanceof AbsAdapter){
             switch (status){
                 case STATUS_DEFAULT:
-                    ((ImpAdapter) getAdapter()).setStatus(ImpAdapter.STATUS_DEFAULT);
+                    ((AbsAdapter) getAdapter()).stateChange(AbsAdapter.STATUS_DEFAULT);
                     break;
                 case STATUS_REFRESHING:
-                    ((ImpAdapter) getAdapter()).setStatus(ImpAdapter.STATUS_REFRESHING);
+                    ((AbsAdapter) getAdapter()).stateChange(AbsAdapter.STATUS_REFRESHING);
                     break;
                 case STATUS_END:
-                    ((ImpAdapter) getAdapter()).setStatus(ImpAdapter.STATUS_END);
+                    ((AbsAdapter) getAdapter()).stateChange(AbsAdapter.STATUS_END);
                     break;
                 case STATUS_ERROR:
-                    ((ImpAdapter) getAdapter()).setStatus(ImpAdapter.STATUS_ERROR);
+                    ((AbsAdapter) getAdapter()).stateChange(AbsAdapter.STATUS_ERROR);
 
             }
         }
