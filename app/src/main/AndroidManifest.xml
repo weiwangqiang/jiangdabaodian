@@ -23,7 +23,6 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
     <!-- Optional for location -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
@@ -196,6 +195,13 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
+        <receiver android:name=".tool.NetState">
+            <intent-filter>
+                <action android:name="android.NET.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.Net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
 
 
         <!--腾信bugly-->

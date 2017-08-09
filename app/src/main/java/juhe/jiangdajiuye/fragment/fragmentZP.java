@@ -99,15 +99,14 @@ public class fragmentZP extends Fragment {
      * 绑定网络监听
      */
     public void bindNetState(){
-        netState = new NetState();
-        netState.setNetLister(new NetState.NetLister() {
+        NetState.addNetLister(new NetState.NetLister() {
             @Override
             public void OutInternet() {
                 error.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void GetInternet() {
+            public void GetInternet(int type) {
                 error.setVisibility(View.GONE);
             }
         });
@@ -196,7 +195,7 @@ public class fragmentZP extends Fragment {
         String url = getUrl();
         Log.i(TAG,"url is "+url);
         urlConnection connection = new urlConnection(getActivity());
-        connection.setgetLister(new urlConnection.NetListener(){
+        connection.setNetListener(new urlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {

@@ -218,7 +218,7 @@ public class library extends BaseActivity implements
         //解决中文乱码问题
         HttpUrl parsed = HttpUrl.parse(getUrl());
         final urlConnection connection= new urlConnection(this);
-        connection.setgetLister(new urlConnection.NetListener() {
+        connection.setNetListener(new urlConnection.NetListener() {
             @Override
             public void success(final String response, int code) {
                 if(isSearch){

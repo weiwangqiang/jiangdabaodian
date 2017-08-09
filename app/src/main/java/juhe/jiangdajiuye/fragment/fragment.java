@@ -2,7 +2,6 @@ package juhe.jiangdajiuye.fragment;
 
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -83,8 +82,7 @@ public class fragment extends Fragment  {
      * 绑定网络监听
      */
     public void bindNetState(){
-        netState = new NetState();
-        netState.setNetLister(new NetState.NetLister() {
+        NetState.addNetLister(new NetState.NetLister() {
             @Override
             public void OutInternet() {
                 if(isfirst){
@@ -92,13 +90,10 @@ public class fragment extends Fragment  {
                 }
             }
             @Override
-            public void GetInternet() {
-                error.setVisibility(View.GONE);
+            public void GetInternet(int type) {
+//                error.setVisibility(View.GONE);
             }
         });
-        IntentFilter filter = new IntentFilter();
-        getActivity().registerReceiver(netState, filter);
-        netState.onReceive(getActivity(), null);
     }
 
     public void findId(){
@@ -186,7 +181,7 @@ public class fragment extends Fragment  {
         String url = getUrl();
 
         urlConnection connection = new urlConnection(getActivity());
-        connection.setgetLister(new urlConnection.NetListener(){
+        connection.setNetListener(new urlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {
@@ -294,7 +289,6 @@ public class fragment extends Fragment  {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().unregisterReceiver(netState);
     }
     @Override
     public void onHiddenChanged (boolean hidden){

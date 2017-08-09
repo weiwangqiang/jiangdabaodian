@@ -2,7 +2,6 @@ package juhe.jiangdajiuye.fragment;
 
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -76,36 +75,31 @@ public class MainFragment extends Fragment implements OnLoadMoreListener {
         findId();
         initRefresh();
         initList();
-//        bindNetState();
+        bindNetState();
     }
 
     /**
      * 绑定网络监听
      */
     public void bindNetState(){
-        netState = new NetState();
-        netState.setNetLister(new NetState.NetLister() {
+        NetState.addNetLister(new NetState.NetLister() {
             @Override
             public void OutInternet() {
-                Log.i(TAG, "OutInternet: ");
                 if(isfirst){
                     error.setVisibility(View.VISIBLE);
                 }
             }
             @Override
-            public void GetInternet() {
+            public void GetInternet(int type) {
                 Log.i(TAG, "GetInternet: ");
                 if(recyclerView != null){
                     if(recyclerView.getmStatus() == mRecyclerView.STATUS_ERROR){
                         recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
                     }
                 }
-                error.setVisibility(View.GONE);
+//                error.setVisibility(View.GONE);
             }
         });
-        IntentFilter filter = new IntentFilter();
-        getActivity().registerReceiver(netState, filter);
-        netState.onReceive(getActivity(), null);
     }
 
     public void findId(){
@@ -171,10 +165,11 @@ public class MainFragment extends Fragment implements OnLoadMoreListener {
         String url = getUrl();
         Log.i(TAG,"url is "+url+" time :");
         urlConnection connection = new urlConnection(getActivity());
-        connection.setgetLister(new urlConnection.NetListener(){
+        connection.setNetListener(new urlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {
+                upDate(parsetools.parseMainMes(response.trim(),tab));
                 upDate(parsetools.parseMainMes(response.trim(),tab));
                 swipeRefreshLayout.setRefreshing(false);
                 recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
@@ -228,7 +223,6 @@ public class MainFragment extends Fragment implements OnLoadMoreListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().unregisterReceiver(netState);
     }
     @Override
     public void onLoadMore() {

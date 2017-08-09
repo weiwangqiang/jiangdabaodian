@@ -31,7 +31,7 @@ public class urlConnection   {
         void success(String response ,int code);
         void failure(Exception e,String Error,int code);
     }
-    public void setgetLister(NetListener lister){
+    public void setNetListener(NetListener lister){
         this.lister = lister;
     }
 

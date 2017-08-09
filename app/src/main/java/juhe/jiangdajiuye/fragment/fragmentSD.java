@@ -79,8 +79,7 @@ public class fragmentSD extends Fragment  {
      * 绑定网络监听
      */
     public void bindNetState(){
-        netState = new NetState();
-        netState.setNetLister(new NetState.NetLister() {
+        NetState.addNetLister(new NetState.NetLister() {
             @Override
             public void OutInternet() {
                 Log.e(TAG,"error is visible");
@@ -88,7 +87,7 @@ public class fragmentSD extends Fragment  {
             }
 
             @Override
-            public void GetInternet() {
+            public void GetInternet(int type) {
                 Log.e(TAG,"error is gone");
                 error.setVisibility(View.GONE);
                 if(UserActionRecordUtils.ipbean == null){
@@ -168,7 +167,7 @@ public class fragmentSD extends Fragment  {
         String url = getUrl();
         Log.e(TAG,"url is "+url);
         urlConnection connection = new urlConnection(getActivity());
-        connection.setgetLister(new urlConnection.NetListener(){
+        connection.setNetListener(new urlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {
