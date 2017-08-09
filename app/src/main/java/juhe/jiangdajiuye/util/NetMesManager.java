@@ -94,7 +94,7 @@ public class NetMesManager {
 
     public static void setIP(Context mCtx) {
         urlConnection connection = new urlConnection(mCtx);
-        connection.setgetLister(new urlConnection.getLister(){
+        connection.setgetLister(new urlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {

@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.util.NetMesManager;
 import juhe.jiangdajiuye.util.UserActionRecordUtils;
 
 /**
@@ -45,7 +44,7 @@ public class welcome extends BaseActivity {
         isfirst = sharedPreferences.getBoolean("first",true);
         init();
         UserActionRecordUtils.setComeTime(System.currentTimeMillis());
-        NetMesManager.setIP(this);
+//        NetMesManager.setIP(this);
     }
 
 
@@ -120,21 +119,6 @@ public class welcome extends BaseActivity {
             startActivity(intent);
             welcome.this.finish();
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
     }
 
     @Override

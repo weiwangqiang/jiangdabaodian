@@ -22,6 +22,7 @@ import java.util.List;
 import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.SDrecyclerAdapter;
+import juhe.jiangdajiuye.consume.recyclerView.mRecyclerView;
 import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.tool.NetState;
 import juhe.jiangdajiuye.tool.parseTools;
@@ -38,7 +39,7 @@ public class fragmentSD extends Fragment  {
     private NetState netState;
     private String TAG = "fragmentSD";
     private String url = "http://ujs.91job.gov.cn/news/index?tag=tzgg";
-    public RecyclerView recyclerView;
+    public mRecyclerView recyclerView;
     private LinearLayoutManager manager;
 
     public List<MessageItem>  data = new ArrayList<>();
@@ -55,7 +56,6 @@ public class fragmentSD extends Fragment  {
     private parseTools parsetools =  parseTools.getparseTool() ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e(TAG,"fragmentSD  is onCreateView");
         view = inflater.inflate(R.layout.fragment,container,false);
         init();
         return view;
@@ -68,7 +68,7 @@ public class fragmentSD extends Fragment  {
 
     public void findId(){
         error = view.findViewById(R.id.error);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView = (mRecyclerView) view.findViewById(R.id.recyclerView);
         manager =  new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
@@ -168,7 +168,7 @@ public class fragmentSD extends Fragment  {
         String url = getUrl();
         Log.e(TAG,"url is "+url);
         urlConnection connection = new urlConnection(getActivity());
-        connection.setgetLister(new urlConnection.getLister(){
+        connection.setgetLister(new urlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {

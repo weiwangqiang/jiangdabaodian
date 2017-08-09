@@ -40,9 +40,7 @@ import java.util.List;
 import cn.jpush.android.api.JPushInterface;
 import juhe.jiangdajiuye.adapter.FragmentAdapter;
 import juhe.jiangdajiuye.broadCast.MyJushReceiver;
-import juhe.jiangdajiuye.fragment.fragmentSD;
-import juhe.jiangdajiuye.fragment.fragmentXJ;
-import juhe.jiangdajiuye.fragment.fragmentZP;
+import juhe.jiangdajiuye.fragment.MainFragment;
 import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.tool.toast;
 import juhe.jiangdajiuye.util.MyApplication;
@@ -148,9 +146,12 @@ public class MainActivity extends AppCompatActivity
         tencent = Tencent.createInstance(APP_ID, this);
     }
     private void initViewPager(){
-        list.add(new fragmentXJ());
-        list.add(new fragmentZP());
-        list.add( new fragmentSD());
+        list.add(MainFragment.newInstance("http://ujs.91job.gov.cn/teachin/index?",
+                "XUANJIANG",MainFragment.XUANJIANG));
+        list.add(MainFragment.newInstance("http://ujs.91job.gov.cn/job/search?",
+                "ZHAOPIN",MainFragment.ZHAOPIN));
+        list.add(MainFragment.newInstance("http://ujs.91job.gov.cn/news/index?tag=tzgg&",
+                "XINXI",MainFragment.XINXI));
         //刚开始只会加载前两个fragment
         adapter  = new FragmentAdapter(getSupportFragmentManager(), list);
         viewPager.setAdapter(adapter);

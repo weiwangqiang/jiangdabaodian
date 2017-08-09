@@ -73,7 +73,6 @@ dependencies {
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     compile 'cn.bmob.android:bmob-sdk:3.5.5'
 
-//    classpath 'com.antfortune.freeline:gradle:0.8.7'
 //    compile 'com.squareup.okhttp:okhttp:2.4.0'
 //    compile 'com.squareup.okio:okio:1.4.0'
 //    compile 'cn.bmob.android:http-legacy:1.0'

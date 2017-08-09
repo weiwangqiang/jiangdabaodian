@@ -186,7 +186,7 @@ public class fragment extends Fragment  {
         String url = getUrl();
 
         urlConnection connection = new urlConnection(getActivity());
-        connection.setgetLister(new urlConnection.getLister(){
+        connection.setgetLister(new urlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {

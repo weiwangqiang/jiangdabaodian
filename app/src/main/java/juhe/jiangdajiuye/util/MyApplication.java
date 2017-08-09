@@ -1,6 +1,7 @@
 package juhe.jiangdajiuye.util;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -22,10 +23,17 @@ public class MyApplication extends Application {
     public static final String APP_ID = "19ecb1a49a"; // TODO 替换成bugly上注册的appid
     private String Bmob_AppId = "f1a3949757fdc914a823e15eef961ce6";//bmob
 
-    protected static MyApplication context;
+    protected static MyApplication application;
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public static Context context ;
     @Override
     public void onCreate() {
         super.onCreate();
+        application = this;
         context = this;
         JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);     		// 初始化 JPush
@@ -84,6 +92,6 @@ public class MyApplication extends Application {
     }
 
     public static MyApplication getApplication(){
-        return context;
+        return application;
     }
 }

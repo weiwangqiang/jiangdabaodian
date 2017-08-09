@@ -1,7 +1,9 @@
 package juhe.jiangdajiuye.util;
 
+
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,20 +16,22 @@ import java.util.concurrent.Executors;
  * Created by wangqiang on 2016/9/29.
  */
 public class urlConnection   {
-    public getLister lister;
+    private String TAG = "urlConnection";
+    public NetListener lister;
     public ExecutorService service;
     public Context mCtx;
     public urlConnection(Context mCtx){
         //指定线程池数
         this.mCtx = mCtx;
-        service = Executors.newFixedThreadPool (Runtime.getRuntime().availableProcessors());
+        int size  = Runtime.getRuntime().availableProcessors() ;
+        service = Executors.newFixedThreadPool (size +1);
     }
 
-    public interface getLister{
+    public interface NetListener{
         void success(String response ,int code);
         void failure(Exception e,String Error,int code);
     }
-    public void setgetLister(getLister lister){
+    public void setgetLister(NetListener lister){
         this.lister = lister;
     }
 
@@ -36,6 +40,7 @@ public class urlConnection   {
      * @param url
      */
     public void get(final String url) {
+
         service.execute(new Runnable() {
             @Override
             public void run() {
@@ -48,6 +53,7 @@ public class urlConnection   {
     int ResponseCode = 0;
     public  void realget(String url1){
         result = "";
+        Log.i(TAG, "realget: "+url1);
         BufferedReader reader =  null;
         try{
             URL url = new URL(url1);

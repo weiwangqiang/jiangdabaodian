@@ -196,7 +196,7 @@ public class fragmentZP extends Fragment {
         String url = getUrl();
         Log.i(TAG,"url is "+url);
         urlConnection connection = new urlConnection(getActivity());
-        connection.setgetLister(new urlConnection.getLister(){
+        connection.setgetLister(new urlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {

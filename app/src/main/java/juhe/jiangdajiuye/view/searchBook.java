@@ -104,7 +104,7 @@ public class searchBook extends BaseActivity{
     }
     public void getSearch(){
         urlConnection connection = new urlConnection(this);
-        connection.setgetLister(new urlConnection.getLister(){
+        connection.setgetLister(new urlConnection.NetListener(){
 
             @Override
             public void success(String result, int code) {

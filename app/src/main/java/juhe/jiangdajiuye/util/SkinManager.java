@@ -26,8 +26,11 @@ public class SkinManager {
         }
         return mSkinManager  ;
     }
+    public static View inflater(@LayoutRes int layout){
+        return inflater(MyApplication.getContext(), layout);
+    }
     public static View inflater(Context mCtx , @LayoutRes int layout){
-        return inflate(mCtx, layout, null, false);
+        return inflater(mCtx, layout, null, false);
     }
 
     /**
@@ -38,7 +41,7 @@ public class SkinManager {
      * @param attachToRoot 是否将view贴到parent上
      * @return view
      */
-    public static  View inflate(Context mCtx, @LayoutRes int layout, ViewGroup parent , boolean attachToRoot){
+    public static  View inflater(Context mCtx, @LayoutRes int layout, ViewGroup parent , boolean attachToRoot){
         LayoutInflater mLayoutInflater = (LayoutInflater) mCtx
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root = mLayoutInflater.inflate(layout, parent, attachToRoot);

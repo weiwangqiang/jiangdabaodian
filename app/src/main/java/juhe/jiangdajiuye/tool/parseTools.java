@@ -20,11 +20,25 @@ import juhe.jiangdajiuye.entity.MessageItem;
 public class parseTools {
     private String TAG = "parseTools";
     public static parseTools parse;
+    public static final int XUANJIANG = 1;
+    public static final int ZHAOPIN = 2;
+    public static final int XINXI = 3;
     public static parseTools getparseTool(){
         if(parse==null){
             parse = new parseTools();
         }
         return parse;
+    }
+    public List<MessageItem> parseMainMes(String response,int tab){
+        switch (tab){
+            case XUANJIANG:
+                return parseXuanjiang(response);
+            case ZHAOPIN:
+                return parseZhaopin(response);
+            case XINXI:
+                return parseShudi(response);
+        }
+        return null ;
     }
     //宣讲会
      public List<MessageItem> parseXuanjiang(String response) {
