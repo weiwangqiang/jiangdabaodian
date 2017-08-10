@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import juhe.jiangdajiuye.util.MyApplication;
 import juhe.jiangdajiuye.util.ToastUtils;
 
 

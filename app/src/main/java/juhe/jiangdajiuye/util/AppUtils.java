@@ -5,6 +5,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 
+import juhe.jiangdajiuye.core.MyApplication;
+
 /**
  * class description here
  *

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import juhe.jiangdajiuye.core.MyApplication;
 import juhe.jiangdajiuye.entity.IPBean;
 import juhe.jiangdajiuye.entity.recordEntity.visitCount;
 

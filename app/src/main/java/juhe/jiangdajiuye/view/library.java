@@ -24,7 +24,7 @@ import juhe.jiangdajiuye.adapter.SearchLibraryAdapter;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.consume.recyclerView.mRecyclerView;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.tool.NetState;
+import juhe.jiangdajiuye.broadCast.NetState;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.urlConnection;

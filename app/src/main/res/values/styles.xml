@@ -52,11 +52,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <!--分享界面的弹出动画-->
-    <style name="popWindow_animation">
-        <item name="android:windowEnterAnimation">@anim/popupwindow_slide_in_from_top</item>
-        <item name="android:windowExitAnimation">@anim/popupwindow_slide_out_to_top</item>
-    </style>
+        <!--分享界面的弹出动画-->
+        <style name="popWindow_animation">
+            <item name="android:windowEnterAnimation">@anim/popupwindow_slide_in_from_top</item>
+            <item name="android:windowExitAnimation">@anim/popupwindow_slide_out_to_top</item>
+        </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

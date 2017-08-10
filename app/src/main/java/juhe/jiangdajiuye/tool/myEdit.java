@@ -14,22 +14,22 @@ import android.widget.EditText;
 import juhe.jiangdajiuye.R;
 
 
-public  class my_Edit extends EditText implements OnFocusChangeListener, TextWatcher {
+public  class myEdit extends EditText implements OnFocusChangeListener, TextWatcher {
 
     private Drawable mClearDrawable,search;
     private boolean hasFoucs;
 	private Context context;
 
-	public my_Edit(Context context) {
+	public myEdit(Context context) {
 		this(context, null);
 		this.context = context;
 		// TODO Auto-generated constructor stub
 	}
-     public my_Edit(Context context, AttributeSet attrs) {
+     public myEdit(Context context, AttributeSet attrs) {
 	    	this(context, attrs, android.R.attr.editTextStyle);
 	    } 
      
-     public my_Edit(Context context, AttributeSet attrs, int defStyle) {
+     public myEdit(Context context, AttributeSet attrs, int defStyle) {
          super(context, attrs, defStyle);
          init();
      }

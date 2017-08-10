@@ -22,7 +22,7 @@ import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.recyclerAdapter;
 import juhe.jiangdajiuye.entity.MessageItem;
-import juhe.jiangdajiuye.tool.NetState;
+import juhe.jiangdajiuye.broadCast.NetState;
 import juhe.jiangdajiuye.tool.parseOther;
 import juhe.jiangdajiuye.util.urlConnection;
 import juhe.jiangdajiuye.view.browse;

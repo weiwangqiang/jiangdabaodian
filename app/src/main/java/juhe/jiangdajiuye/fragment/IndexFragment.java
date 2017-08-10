@@ -20,7 +20,7 @@ import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.consume.recyclerView.mRecyclerView;
 import juhe.jiangdajiuye.entity.MessageItem;
-import juhe.jiangdajiuye.tool.NetState;
+import juhe.jiangdajiuye.broadCast.NetState;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.util.urlConnection;
@@ -65,6 +65,29 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         view = inflater.inflate(R.layout.fragment,container,false);
         init();
         return view;
+    }
+
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+    }
+
+    /**
+     * Called when the Fragment is no longer resumed.  This is generally
+     * tied to {@link Activity#onPause() Activity.onPause} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: ");
     }
 
     public void init(){

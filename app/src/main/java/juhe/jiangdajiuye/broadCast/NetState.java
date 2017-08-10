@@ -1,11 +1,10 @@
-package juhe.jiangdajiuye.tool;
+package juhe.jiangdajiuye.broadCast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,6 @@ public class NetState extends BroadcastReceiver {
     private void setmState(int type) {
         if(mState == type) return;
         mState = type ;
-        Log.i(TAG, "setmState: listener size is "+listers.size() );
         switch (type){
             case TYPE_ERROR:
                 for(NetLister netLister : listers){

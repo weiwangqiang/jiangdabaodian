@@ -34,7 +34,7 @@
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal"
                 >
-                <juhe.jiangdajiuye.tool.my_Edit
+                <juhe.jiangdajiuye.tool.myEdit
                     android:id="@+id/library_edit"
                     android:layout_width="match_parent"
                     android:layout_margin="8dp"

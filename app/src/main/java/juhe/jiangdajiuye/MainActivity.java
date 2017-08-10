@@ -43,7 +43,7 @@ import juhe.jiangdajiuye.broadCast.MyJushReceiver;
 import juhe.jiangdajiuye.fragment.IndexFragment;
 import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.tool.toast;
-import juhe.jiangdajiuye.util.MyApplication;
+import juhe.jiangdajiuye.core.MyApplication;
 import juhe.jiangdajiuye.util.TabLayoutUtils;
 import juhe.jiangdajiuye.util.UserActionRecordUtils;
 import juhe.jiangdajiuye.util.UserBrowseRecordUtils;

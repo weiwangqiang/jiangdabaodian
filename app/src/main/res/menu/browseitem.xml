@@ -8,6 +8,12 @@
         android:background="@color/white"
         app:showAsAction="never" />
     <item
+        android:id="@+id/browse_calendar"
+        android:icon="@drawable/ic_share_white"
+        android:title="添加到日历"
+        android:background="@color/white"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/browse_collect"
         android:icon="@drawable/collectbg"
         android:checked="false"

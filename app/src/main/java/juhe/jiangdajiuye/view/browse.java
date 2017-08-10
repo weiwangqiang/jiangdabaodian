@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,7 +18,6 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
@@ -30,12 +30,14 @@ import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.shareDialog;
+import juhe.jiangdajiuye.util.ToastUtils;
 
 /**
  * Created by wangqiang on 2016/10/1.
@@ -195,9 +197,55 @@ public class browse extends BaseActivity {
              return true;
           case R.id.browse_open:
               openInBrowse();
+              return true;  
+          case R.id.browse_calendar:
+              calendar();
               return true;
      }
         return super.onOptionsItemSelected(item);
+    }
+    public int SendCalendarCode = 0x12;
+    private void calendar() {
+        Log.i(TAG, "calendar: ");
+        String LOCATION;
+
+        if(company == null && location == null)
+            LOCATION = "地点未知，请点击修改";
+        else
+        {
+            LOCATION = company + "  "+ location ;
+        }
+        String TITLE = title ;
+        String[] tiems = time.split("-|:| ");
+        int size = tiems.length ;
+        for(String s : tiems){
+            System.out.println(" ; "+s);
+        }
+        Calendar beginTime = Calendar.getInstance();
+        Calendar endTime = Calendar.getInstance();
+        if(tiems.length >= 3){
+            int year = Integer.parseInt(tiems[0]);
+            int month = Integer.parseInt(tiems[1]);
+            month--;
+            int day = Integer.parseInt(tiems[2]);
+            if(tiems.length == 3){
+                beginTime.set(year, month, day, 0, 0);
+                endTime.set(year, month, day+1, 0, 0);
+            }else {
+                int hourS = Integer.parseInt(tiems[3]);
+                int minuteS = Integer.parseInt(tiems[4]);
+                int hourE = Integer.parseInt(tiems[5]);
+                int minuteE = Integer.parseInt(tiems[6]);
+                beginTime.set(year, month, day, hourS, minuteS);
+                endTime.set(year, month, day, hourE, minuteE);
+            }
+        }
+        Intent calendarIntent = new Intent(Intent.ACTION_INSERT, CalendarContract.Events.CONTENT_URI);
+        calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
+        calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
+        calendarIntent.putExtra(CalendarContract.Events.TITLE,title);
+        calendarIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, LOCATION);
+        startActivityForResult(calendarIntent,SendCalendarCode);
     }
 
     private void openInBrowse() {
@@ -219,18 +267,14 @@ public class browse extends BaseActivity {
     }
     private void showCollect(){
         if(ischeck){
-            Log.e(TAG,"is false");
-//            collect.setChecked(false);
             uiutils.showToast("取消成功");
             Menutitle = "收藏";
             menu.findItem(R.id.browse_collect).setTitle("收藏");
 
         }
         else if(!ischeck){
-//            collect.setChecked(true);
             uiutils.showToast("收藏成功");
             Menutitle = "取消收藏";
-            Log.i(TAG, "showCollect: 取消收藏");
             menu.findItem(R.id.browse_collect).setTitle("取消收藏");
 
         }
@@ -276,7 +320,6 @@ public class browse extends BaseActivity {
         req.transaction = "webPager";
         req.message = message;
         Boolean get = api.sendReq(req);
-//        api.handleIntent(getIntent(),this);
         dialog.cancel();
         Log.e(TAG,"share return is "+get);
     }
@@ -324,12 +367,22 @@ public class browse extends BaseActivity {
     }
     //    //要想调用IUiListener 必须重写此函数
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Tencent.onActivityResultData(requestCode, resultCode, data, baseuiLister);
-        if(requestCode == Constants.REQUEST_QQ_SHARE || requestCode == Constants.REQUEST_QZONE_SHARE){
-            if (resultCode == Constants.ACTIVITY_OK) {
-                Tencent.handleResultData(data, new baseUiLister());
+        if(requestCode == SendCalendarCode){
+            if(resultCode == RESULT_OK){
+                ToastUtils.showToast("添加成功!");
             }
+            Log.i(TAG, "onActivityResult: "+resultCode+" ok "+RESULT_OK);
+            return;
         }
+        Tencent.onActivityResultData(requestCode, resultCode, data, baseuiLister);
+        Log.i(TAG, "onActivityResult: requestCode "+requestCode );
+//        if(requestCode == Constants.REQUEST_QQ_SHARE || requestCode == Constants.REQUEST_QZONE_SHARE){
+//            if (resultCode == Constants.ACTIVITY_OK) {
+//                Log.i(TAG, "onActivityResult: --------------");
+//                Tencent.handleResultData(data, new baseUiLister());
+//            }
+//        }
+
     }
     @Override
     public void onPause(){

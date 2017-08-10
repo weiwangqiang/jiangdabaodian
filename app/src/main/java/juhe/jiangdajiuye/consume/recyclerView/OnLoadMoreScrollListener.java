@@ -3,9 +3,7 @@ package juhe.jiangdajiuye.consume.recyclerView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-/**
- * Created by aspsine on 16/3/13.
- */
+
 public abstract class OnLoadMoreScrollListener extends RecyclerView.OnScrollListener {
 
     @Override

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.util;
+package juhe.jiangdajiuye.core;
 
 import android.app.Application;
 import android.content.Context;
@@ -30,6 +30,8 @@ public class MyApplication extends Application {
     }
 
     public static Context context ;
+    private String[]  permissions =
+            new String[]{"android.permission.READ_PHONE_STATE"};
     @Override
     public void onCreate() {
         super.onCreate();
