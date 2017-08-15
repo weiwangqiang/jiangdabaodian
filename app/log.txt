@@ -48,24 +48,6 @@
 [openamp.d] transforming com/android/dx/command/dexer/Main
 [openamp.d] cn/bmob/v3/update/UpdateDialogActivity traceMethodMap: .onResume()V
 [openamp.d] cn/bmob/v3/update/UpdateDialogActivity traceMethodMap: .onPause()V
-[openamp.d] com/tencent/wxop/stat/EasyActivity traceMethodMap: injectMethod.android/app/Activity
-[openamp.d] com/tencent/wxop/stat/EasyActivity traceMethodMap: injectMethod.android/app/Activity
-[openamp.d] com/tencent/wxop/stat/EasyListActivity traceMethodMap: injectMethod.android/app/ListActivity
-[openamp.d] com/tencent/wxop/stat/EasyListActivity traceMethodMap: injectMethod.android/app/ListActivity
-[openamp.d] juhe/jiangdajiuye/MainActivity traceMethodMap: injectMethod.android/support/v7/app/AppCompatActivity
-[openamp.d] juhe/jiangdajiuye/MainActivity traceMethodMap: injectMethod.android/support/v7/app/AppCompatActivity
-[openamp.d] juhe/jiangdajiuye/core/BaseActivity traceMethodMap: injectMethod.android/support/v7/app/AppCompatActivity
-[openamp.d] juhe/jiangdajiuye/core/BaseActivity traceMethodMap: .onPause()V
-[openamp.w] [WebViewClient===>] replacing static call to juhe/jiangdajiuye/view/Jpush/WebBrowse$1 signature null
-
-[openamp.w] [WebViewClient===>] replacing static call to <init> signature null desc (Ljuhe/jiangdajiuye/view/Jpush/WebBrowse;)V
-
-[openamp.w] [WebViewClient===>] replacing static call to juhe/jiangdajiuye/view/browse$1 signature null
-
-[openamp.w] [WebViewClient===>] replacing static call to <init> signature null desc (Ljuhe/jiangdajiuye/view/browse;)V
-
-[openamp.d] juhe/jiangdajiuye/view/gameOnline traceMethodMap: injectMethod.android/support/v7/app/AppCompatActivity
-[openamp.d] juhe/jiangdajiuye/view/gameOnline traceMethodMap: .onResume()V
 [openamp.d] cn/jpush/android/api/InstrumentedActivity traceMethodMap: injectMethod.android/app/Activity
 [openamp.d] cn/jpush/android/api/InstrumentedActivity traceMethodMap: injectMethod.android/app/Activity
 [openamp.d] cn/jpush/android/api/InstrumentedListActivity traceMethodMap: injectMethod.android/app/ListActivity
@@ -102,3 +84,21 @@
 
 [openamp.d] com/tencent/tauth/AuthActivity traceMethodMap: .onResume()V
 [openamp.d] com/tencent/tauth/AuthActivity traceMethodMap: .onPause()V
+[openamp.d] com/tencent/wxop/stat/EasyActivity traceMethodMap: injectMethod.android/app/Activity
+[openamp.d] com/tencent/wxop/stat/EasyActivity traceMethodMap: injectMethod.android/app/Activity
+[openamp.d] com/tencent/wxop/stat/EasyListActivity traceMethodMap: injectMethod.android/app/ListActivity
+[openamp.d] com/tencent/wxop/stat/EasyListActivity traceMethodMap: injectMethod.android/app/ListActivity
+[openamp.d] juhe/jiangdajiuye/MainActivity traceMethodMap: injectMethod.android/support/v7/app/AppCompatActivity
+[openamp.d] juhe/jiangdajiuye/MainActivity traceMethodMap: injectMethod.android/support/v7/app/AppCompatActivity
+[openamp.d] juhe/jiangdajiuye/core/BaseActivity traceMethodMap: injectMethod.android/support/v7/app/AppCompatActivity
+[openamp.d] juhe/jiangdajiuye/core/BaseActivity traceMethodMap: .onPause()V
+[openamp.w] [WebViewClient===>] replacing static call to juhe/jiangdajiuye/view/Jpush/WebBrowse$1 signature null
+
+[openamp.w] [WebViewClient===>] replacing static call to <init> signature null desc (Ljuhe/jiangdajiuye/view/Jpush/WebBrowse;)V
+
+[openamp.w] [WebViewClient===>] replacing static call to juhe/jiangdajiuye/view/browse$1 signature null
+
+[openamp.w] [WebViewClient===>] replacing static call to <init> signature null desc (Ljuhe/jiangdajiuye/view/browse;)V
+
+[openamp.d] juhe/jiangdajiuye/view/gameOnline traceMethodMap: injectMethod.android/support/v7/app/AppCompatActivity
+[openamp.d] juhe/jiangdajiuye/view/gameOnline traceMethodMap: .onResume()V
