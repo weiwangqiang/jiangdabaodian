@@ -3,6 +3,7 @@ package juhe.jiangdajiuye.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,10 +15,13 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.io.File;
+
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.util.UserActionRecordUtils;
+import juhe.jiangdajiuye.view.constant.FileConstant;
 
 /**
  * Created by wangqiang on 2016/7/3.
@@ -44,19 +48,11 @@ public class welcome extends BaseActivity {
         isfirst = sharedPreferences.getBoolean("first",true);
         init();
         UserActionRecordUtils.setComeTime(System.currentTimeMillis());
-//        NetMesManager.setIP(this);
     }
-
-
-
-
     private void init(){
-        welcome  = (ImageView)findViewById(R.id.welcome_image);
-        float math = (float) Math.random();
-        int ran = (int)(math * image.length);
-        welcome.setBackgroundResource(image[ran]);
-        loading = (ImageView)findViewById(R.id.welcome_Loading);
-        button =  (Button)findViewById(R.id.welcome_button);
+        findId();
+        setBootAdvert();
+
         Loadmation = AnimationUtils.loadAnimation(this,R.anim.loading);//点击跳转后等待的动画
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +103,24 @@ public class welcome extends BaseActivity {
             }
         });
     }
+
+    private void findId() {
+        welcome  = (ImageView)findViewById(R.id.welcome_image);
+        loading = (ImageView)findViewById(R.id.welcome_Loading);
+        button =  (Button)findViewById(R.id.welcome_button);
+    }
+
+    private void setBootAdvert() {
+        float math = (float) Math.random();
+        int ran = (int)(math * image.length);
+        File file = new File(FileConstant.BootAdvertSaveRootFile+FileConstant.BootAdvertSavePictureName);
+        if(file.exists())
+            welcome.setImageDrawable(Drawable.createFromPath(FileConstant.BootAdvertSaveRootFile
+                    +FileConstant.BootAdvertSavePictureName));
+        if(welcome.getDrawable() == null)
+            welcome.setBackgroundResource(image[ran]);
+    }
+
     //跳转到主界面
     public void ToMainActivity(){
         if(!isIn){
@@ -127,6 +141,7 @@ public class welcome extends BaseActivity {
         Loadmation.cancel();
         animation.cancel();
     }
+
 
     /**
      * Called when a view has been clicked.

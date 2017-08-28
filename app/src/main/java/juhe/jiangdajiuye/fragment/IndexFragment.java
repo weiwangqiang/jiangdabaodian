@@ -1,6 +1,7 @@
 package juhe.jiangdajiuye.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,10 +18,10 @@ import java.util.List;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
+import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.consume.recyclerView.mRecyclerView;
 import juhe.jiangdajiuye.entity.MessageItem;
-import juhe.jiangdajiuye.broadCast.NetState;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.util.urlConnection;
@@ -40,7 +41,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     private int tab ;
     public mRecyclerView recyclerView;
     private LinearLayoutManager manager;
-    private NetState netState;
+    private NetStateReceiver netState;
     public List<MessageItem> data = new ArrayList<>();
     public IndexFragmentAdapter adapter;
     //下拉刷新
@@ -48,7 +49,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     private int page = 1;
     private SwipeRefreshLayout swipeRefreshLayout;
     private parseTools parsetools =  parseTools.getparseTool() ;
-
+    private String string = "";
 
     public static IndexFragment newInstance(String url, String TAG, int tab) {
         IndexFragment f = new IndexFragment();
@@ -62,32 +63,48 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.e(TAG,"  is onCreateView");
+        if(view != null)
+            return view ;
         view = inflater.inflate(R.layout.fragment,container,false);
         init();
         return view;
     }
 
     /**
-     * Called when the fragment is visible to the user and actively running.
-     * This is generally
-     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * Called when the Fragment is visible to the user.  This is generally
+     * tied to {@link Activity#onStart() Activity.onStart} of the containing
      * Activity's lifecycle.
      */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: ");
+        Log.i(TAG, "onStart: "+string);
+    }
+
+
     @Override
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
     }
 
-    /**
-     * Called when the Fragment is no longer resumed.  This is generally
-     * tied to {@link Activity#onPause() Activity.onPause} of the containing
-     * Activity's lifecycle.
-     */
+
     @Override
     public void onPause() {
         super.onPause();
         Log.i(TAG, "onPause: ");
+    }
+
+    /**
+     * Called when the Fragment is no longer started.  This is generally
+     * tied to {@link Activity#onStop() Activity.onStop} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: ");
     }
 
     public void init(){
@@ -105,7 +122,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
      * 绑定网络监听
      */
     public void bindNetState(){
-        NetState.addNetLister(new NetState.NetLister() {
+        NetStateReceiver.addNetLister(new NetStateReceiver.NetLister() {
             @Override
             public void OutInternet() {
                 if(isfirst){
@@ -184,7 +201,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     }
     public void getMessage() {
         String url = getUrl();
-        Log.i(TAG,"url is "+url+" time :");
+//        Log.i(TAG,"url is "+url+" time :");
         urlConnection connection = new urlConnection(getActivity());
         connection.setNetListener(new urlConnection.NetListener(){
 
@@ -244,7 +261,19 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i(TAG, "onDestroy: ");
     }
+
+    /**
+     * Called when the fragment is no longer attached to its activity.  This
+     * is called after {@link #onDestroy()}.
+     */
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.i(TAG, "onDetach: ");
+    }
+
     @Override
     public void onLoadMore() {
         if(recyclerView.getmStatus() == mRecyclerView.STATUS_DEFAULT){
@@ -269,5 +298,18 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
                 });
             }
         }
+    }
+
+    /**
+     * Called when a fragment is first attached to its context.
+     * {@link #onCreate(Bundle)} will be called after this.
+     *
+     * @param context
+     */
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.i(TAG, "onAttach: ");
+        string = "onAttach ";
     }
 }

@@ -21,8 +21,8 @@ import java.util.List;
 import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.recyclerAdapter;
+import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.entity.MessageItem;
-import juhe.jiangdajiuye.broadCast.NetState;
 import juhe.jiangdajiuye.tool.parseOther;
 import juhe.jiangdajiuye.util.urlConnection;
 import juhe.jiangdajiuye.view.browse;
@@ -37,7 +37,7 @@ public class fragment extends Fragment  {
     private int from ;
     public RecyclerView recyclerView;
     private LinearLayoutManager manager;
-    private NetState netState;
+    private NetStateReceiver netState;
     public List<MessageItem> data = new ArrayList<>();
     public recyclerAdapter adapter;
     //下拉刷新
@@ -62,6 +62,7 @@ public class fragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.e(TAG,"fragmentJS  is onCreateView");
+        if(view != null) return view ;
         view = inflater.inflate(R.layout.fragment,container,false);
         init();
         return view;
@@ -82,7 +83,7 @@ public class fragment extends Fragment  {
      * 绑定网络监听
      */
     public void bindNetState(){
-        NetState.addNetLister(new NetState.NetLister() {
+        NetStateReceiver.addNetLister(new NetStateReceiver.NetLister() {
             @Override
             public void OutInternet() {
                 if(isfirst){
@@ -299,6 +300,7 @@ public class fragment extends Fragment  {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         this.isVisibleToUser  = isVisibleToUser ;
+        Log.i(TAG, "setUserVisibleHint: ");
         if(isfirst&&!swipInit &&isVisibleToUser){
             if(swipeRefreshLayout!=null){
                 swipInit = true;

@@ -1,9 +1,9 @@
 package juhe.jiangdajiuye;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -22,6 +22,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
@@ -37,24 +40,33 @@ import com.tencent.tauth.UiError;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.jpush.android.api.JPushInterface;
 import juhe.jiangdajiuye.adapter.FragmentAdapter;
 import juhe.jiangdajiuye.broadCast.MyJushReceiver;
+import juhe.jiangdajiuye.broadCast.NetStateReceiver;
+import juhe.jiangdajiuye.entity.bmobBean.bootPicture;
 import juhe.jiangdajiuye.fragment.IndexFragment;
+import juhe.jiangdajiuye.imageUtil.ImageLocalLoad;
 import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.tool.toast;
-import juhe.jiangdajiuye.core.MyApplication;
+import juhe.jiangdajiuye.util.NetMesManager;
+import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
 import juhe.jiangdajiuye.util.TabLayoutUtils;
 import juhe.jiangdajiuye.util.UserActionRecordUtils;
 import juhe.jiangdajiuye.util.UserBrowseRecordUtils;
 import juhe.jiangdajiuye.util.UserShareUtils;
-import juhe.jiangdajiuye.util.lifecycle.AppLifeCycle;
 import juhe.jiangdajiuye.view.about;
 import juhe.jiangdajiuye.view.collect;
+import juhe.jiangdajiuye.view.constant.FileConstant;
 import juhe.jiangdajiuye.view.game;
 import juhe.jiangdajiuye.view.library;
 import juhe.jiangdajiuye.view.suggest;
 import juhe.jiangdajiuye.view.xuanjiang;
+
+import static juhe.jiangdajiuye.core.MyApplication.context;
 
 
 public class MainActivity extends AppCompatActivity
@@ -90,26 +102,20 @@ public class MainActivity extends AppCompatActivity
             "%26versioncode%3D1%26actionflag%3D0%26channelid%3D";
     private String IcnUrl = "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3084594445,4206732502&fm=96";
     private String[] res = {"首页","图书馆","职位收藏"};
+    private Object advert;
+    private boolean isInitLeftMain = false ;
+    private NavigationView navigationView ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AppLifeCycle appLifeCycle =  AppLifeCycle.getInstance(MyApplication.getApplication());
-        appLifeCycle.addListener(new AppLifeCycle.Listener() {
-            @Override
-            public void onBecameForeground(Activity activity) {
-                Log.i(TAG, "onBecameForeground: ");
-            }
-
-            @Override
-            public void onBecameBackground(Activity activity) {
-                Log.i(TAG, "onBecameBackground: ");
-            }
-        });
+        Log.i(TAG, "onCreate: ");
+        bindNetState();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
         //实现左右滑动
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -177,6 +183,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
     }
+    private View leftMainView;
     public void findid(){
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -211,7 +218,6 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         switch(item.getItemId()){
             case R.id.nav_home:
-
                 drawer.closeDrawer(Gravity.LEFT);
                 break;
             case R.id.nav_library:
@@ -262,7 +268,50 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
         sharedialog.setItemlister(new myItemlist());
     }
+    private boolean getAdvert = false ;
+    public void getAdvert() {
+        Log.i(TAG, "getAdvert: ---------- ");
+        if(getAdvert) return;
+        if(NetStateUtils.getNetWorkState() != NetStateUtils.TYPE_WIFI)
+            return;
+        Log.i(TAG, "getAdvert: ");
+        BmobQuery<bootPicture> query = new BmobQuery<>();
+        query.findObjects(new FindListener<bootPicture>() {
+            @Override
+            public void done(List<bootPicture> object, BmobException e) {
+                if(e==null && object.size()!=0){
+                    bootPicture picture = object.get(object.size() - 1);
+                    Log.i(TAG, "done: uri Is "+picture.getUrl());
+                    getAdvert = true ;
+                    pictureUri =  picture.getUrl() ;
+                    Glide.with(context ) // could be an issue!
+                            .load(pictureUri)
+                            .asBitmap()   //强制转换Bitmap
+                            .into( target );
+                }
+            }
+        });
+    }
+    String pictureUri = null;
+    String kind = null ;
+    Bitmap myBitmap = null ;
+    private SimpleTarget target = new SimpleTarget<Bitmap>() {
+        @Override
+        public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+            myBitmap = bitmap ;
+            if(pictureUri != null)
+               kind =   pictureUri.substring(pictureUri.lastIndexOf(".")+1,pictureUri.length());
+            final ImageLocalLoad load = new ImageLocalLoad();
+            final String saveFile = FileConstant.BootAdvertSaveRootFile ;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    load.saveBitmapToLocal(saveFile,FileConstant.BootAdvertSavePictureName ,"jpg" , myBitmap);
+                }
+            }).start();
 
+        }
+    };
     /**
      * popupwind的Item 监听
      */
@@ -425,6 +474,28 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
+        if( UserActionRecordUtils.getIpbean() == null)
+             NetMesManager.setIP(this);
+        getAdvert();
+    }
+    /**
+     * 绑定网络监听
+     */
+    public void bindNetState(){
+        NetStateReceiver.addNetLister(new NetStateReceiver.NetLister() {
+            @Override
+            public void OutInternet() {
+                Log.i(TAG, "OutInternet: ");
+            }
+
+            @Override
+            public void GetInternet(int type) {
+                Log.i(TAG, "GetInternet: ");
+                if (type == NetStateReceiver.TYPE_WIFI) {
+                    getAdvert();
+                }
+            }
+        });
     }
     /**
      * 方法必须重写
@@ -462,7 +533,6 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG, "onSaveInstanceState: ");
         outState.putInt("IntTest", 0);
 //        unregisterReceiver(receiver);
-        UserActionRecordUtils.setOutTime(System.currentTimeMillis());
     }
 
     @Override

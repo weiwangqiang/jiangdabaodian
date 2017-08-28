@@ -2,9 +2,7 @@ package juhe.jiangdajiuye.imageUtil;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,7 +33,6 @@ public class ImageLocalLoad {
         sb.append(s[length -2 ]);
         sb.append("/");
         sb.append(s[length-1]);
-        Log.i(TAG, "getBitmapFromLocal: sb is "+sb.toString());
         try {
             File file = new File(sb.toString());
             if (file.exists()) {
@@ -49,25 +46,24 @@ public class ImageLocalLoad {
         }
         return null;
     }
-    public boolean setBitmapToLocal(String imageUrl, Bitmap bitmap){
-        String name =   imageUrl.substring(imageUrl.lastIndexOf("/"));
-        String url = rootUrl + name;
-        Log.i(TAG, "setBitmapToLocal: url "+url);
+    public boolean saveBitmapToLocal(String saveUri,String name,String kind , Bitmap bitmap){
     try{
-        File file = new File(url.toString());
-        if(file.exists()){
-          file.delete();
+        File file = new File(saveUri);
+        if(!file.exists()){
+            file.mkdirs();
         }
-        Log.i(TAG, "setBitmapToLocal: file"+file);
-        // 将图片保存在本地
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
+        File saveFile = new File(saveUri+name);
+        if(saveFile.exists()){
+            saveFile.delete();
+        }
         try{
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+            FileOutputStream out = new FileOutputStream(saveFile);
+            if(kind != null &&  kind.equals("jpeg") || kind.equals("jpg"))
+              bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            else
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
-            Log.i(TAG, "setBitmapToLocal: save  success");
         }catch(Exception e){
             e.printStackTrace();
         }

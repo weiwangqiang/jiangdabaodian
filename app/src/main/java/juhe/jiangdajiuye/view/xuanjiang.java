@@ -49,7 +49,7 @@ public class xuanjiang extends BaseActivity {
         college = xuanJiangData.getTitle();
         urls = xuanJiangData.getUrls();
         for(int i =0;i<college.length;i++){
-            fragment f = fragment.newInstance(urls[i],college[0],i);
+            fragment f = fragment.newInstance(urls[i],college[i],i);
 //            fragmentSD f = new fragmentSD();
             list.add(f);
         }

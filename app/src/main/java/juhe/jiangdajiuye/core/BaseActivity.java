@@ -10,7 +10,6 @@ import juhe.jiangdajiuye.util.ToastUtils;
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
     public static String EXIT_APP_ACTION = "com.joshua.exit";
-    private Boolean isFinished = false;
     public final int NET_SUCCESS = 0x1;
     public final int NET_ERROR = 0x2;
     private String TAG = "BaseActivity";
@@ -18,10 +17,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uiutils = new ToastUtils(MyApplication.getApplication());
+        uiutils =  ToastUtils.inStance(MyApplication.getContext());
         initScreen();
-        initXUtils();
-        initReceiver();
     }
 
     @Override
@@ -50,37 +47,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 //            }
 //        }
     }
-
-    @Override
-    public void finish() {
-        super.finish();
-        isFinished = true;
-    }
-
     /**
      * 初始化屏幕方向
      */
     private void initScreen() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//设置竖屏
     }
-
-    /**
-     * 初始化xUtils
-     */
-    private void initXUtils() {
-    }
-
-    /**
-     * 初始化退出广播监听
-     */
-    private void initReceiver() {
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-
 
 }

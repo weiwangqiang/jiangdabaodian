@@ -107,7 +107,7 @@ public class suggest extends BaseActivity {
             public void done(String s, BmobException e) {
                 Log.i(TAG, "done: "+s);
                 if(e == null){
-                    ToastUtils.showToast("提交成功 ：\n "+s);
+                    ToastUtils.showToast("提交成功");
                     getemail.setText("");
                     getcontent.setText("");
                 }

@@ -21,10 +21,10 @@ import java.util.concurrent.Executors;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.SearchLibraryAdapter;
+import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.consume.recyclerView.mRecyclerView;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.broadCast.NetState;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.urlConnection;
@@ -102,7 +102,7 @@ public class library extends BaseActivity implements
      * 绑定网络监听
      */
     public void bindNetState(){
-        NetState.addNetLister(new NetState.NetLister() {
+        NetStateReceiver.addNetLister(new NetStateReceiver.NetLister() {
             @Override
             public void OutInternet() {
                 Log.i(TAG, "OutInternet: ");

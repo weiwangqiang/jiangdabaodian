@@ -3,8 +3,6 @@ package juhe.jiangdajiuye.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 import juhe.jiangdajiuye.MainActivity;
@@ -44,57 +41,6 @@ public class guide extends BaseActivity {
         getView();
         findid();
         initViewpager();
-            try{
-                new my().execute(new URL("asf"));
-
-            }catch(Exception e){
-                    e.printStackTrace();
-                }
-    }
-
-    /**
-     * 三个参数：请求参数，进度参数，结果参数
-     */
-    private class my extends AsyncTask<URL,Integer,Bitmap>{
-
-        @Override
-        protected Bitmap doInBackground(URL... params) {
-            return null;
-        }
-
-        /**
-         * <p>Runs on the UI thread after {@link #doInBackground}. The
-         * specified result is the value returned by {@link #doInBackground}.</p>
-         * <p>
-         * <p>This method won't be invoked if the task was cancelled.</p>
-         *
-         * @param bitmap The result of the operation computed by {@link #doInBackground}.
-         * @see #onPreExecute
-         * @see #doInBackground
-         * @see #onCancelled(Object)
-         */
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-
-            super.onPostExecute(bitmap);
-
-        }
-
-
-        /**
-         * Runs on the UI thread after {@link #publishProgress} is invoked.
-         * The specified values are the values passed to {@link #publishProgress}.
-         *
-         * @param values The values indicating progress.
-         * @see #publishProgress
-         * @see #doInBackground
-         */
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-
     }
     public void getView(){
         in = AnimationUtils.loadAnimation(guide.this,R.anim.in_from_bottom_to_top);

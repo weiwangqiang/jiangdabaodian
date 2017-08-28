@@ -3,7 +3,6 @@ package juhe.jiangdajiuye.consume.recyclerView.adapter;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -106,7 +105,6 @@ public abstract class AbsAdapter<T extends Object>  extends  RecyclerView.Adapte
             views = new HashMap<>();
         }
         protected View getView(int id){
-            Log.i(TAG, "getView: "+id);
             View v = views.get(id);
             if(v == null)
                 v = root.findViewById(id);

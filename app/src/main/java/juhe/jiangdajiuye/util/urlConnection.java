@@ -58,7 +58,7 @@ public class urlConnection   {
         try{
             URL url = new URL(url1);
             connect = (HttpURLConnection)url.openConnection();
-            connect.setConnectTimeout(000);
+            connect.setConnectTimeout(10000);
             //设置请求属性
             connect.setRequestProperty("Accept",
                     "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");

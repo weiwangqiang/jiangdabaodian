@@ -27,6 +27,10 @@ public class UserActionRecordUtils {
         UserActionRecordUtils.ipbean = ipbean;
     }
 
+    public static IPBean getIpbean() {
+        return ipbean;
+    }
+
     public static IPBean ipbean ;
     public static void setComeTime(long comeTime) {
         UserActionRecordUtils.comeTime = comeTime;

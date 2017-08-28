@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
-import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.core.MyApplication;
+import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.util.SkinManager;
 
 import static juhe.jiangdajiuye.R.id.footerProgressBar;
@@ -100,7 +100,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
         ((mItemViewHodler)holder).root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(null!= itemClickListener )
+                if(null!= itemClickListener );
                     itemClickListener.OnItemClick(data);
             }
         });
@@ -126,6 +126,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
         TextView title,time,place,company,work;
         private mItemViewHodler(View itemView) {
             super(itemView);
+            root = getView(R.id.card_view);
             title = (TextView) getView(R.id.title);
             time = (TextView) getView(R.id.time);
             place = (TextView)getView(R.id.place);

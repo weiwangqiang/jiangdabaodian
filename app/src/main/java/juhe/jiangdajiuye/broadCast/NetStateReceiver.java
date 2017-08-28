@@ -9,11 +9,13 @@ import android.net.NetworkInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
+
 /**网络接口
  * Created by wangqiang on 2016/7/14.
  */
-public class NetState extends BroadcastReceiver {
-    private String TAG = "NetState" ;
+public class NetStateReceiver extends BroadcastReceiver {
+    private String TAG = "NetStateReceiver" ;
     public static final int TYPE_WIFI = 0x1;
     public static final int TYPE_MOBILE = 0x2;
     public static final int TYPE_ERROR = 0x3;
@@ -34,11 +36,14 @@ public class NetState extends BroadcastReceiver {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
         if (activeNetwork != null) { // connected to the internet
-            if (activeNetwork.isConnected()) {
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                    setmState(TYPE_WIFI);
-                } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                    setmState(TYPE_MOBILE);
+            if (activeNetwork.isConnected() || activeNetwork.isAvailable()) {
+                switch (activeNetwork.getType()){
+                    case ConnectivityManager.TYPE_WIFI :
+                        setmState(TYPE_WIFI);
+                        break;
+                    case ConnectivityManager.TYPE_MOBILE:
+                        setmState(TYPE_MOBILE);
+                        break;
                 }
             } else {
                 setmState(TYPE_ERROR);
@@ -53,16 +58,19 @@ public class NetState extends BroadcastReceiver {
         mState = type ;
         switch (type){
             case TYPE_ERROR:
+                NetStateUtils.setNetWorkState(NetStateUtils.TYPE_ERROR);
                 for(NetLister netLister : listers){
                     netLister.OutInternet();
                 }
                 break;
             case TYPE_MOBILE:
+                NetStateUtils.setNetWorkState(NetStateUtils.TYPE_MOBILE);
                 for(NetLister netLister : listers){
                     netLister.GetInternet(TYPE_MOBILE);
                 }
                 break;
             case TYPE_WIFI:
+                NetStateUtils.setNetWorkState(NetStateUtils.TYPE_WIFI);
                 for(NetLister netLister : listers){
                     netLister.GetInternet(TYPE_WIFI);
                 }

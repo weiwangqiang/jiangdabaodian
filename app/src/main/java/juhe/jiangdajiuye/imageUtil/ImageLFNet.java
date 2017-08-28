@@ -9,6 +9,9 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+
+import juhe.jiangdajiuye.R;
 
 
 /**
@@ -27,7 +30,19 @@ public class ImageLFNet {
     public  void getBitmapFromNet(ImageView imageView, String url ){
         Log.i(TAG, "downLoadImage: url "+url);
         this.url = url ;
-        Glide.with(imageView.getContext()).load(url).into(imageView);
+//        Glide.get(imageView.getContext()).load
+        Glide.with(imageView.getContext())
+                .load(url)
+                .placeholder(R.drawable.load_waiting)
+                .error(R.drawable.load_waiting)
+                .skipMemoryCache(true)//跳过内存缓存
+//                .animate(R.anim.item_alpha_in)//提供加载动画
+//                .thumbnail(0.1f) //先加载略缩图在加载大图
+//                .override(800, 800) //设置加载尺寸
+//                .centerCrop()//设置动态转换 or fitCenter()
+//                .transform(new GlideRoundTransform(this))或者设置转换器
+                .priority(Priority.NORMAL)//设置下载优先级
+                .into(imageView);
 //        ImageOptions imageOptions = new ImageOptions.Builder()
 //                .setSize(DensityUtil.dip2px(80), DensityUtil.dip2px(80))
 //                .setRadius(DensityUtil.dip2px(5))
@@ -87,14 +102,25 @@ public class ImageLFNet {
 //        }
 //    }
 
-    private void saveBitmap(final Drawable result) {
+    public void saveDrawable(final Drawable result,final String url) {
         Log.i(TAG, "saveBitmap: ");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Bitmap bitmap = DrawableToiBitmap(result);
                 saveToMemory(bitmap);
-                saveTolical(bitmap);
+                saveTolocal(bitmap,url);
+            }
+        }).start();
+
+    }
+    private void saveBitmap(final Bitmap result,final String url) {
+        Log.i(TAG, "saveBitmap: ");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                saveToMemory(result);
+                saveTolocal(result,url);
             }
         }).start();
 
@@ -105,9 +131,9 @@ public class ImageLFNet {
         imageLFMemory.setBitmapToMemory(url,bitmap);
     }
 
-    private void saveTolical(Bitmap bitmap) {
+    private void saveTolocal(Bitmap bitmap,String url) {
         ImageLocalLoad load = new ImageLocalLoad();
-        load.setBitmapToLocal(url,bitmap);
+        load.saveBitmapToLocal(url,"name","png",bitmap);
     }
 
     @NonNull

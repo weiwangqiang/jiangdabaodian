@@ -1,6 +1,7 @@
 package juhe.jiangdajiuye.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,10 +110,10 @@ public class recyclerAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHold
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView title,time,place,company,work;
-
+        CardView cardView ;
         public MyViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
             title = (TextView) itemView.findViewById(R.id.title);
             time = (TextView)itemView.findViewById(R.id.time);
             place = (TextView)itemView.findViewById(R.id.place);
@@ -121,6 +122,8 @@ public class recyclerAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHold
             place.setVisibility(View.GONE);
             company.setVisibility(View.GONE);
             work.setVisibility(View.GONE);
+            cardView.setOnClickListener(this);
+
         }
 
         /**
