@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +77,6 @@ public class collect extends BaseActivity {
     }
     public void initToolbar(){
         toolbar.setTitle("收藏栏");
-//        toolbar.setNavigationIcon(R.drawable.menue);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,16 +88,8 @@ public class collect extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
     public void initDate(){
-        Log.e(TAG,"init date first is false");
         date.clear();
         date = helper.selectAll();
-//        for(int i =0;i<date.size();i++){
-//            Log.e(TAG," title is "+date.get(i).get("title")+
-//                    " location is "+date.get(i).get("location ")+
-//                    "time is "+date.get(i).get("time ")+
-//                    " url is "+date.get(i).get("url ")+
-//                    " company is "+ date.get(i).get("company") );
-//        }
         first = false;
         if(date.size()==0){
             nothing.setVisibility(View.VISIBLE);
@@ -113,7 +102,7 @@ public class collect extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case android.R.id.home:
-                Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

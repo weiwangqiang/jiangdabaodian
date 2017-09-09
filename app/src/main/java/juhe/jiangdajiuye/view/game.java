@@ -31,6 +31,7 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.gameAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.tool.shareDialog;
+import juhe.jiangdajiuye.view.constant.AppConstant;
 
 
 /**
@@ -277,6 +278,7 @@ public class game extends BaseActivity implements ListView.OnItemClickListener{
         Intent intent = new Intent(game.this,gameOnline.class);
         String url = data.get(position).get("url");
         intent.putExtra("url",url);
+        intent.putExtra("title",data.get(position).get("title"));
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
@@ -311,38 +313,36 @@ public class game extends BaseActivity implements ListView.OnItemClickListener{
     }
     private void shareToWX(){
         Toast.makeText(this,"正在跳转",Toast.LENGTH_SHORT).show();
-        Log.e(TAG,"share to weixin");
         webpager = new WXWebpageObject();
-        webpager.webpageUrl = url[0];
+        webpager.webpageUrl = AppConstant.AppDownLoad;
         message = new WXMediaMessage(webpager);
-        message.title = "江大宝典";
-        message.description = title[0];
+        message.title = AppConstant.AppName;
+        message.description = AppConstant.AppDescription;
         req.transaction = "webPager";
         req.message = message;
         Boolean get = api.sendReq(req);
 //        api.handleIntent(getIntent(),this);
         dialog.cancel();
-        Log.e(TAG,"share return is "+get);
     }
     private void ToQQ(){
         Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-        params.putString(QQShare.SHARE_TO_QQ_TITLE, "'");
-        params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "我正在江大宝典看"+title);
-        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, url[0]);
-        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,url[0]);
-        params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "江大宝典");
+        params.putString(QQShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "我正在玩"+title);
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, AppConstant.AppDownLoad);
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,AppConstant.AppIcnUrl);
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, AppConstant.AppName);
         dialog.cancel();
         tencent.shareToQQ(game.this, params,baseuiLister);
     }
     private void  ToQzone(){
         Bundle params = new Bundle();
         ArrayList<String> list = new ArrayList<>();
-        list.add(url[0]);
+        list.add(AppConstant.AppIcnUrl);
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title[0]);//必填
-        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,"我正在宝典看"+title);//选填
-        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url[0]);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE,AppConstant.AppName);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,"我正在玩"+title);//选填
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, AppConstant.AppDownLoad);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL,list);
         dialog.cancel();
         tencent.shareToQzone(game.this, params,baseuiLister);
@@ -354,7 +354,7 @@ public class game extends BaseActivity implements ListView.OnItemClickListener{
 
         @Override
         public void onComplete(Object o) {
-            Toast.makeText(game.this,"分享成功！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(game.this,"分享成功！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -363,7 +363,7 @@ public class game extends BaseActivity implements ListView.OnItemClickListener{
 
         @Override
         public void onCancel() {
-            Toast.makeText(game.this,"取消分享！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(game.this,"取消分享！", Toast.LENGTH_SHORT).show();
         }
     }
     //    //要想调用IUiListener 必须重写此函数

@@ -35,12 +35,13 @@ public class parseOther {
         for (int i = 1; i < elements.size(); i++) {
             MessageItem item = new MessageItem();
             Elements e = elements.get(i).getElementsByClass("span1");
+            Elements elements1 = elements.get(i).getElementsByTag("li");
             item.setUrl(baseUrl+e.select("a").attr("href"));
             item.setTitle(e.select("b").text() + e.select("a").attr("title"));
-            item.setFrom(elements.get(i).getElementsByClass("span2").text());
-            item.setCity(elements.get(i).getElementsByClass("span3").text());
-            item.setLocate( elements.get(i).getElementsByClass("span4").text());
-            item.setTime(elements.get(i).getElementsByClass("span5").text());
+            item.setFrom(elements1.get(1).text());
+            item.setCity(elements1.get(2).text());
+            item.setLocate(elements1.get(3).text());
+            item.setTime(elements1.get(4).text());
             list.add(item);
         }
         return list;

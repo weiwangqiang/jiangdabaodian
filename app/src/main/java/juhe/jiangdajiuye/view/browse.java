@@ -38,6 +38,7 @@ import juhe.jiangdajiuye.sql.CollectSqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.util.ToastUtils;
+import juhe.jiangdajiuye.view.constant.AppConstant;
 
 /**
  * Created by wangqiang on 2016/10/1.
@@ -66,7 +67,6 @@ public class browse extends BaseActivity {
 
     private CollectSqlHelper helper;
     private SQLiteDatabase sqLiteDatabase;
-    private String IcnUrl = "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3084594445,4206732502&fm=96";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -311,12 +311,11 @@ public class browse extends BaseActivity {
     }
     private void shareToWX(){
         Toast.makeText(this,"正在跳转",Toast.LENGTH_SHORT).show();
-        Log.e(TAG,"share to weixin");
         webpager = new WXWebpageObject();
         webpager.webpageUrl = url;
         message = new WXMediaMessage(webpager);
-        message.title = "江大宝典";
-        message.description = title;
+        message.title = AppConstant.AppName;
+        message.description = "我正在"+AppConstant.AppName+"看"+title;
         req.transaction = "webPager";
         req.message = message;
         Boolean get = api.sendReq(req);
@@ -326,21 +325,21 @@ public class browse extends BaseActivity {
     private void ToQQ(){
         Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-        params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
-        params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "我正在江大宝典看"+title);
+        params.putString(QQShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "我正在看"+title);
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, url);
-        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,IcnUrl);
-        params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "江大宝典");
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, AppConstant.AppIcnUrl);
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  AppConstant.AppName);
         dialog.cancel();
         tencent.shareToQQ(browse.this, params,baseuiLister);
     }
     private void  ToQzone(){
         Bundle params = new Bundle();
         ArrayList<String> list = new ArrayList<>();
-        list.add(IcnUrl);
+        list.add(AppConstant.AppIcnUrl);
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);//必填
-        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,"我正在宝典看"+title);//选填
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,"我正在看"+title);//选填
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL,list);
         dialog.cancel();
@@ -353,7 +352,7 @@ public class browse extends BaseActivity {
 
         @Override
         public void onComplete(Object o) {
-            Toast.makeText(browse.this,"分享成功！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(browse.this,"分享成功！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -362,7 +361,7 @@ public class browse extends BaseActivity {
 
         @Override
         public void onCancel() {
-            Toast.makeText(browse.this,"取消分享！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(browse.this,"取消分享！", Toast.LENGTH_SHORT).show();
         }
     }
     //    //要想调用IUiListener 必须重写此函数
@@ -375,7 +374,6 @@ public class browse extends BaseActivity {
             return;
         }
         Tencent.onActivityResultData(requestCode, resultCode, data, baseuiLister);
-        Log.i(TAG, "onActivityResult: requestCode "+requestCode );
 //        if(requestCode == Constants.REQUEST_QQ_SHARE || requestCode == Constants.REQUEST_QZONE_SHARE){
 //            if (resultCode == Constants.ACTIVITY_OK) {
 //                Log.i(TAG, "onActivityResult: --------------");

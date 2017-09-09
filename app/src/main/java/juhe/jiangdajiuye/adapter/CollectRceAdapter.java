@@ -76,7 +76,7 @@ public class CollectRceAdapter extends  RecyclerView.Adapter<CollectRceAdapter.M
         private CardView cardView;
         public MyViewHolder(View itemView, Context context) {
             super(itemView);
-            itemView.setOnClickListener(this);
+            itemView.findViewById(R.id.card_view).setOnClickListener(this);
             if(context!=null){
                 getshow();
             }

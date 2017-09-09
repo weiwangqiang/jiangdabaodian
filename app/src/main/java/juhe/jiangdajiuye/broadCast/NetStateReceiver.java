@@ -30,6 +30,10 @@ public class NetStateReceiver extends BroadcastReceiver {
         if(!listers.contains(myNetLister))
           listers.add(myNetLister);
     }
+    public static void removeLister(NetLister lister){
+        if(listers.contains(lister))
+            listers.remove(lister);
+    }
     @Override
     public void onReceive(Context context, Intent intent) {
         ConnectivityManager manager = (ConnectivityManager)context.

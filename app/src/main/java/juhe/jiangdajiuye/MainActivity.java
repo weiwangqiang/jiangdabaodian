@@ -12,7 +12,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -47,6 +46,7 @@ import cn.jpush.android.api.JPushInterface;
 import juhe.jiangdajiuye.adapter.FragmentAdapter;
 import juhe.jiangdajiuye.broadCast.MyJushReceiver;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
+import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.entity.bmobBean.bootPicture;
 import juhe.jiangdajiuye.fragment.IndexFragment;
 import juhe.jiangdajiuye.imageUtil.ImageLocalLoad;
@@ -60,6 +60,7 @@ import juhe.jiangdajiuye.util.UserBrowseRecordUtils;
 import juhe.jiangdajiuye.util.UserShareUtils;
 import juhe.jiangdajiuye.view.about;
 import juhe.jiangdajiuye.view.collect;
+import juhe.jiangdajiuye.view.constant.AppConstant;
 import juhe.jiangdajiuye.view.constant.FileConstant;
 import juhe.jiangdajiuye.view.game;
 import juhe.jiangdajiuye.view.library;
@@ -69,7 +70,7 @@ import juhe.jiangdajiuye.view.xuanjiang;
 import static juhe.jiangdajiuye.core.MyApplication.context;
 
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener ,
         View.OnClickListener{
     private String TAG = "MainActivity";
@@ -94,13 +95,7 @@ public class MainActivity extends AppCompatActivity
     private WXMediaMessage message;
     private SendMessageToWX.Req req;
     //分享的信息
-    private String APPName = "江大宝典";
-    private String title = "我的分享";
     private String content = "我正在使用江大宝典，你也来看看吧";
-    private String url = "http://fusion.qq.com/cgi-bin/qzapps/unified_jump?" +
-            "appid=42384324&from=mqq&actionFlag=0&params=pname%3Djuhe.jiangdajiuye" +
-            "%26versioncode%3D1%26actionflag%3D0%26channelid%3D";
-    private String IcnUrl = "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3084594445,4206732502&fm=96";
     private String[] res = {"首页","图书馆","职位收藏"};
     private Object advert;
     private boolean isInitLeftMain = false ;
@@ -344,9 +339,9 @@ public class MainActivity extends AppCompatActivity
         mytoast.makeText(MainActivity.this,"正在跳转");
         Log.e(TAG,"share to weixin");
         webpager = new WXWebpageObject();
-        webpager.webpageUrl = url;
+        webpager.webpageUrl = AppConstant.AppDownLoad;
         message = new WXMediaMessage(webpager);
-        message.title = title;
+        message.title = AppConstant.AppName;
         message.description = content;
         req.transaction = "webPager";
         req.message = message;
@@ -357,22 +352,22 @@ public class MainActivity extends AppCompatActivity
     private void ToQQ(){
         Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-        params.putString(QQShare.SHARE_TO_QQ_TITLE,title);
+        params.putString(QQShare.SHARE_TO_QQ_TITLE,AppConstant.AppName);
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, content);
-        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, url);
-        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,IcnUrl);
-        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, APPName);
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, AppConstant.AppDownLoad);
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,AppConstant.AppIcnUrl);
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, AppConstant.AppName);
         dialog.cancel();
         tencent.shareToQQ(this, params,baseuiLister);
     }
     private void  ToQzone(){
         Bundle params = new Bundle();
         ArrayList<String> list = new ArrayList<>();
-        list.add(IcnUrl);
+        list.add(AppConstant.AppIcnUrl);
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);//必填
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,content);//选填
-        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, AppConstant.AppDownLoad);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL,list);
         dialog.cancel();
         tencent.shareToQzone(this, params,baseuiLister);
@@ -384,7 +379,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onComplete(Object o) {
-            mytoast.makeText(MainActivity.this,"分享成功！");
+//            mytoast.makeText(MainActivity.this,"分享成功！");
             UserShareUtils.setQQ(1);
         }
 
@@ -394,7 +389,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onCancel() {
-            mytoast.makeText(MainActivity.this,"取消分享");
+//            mytoast.makeText(MainActivity.this,"取消分享");
         }
     }
     //    //要想调用IUiListener 必须重写此函数

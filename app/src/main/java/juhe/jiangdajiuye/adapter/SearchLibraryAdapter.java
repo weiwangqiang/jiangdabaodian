@@ -1,5 +1,6 @@
 package juhe.jiangdajiuye.adapter;
 
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +29,7 @@ public class SearchLibraryAdapter extends AbsAdapter<Map<String,String>> {
 
     public mItemViewHodler itemViewHodler ;
     public mFooterViewHolder footerViewHolder ;
-
+    private Context mCtx ;
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
@@ -38,8 +39,9 @@ public class SearchLibraryAdapter extends AbsAdapter<Map<String,String>> {
         void OnItemClick(Map<String,String> item);
     }
 
-    public SearchLibraryAdapter(@LayoutRes int layout) {
+    public SearchLibraryAdapter(Context mCtx , @LayoutRes int layout) {
         super(layout);
+        this.mCtx = mCtx ;
     }
 
     /**
@@ -51,7 +53,7 @@ public class SearchLibraryAdapter extends AbsAdapter<Map<String,String>> {
     @NonNull
     @Override
     public ItemViewHolder getItemViewHolder(ViewGroup parent) {
-        return new mItemViewHodler(SkinManager.inflater(MyApplication.getContext(),mLayout,parent,false));
+        return new mItemViewHodler(SkinManager.inflater(mCtx,mLayout,parent,false));
     }
 
     /**

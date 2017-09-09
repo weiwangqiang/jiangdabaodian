@@ -79,7 +79,7 @@ public class library extends BaseActivity implements
         toolbar = (Toolbar)findViewById(R.id.Library_toolbar);
     }
     public void initList(){
-        adapter = new SearchLibraryAdapter(R.layout.library_listitem);
+        adapter = new SearchLibraryAdapter(this,R.layout.library_listitem);
         manager =  new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);

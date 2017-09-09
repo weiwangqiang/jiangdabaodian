@@ -1,7 +1,6 @@
 package juhe.jiangdajiuye.fragment;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -71,40 +70,13 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     }
 
     /**
-     * Called when the Fragment is visible to the user.  This is generally
-     * tied to {@link Activity#onStart() Activity.onStart} of the containing
-     * Activity's lifecycle.
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
      */
     @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(TAG, "onStart: ");
-        Log.i(TAG, "onStart: "+string);
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume: ");
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i(TAG, "onPause: ");
-    }
-
-    /**
-     * Called when the Fragment is no longer started.  This is generally
-     * tied to {@link Activity#onStop() Activity.onStop} of the containing
-     * Activity's lifecycle.
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.i(TAG, "onStop: ");
+    public void onDestroy() {
+        super.onDestroy();
+        NetStateReceiver.removeLister(receiver);
     }
 
     public void init(){
@@ -122,24 +94,26 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
      * 绑定网络监听
      */
     public void bindNetState(){
-        NetStateReceiver.addNetLister(new NetStateReceiver.NetLister() {
-            @Override
-            public void OutInternet() {
-                if(isfirst){
-                    error.setVisibility(View.VISIBLE);
-                }
-            }
-            @Override
-            public void GetInternet(int type) {
-                if(recyclerView != null){
-                    if(recyclerView.getmStatus() == mRecyclerView.STATUS_ERROR){
-                        recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
-                    }
-                }
-            }
-        });
+        NetStateReceiver.addNetLister(receiver);
     }
+    private  NetStateReceiver.NetLister receiver = new NetStateReceiver.NetLister(){
 
+        @Override
+        public void OutInternet() {
+            if(isfirst){
+                error.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void GetInternet(int type) {
+            if(recyclerView != null){
+                if(recyclerView.getmStatus() == mRecyclerView.STATUS_ERROR){
+                    recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
+                }
+            }
+        }
+    };
     public void findId(){
         error = view.findViewById(R.id.error);
         recyclerView = (mRecyclerView) view.findViewById(R.id.recyclerView);
@@ -181,7 +155,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     }
 
     public void initList(){
-        adapter = new IndexFragmentAdapter(R.layout.main_list_item);
+        adapter = new IndexFragmentAdapter(getActivity(),R.layout.main_list_item);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new IndexFragmentAdapter.OnItemClickListener() {
             @Override
@@ -207,7 +181,6 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
 
             @Override
             public void success(String response, int code) {
-                upDate(parsetools.parseMainMes(response.trim(),tab));
                 upDate(parsetools.parseMainMes(response.trim(),tab));
                 swipeRefreshLayout.setRefreshing(false);
                 recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
@@ -257,23 +230,6 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         str = baseurl +"page="+page;
         return str;
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "onDestroy: ");
-    }
-
-    /**
-     * Called when the fragment is no longer attached to its activity.  This
-     * is called after {@link #onDestroy()}.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.i(TAG, "onDetach: ");
-    }
-
     @Override
     public void onLoadMore() {
         if(recyclerView.getmStatus() == mRecyclerView.STATUS_DEFAULT){
@@ -300,16 +256,4 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         }
     }
 
-    /**
-     * Called when a fragment is first attached to its context.
-     * {@link #onCreate(Bundle)} will be called after this.
-     *
-     * @param context
-     */
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.i(TAG, "onAttach: ");
-        string = "onAttach ";
-    }
 }

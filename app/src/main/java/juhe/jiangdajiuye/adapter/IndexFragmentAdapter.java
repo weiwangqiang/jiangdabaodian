@@ -1,5 +1,6 @@
 package juhe.jiangdajiuye.adapter;
 
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
-import juhe.jiangdajiuye.core.MyApplication;
 import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.util.SkinManager;
 
@@ -27,7 +27,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
 
     public mItemViewHodler itemViewHodler ;
     public mFooterViewHolder footerViewHolder ;
-
+    private Context mCtx ;
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
@@ -37,8 +37,9 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
         void OnItemClick(MessageItem item);
     }
 
-    public IndexFragmentAdapter(@LayoutRes int layout) {
+    public IndexFragmentAdapter(Context mCtx ,@LayoutRes int layout) {
         super(layout);
+        this.mCtx = mCtx ;
     }
 
     /**
@@ -50,7 +51,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
     @NonNull
     @Override
     public ItemViewHolder getItemViewHolder(ViewGroup parent) {
-        return new mItemViewHodler(SkinManager.inflater(mLayout));
+        return new mItemViewHodler(SkinManager.inflater(mCtx,mLayout));
     }
 
     /**
@@ -63,7 +64,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
     @Override
     public FooterViewHolder getFooterViewHolder(ViewGroup parent) {
         if(footerViewHolder == null)
-            footerViewHolder = new mFooterViewHolder(SkinManager.inflater(MyApplication.getContext(),
+            footerViewHolder = new mFooterViewHolder(SkinManager.inflater(mCtx,
                     R.layout.footer,parent,false));
         return footerViewHolder ;
     }

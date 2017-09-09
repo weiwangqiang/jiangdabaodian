@@ -11,7 +11,7 @@
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="10dp"
-    android:stateListAnimator="@drawable/lift_on_touch"
+    android:foreground="?android:attr/selectableItemBackgroundBorderless"
     android:clickable="false"
     card_view:cardCornerRadius="4dp">
 <LinearLayout

@@ -49,12 +49,13 @@ public class parseTools {
          for (int i = 1; i < elements.size(); i++) {
              MessageItem mes = new MessageItem();
              Elements e = elements.get(i).getElementsByClass("span1");
+             Elements elements1 = elements.get(i).getElementsByTag("li");
              mes.setUrl("http://ujs.91job.gov.cn"+e.select("a").attr("href"));
              mes.setTitle(e.select("a").attr("title"));
-             mes.setFrom(elements.get(i).getElementsByClass("span2").text());
-             mes.setCity(elements.get(i).getElementsByClass("span3").text());
-             mes.setLocate(elements.get(i).getElementsByClass("span4").text());
-             mes.setTime(elements.get(i).getElementsByClass("span5").text());
+             mes.setFrom(elements1.get(1).text());
+             mes.setCity(elements1.get(2).text());
+             mes.setLocate(elements1.get(3).text());
+             mes.setTime(elements1.get(4).text());
              list.add(mes);
          }
          return list;
