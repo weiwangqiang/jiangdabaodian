@@ -14,7 +14,7 @@ public class XuanJiangData {
                             ,"http://jiangnan.91job.gov.cn/teachin/index"
                             ,"http://njust.91job.gov.cn/teachin/index"
                             ,"http://seu.91job.gov.cn/teachin/index"
-                            ,"http://job.nju.edu.cn:9081/login/nju/home.jsp"
+                            ,"job.nju.edu.cn:9081/login/nju/home.jsp"
                             ,"http://job.nuaa.edu.cn/teachin/index"
                             ,"http://suda.91job.gov.cn/teachin/index"
                             ,"http://njmu.91job.gov.cn/teachin/index"

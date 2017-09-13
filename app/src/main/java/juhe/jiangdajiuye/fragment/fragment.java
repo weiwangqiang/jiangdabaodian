@@ -33,7 +33,7 @@ import juhe.jiangdajiuye.view.browse;
 public class fragment extends Fragment  {
     private View view,error;
     private String baseurl;
-    private String TAG;
+    private String college;
     private int from ;
     public RecyclerView recyclerView;
     private LinearLayoutManager manager;
@@ -50,18 +50,18 @@ public class fragment extends Fragment  {
     private parseOther parse = new parseOther();
 
 
-    public static fragment newInstance(String url,String TAG,int from) {
+    public static fragment newInstance(String url,String college,int from) {
         fragment f = new fragment();
         Bundle b = new Bundle();
         b.putString("url",url);
-        b.putString("TAG",TAG);
+        b.putString("TAG",college);
         b.putInt("from",from);
         f.setArguments(b);
         return f;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e(TAG,"fragmentJS  is onCreateView");
+        Log.e(college,"fragmentJS  is onCreateView");
         if(view != null) return view ;
         view = inflater.inflate(R.layout.fragment,container,false);
         init();
@@ -71,7 +71,7 @@ public class fragment extends Fragment  {
     public void init(){
         Bundle bundle = getArguments();
         baseurl = bundle.getString("url");
-        TAG = bundle.getString("TAG");
+        college = bundle.getString("TAG");
         from = bundle.getInt("from");//控制用哪个解析方法
         findId();
         initRefresh();
@@ -242,26 +242,26 @@ public class fragment extends Fragment  {
         String str = "";
         //下拉或者是第一次加载
         if(isPull||isfirst){
-            str = getPullurl(from);
+            str = getPullurl(college);
         }
         else {
-            str = getNexturl(from);
+            str = getNexturl(college);
         }
         return str;
     }
     //获取下拉url
-    public String  getPullurl(int from){
-        if(from==5){
+    public String  getPullurl(String college){
+        if(college.equals("南京大学")){
             //南京大学的url 与其他的大学不一样
-            page=1;
-            return baseurl+"?type=xyzp&pageNow="+page;
+            page =1;
+            return baseurl+"?type=zph&pageNow="+page;
         }else
             return baseurl;
     }
     //获取上拉url
-    public String getNexturl(int from){
-        if(from==5)
-            return baseurl+"?type=xyzp&pageNow="+page;
+    public String getNexturl(String college){
+        if(college.equals("南京大学"))
+            return baseurl+"?type=zph&pageNow="+page;
         return  baseurl +"?page="+page;
     }
 
@@ -300,7 +300,7 @@ public class fragment extends Fragment  {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         this.isVisibleToUser  = isVisibleToUser ;
-        Log.i(TAG, "setUserVisibleHint: ");
+        Log.i(college, "setUserVisibleHint: ");
         if(isfirst&&!swipInit &&isVisibleToUser){
             if(swipeRefreshLayout!=null){
                 swipInit = true;
