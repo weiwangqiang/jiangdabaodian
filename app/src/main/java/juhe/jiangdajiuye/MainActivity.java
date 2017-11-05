@@ -42,19 +42,17 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.jpush.android.api.JPushInterface;
 import juhe.jiangdajiuye.adapter.FragmentAdapter;
-import juhe.jiangdajiuye.broadCast.MyJushReceiver;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.entity.bmobBean.bootPicture;
 import juhe.jiangdajiuye.fragment.IndexFragment;
 import juhe.jiangdajiuye.imageUtil.ImageLocalLoad;
 import juhe.jiangdajiuye.tool.shareDialog;
-import juhe.jiangdajiuye.tool.toast;
 import juhe.jiangdajiuye.util.NetMesManager;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
 import juhe.jiangdajiuye.util.TabLayoutUtils;
+import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.util.UserActionRecordUtils;
 import juhe.jiangdajiuye.util.UserBrowseRecordUtils;
 import juhe.jiangdajiuye.util.UserShareUtils;
@@ -65,7 +63,7 @@ import juhe.jiangdajiuye.view.constant.FileConstant;
 import juhe.jiangdajiuye.view.game;
 import juhe.jiangdajiuye.view.library;
 import juhe.jiangdajiuye.view.suggest;
-import juhe.jiangdajiuye.view.xuanjiang;
+import juhe.jiangdajiuye.view.xuanJiang.XuanEntrance;
 
 import static juhe.jiangdajiuye.core.MyApplication.context;
 
@@ -75,9 +73,7 @@ public class MainActivity extends BaseActivity
         View.OnClickListener{
     private String TAG = "MainActivity";
     private Long exitTime = 0L;
-
     private List<Fragment> list = new ArrayList<>();
-    private toast mytoast = new toast();
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private DrawerLayout drawer;
@@ -97,14 +93,11 @@ public class MainActivity extends BaseActivity
     //分享的信息
     private String content = "我正在使用江大宝典，你也来看看吧";
     private String[] res = {"首页","图书馆","职位收藏"};
-    private Object advert;
-    private boolean isInitLeftMain = false ;
     private NavigationView navigationView ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.i(TAG, "onCreate: ");
         bindNetState();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
@@ -118,16 +111,12 @@ public class MainActivity extends BaseActivity
         initView();
         initPush();
     }
-    public static final String MESSAGE_RECEIVED_ACTION = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
-    MyJushReceiver receiver ;
+    public static final String MESSAGE_RECEIVED_ACTION
+            = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
     private void initPush(){
-        Log.i(TAG, "initPush: ");
-        JPushInterface.init(MainActivity.this);
-        receiver = new MyJushReceiver();
         IntentFilter filter = new IntentFilter();
         filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         filter.addAction(MESSAGE_RECEIVED_ACTION);
-        registerReceiver(receiver, filter);
     }
     public void initView(){
         sharedialog = new shareDialog();
@@ -178,7 +167,6 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
     }
-    private View leftMainView;
     public void findid(){
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -186,13 +174,11 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed: start");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            Log.d(TAG, "onBackPressed: ");
             Intent intent = new Intent();
             intent.setAction("android.intent.action.MAIN");
             intent.addCategory("android.intent.category.HOME");
@@ -225,7 +211,7 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.nav_xuanjianghui:
                 UserBrowseRecordUtils.setmXuanJiangCollect(1);
-                startActivity(new Intent(MainActivity.this,xuanjiang.class));
+                startActivity(new Intent(MainActivity.this,XuanEntrance.class));
                 break;
             case R.id.nav_send:
                 startActivity(new Intent(MainActivity.this,suggest.class));
@@ -265,18 +251,15 @@ public class MainActivity extends BaseActivity
     }
     private boolean getAdvert = false ;
     public void getAdvert() {
-        Log.i(TAG, "getAdvert: ---------- ");
         if(getAdvert) return;
         if(NetStateUtils.getNetWorkState() != NetStateUtils.TYPE_WIFI)
             return;
-        Log.i(TAG, "getAdvert: ");
         BmobQuery<bootPicture> query = new BmobQuery<>();
         query.findObjects(new FindListener<bootPicture>() {
             @Override
             public void done(List<bootPicture> object, BmobException e) {
                 if(e==null && object.size()!=0){
                     bootPicture picture = object.get(object.size() - 1);
-                    Log.i(TAG, "done: uri Is "+picture.getUrl());
                     getAdvert = true ;
                     pictureUri =  picture.getUrl() ;
                     Glide.with(context ) // could be an issue!
@@ -336,8 +319,7 @@ public class MainActivity extends BaseActivity
         }
     }
     private void shareToWX(){
-        mytoast.makeText(MainActivity.this,"正在跳转");
-        Log.e(TAG,"share to weixin");
+        ToastUtils.showToast("正在跳转");
         webpager = new WXWebpageObject();
         webpager.webpageUrl = AppConstant.AppDownLoad;
         message = new WXMediaMessage(webpager);
@@ -438,7 +420,7 @@ public class MainActivity extends BaseActivity
                 Log.e(TAG," toast time is "+Toast.LENGTH_SHORT);
                 if (secondTime - exitTime > 2500) {
                     //如果两次按键时间间隔大于2秒，则不退出
-                    mytoast.makeText(MainActivity.this,"再按一次退出");
+                    ToastUtils.showToast("再按一次退出");
                     exitTime = secondTime;
                     //更新firstTime
                     return true;
@@ -450,17 +432,6 @@ public class MainActivity extends BaseActivity
         }
         return super.onKeyUp(keyCode, event);
     }
-    //***********************生命周期*******************************************
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.i(TAG, "onRestart()");
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(TAG, "onStart: ");
-    }
 
     /**
      * 方法必须重写
@@ -468,7 +439,6 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume: ");
         if( UserActionRecordUtils.getIpbean() == null)
              NetMesManager.setIP(this);
         getAdvert();
@@ -496,43 +466,10 @@ public class MainActivity extends BaseActivity
      * 方法必须重写
      */
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG, "onPause: ");
-    }
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.i(TAG, "onStop: ");
-    }
-    /**
-     * 方法必须重写
-     */
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy: ");
-        unregisterReceiver(receiver);
         UserActionRecordUtils.setOutTime(System.currentTimeMillis());
         UserBrowseRecordUtils.save();
         UserShareUtils.save();
-    }
-//*******************异常退出保留数据方法*******************************
-    /** 异常退出保留数据
-     *
-     * 方法必须重写
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.i(TAG, "onSaveInstanceState: ");
-        outState.putInt("IntTest", 0);
-//        unregisterReceiver(receiver);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.i(TAG, "onRestoreInstanceState: ");
     }
 }

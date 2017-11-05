@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.entity.MessageItem;
 
 /**收藏栏的adapter
  * Created by wangqiang on 2016/9/28.
@@ -41,11 +42,11 @@ public class CollectRceAdapter extends  RecyclerView.Adapter<CollectRceAdapter.M
     @Override
     public void onBindViewHolder(CollectRceAdapter.MyViewHolder holder, final int position) {
         try{
-            holder.title.setText(data.get(position).get("title").toString());
-            holder.time.setText(data.get(position).get("time").toString());
-            if(data.get(position).containsKey("location")){
-                holder.place.setText(data.get(position).get("location").toString());
-                holder.company.setText(data.get(position).get("company").toString());
+            holder.title.setText(data.get(position).get(MessageItem.keyVal.title).toString());
+            holder.time.setText(data.get(position).get(MessageItem.keyVal.time).toString());
+            if(data.get(position).containsKey(MessageItem.keyVal.locate)){
+                holder.place.setText(data.get(position).get(MessageItem.keyVal.locate).toString());
+                holder.company.setText(data.get(position).get(MessageItem.keyVal.from).toString());
             }
             else
             {

@@ -1,5 +1,6 @@
-package juhe.jiangdajiuye.view;
+package juhe.jiangdajiuye.view.xuanJiang;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,8 +16,8 @@ import java.util.List;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.XJFragmentAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.fragment.fragment;
-import juhe.jiangdajiuye.util.XuanJiangData;
+import juhe.jiangdajiuye.view.xuanJiang.fragment.JiangSuFragment;
+import juhe.jiangdajiuye.view.xuanJiang.constant.XuanJiangData;
 
 /**
  * Created by wangqiang on 2016/10/1.
@@ -30,10 +31,14 @@ public class xuanjiang extends BaseActivity {
     private XJFragmentAdapter adapter;
     public String[] college ;
     public String[] urls ;
+    private int provinceId ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xuanjiang);
+        Intent intent = getIntent();
+        provinceId = intent.getIntExtra("provinceId",0);
+        Log.i(TAG, "onCreate: "+provinceId);
         findid();
         initList();
         initTabLayout();
@@ -42,20 +47,17 @@ public class xuanjiang extends BaseActivity {
         viewPager = (ViewPager) findViewById(R.id.xuanjiang_viewpager);
         toolbar = (Toolbar)findViewById(R.id.xuanjiang_toolbar);
         tabLayout = (TabLayout) findViewById(R.id.xuanjiang_tabLayout);
-
     }
     public void initList(){
-        XuanJiangData xuanJiangData = new XuanJiangData();
-        college = xuanJiangData.getTitle();
-        urls = xuanJiangData.getUrls();
+        XuanJiangData xuanJiangData =  XuanJiangData.getInstance();
+        college = xuanJiangData.getTitle(provinceId);
+        urls = xuanJiangData.getUrls(provinceId);
         for(int i =0;i<college.length;i++){
-            fragment f = fragment.newInstance(urls[i],college[i],i);
-//            fragmentSD f = new fragmentSD();
+            Fragment f = JiangSuFragment.newInstance(urls[i],college[i],i,provinceId);
             list.add(f);
         }
         adapter  = new XJFragmentAdapter(getSupportFragmentManager(), list,college);
         viewPager.setAdapter(adapter);
-//        viewPager.setOffscreenPageLimit(3);
         viewPager.setOnPageChangeListener(new pagerlist());
         viewPager.setCurrentItem(0);
     }

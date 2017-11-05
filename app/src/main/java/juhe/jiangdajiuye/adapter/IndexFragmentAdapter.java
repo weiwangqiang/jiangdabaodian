@@ -86,7 +86,11 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
                 ((mItemViewHodler)holder).place.setVisibility(View.VISIBLE);
                 ((mItemViewHodler)holder).place.setText(data.getLocate());
             }
-            if(data.getFrom() != null){
+            if(data.getTheme() != null){
+                ((mItemViewHodler)holder).company.setText(data.getTheme());
+                ((mItemViewHodler)holder).company.setVisibility(View.VISIBLE);
+            }
+            else if(data.getFrom() != null){
                 ((mItemViewHodler)holder).company.setText(data.getFrom());
                 ((mItemViewHodler)holder).company.setVisibility(View.VISIBLE);
             }
@@ -153,7 +157,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
         switch (state){
             case STATUS_DEFAULT:
                 footerViewHolder.tv.setText("上拉加载更多");
-                footerViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case STATUS_REFRESHING:
                 footerViewHolder.tv.setText("正在加载");
@@ -162,11 +166,11 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
                 break;
             case STATUS_END:
                 footerViewHolder.tv.setText("没有更多了");
-                footerViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case STATUS_ERROR:
                 footerViewHolder.tv.setText("网络出错，请连接后再试");
-                footerViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
         }
     }

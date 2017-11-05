@@ -10,22 +10,23 @@ import com.tencent.bugly.BuglyStrategy;
 import com.tencent.bugly.beta.Beta;
 
 import cn.bmob.v3.Bmob;
-import cn.jpush.android.api.JPushInterface;
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
 
 /**
  * Created by wangqiang on 2017/4/23.
+ *
+ * 不要在application 中完成第三方的初始化工作
+ *  可以开一个service完成所有第三方的初始化工作
  */
 
 public class MyApplication extends Application {
     private static final String TAG = "MyApplication";
-    public static final String APP_ID = "19ecb1a49a"; // TODO 替换成bugly上注册的appid
-    private String Bmob_AppId = "f1a3949757fdc914a823e15eef961ce6";//bmob
 
     protected static MyApplication application;
-
+    public static final String APP_ID = "19ecb1a49a"; // TODO 替换成bugly上注册的appid
+    private String Bmob_AppId = "f1a3949757fdc914a823e15eef961ce6";//bmob
     public static Context getContext() {
         return context;
     }
@@ -38,8 +39,6 @@ public class MyApplication extends Application {
         super.onCreate();
         application = this;
         context = this;
-        JPushInterface.setDebugMode(false); 	// 设置开启日志,发布时请关闭日志
-        JPushInterface.init(this);     		// 初始化 JPush
         Bmob.initialize(this, Bmob_AppId);
         NetStateUtils.initNetWorkState(this);
         Log.i(TAG, "onCreate: init jpush ");
@@ -92,6 +91,10 @@ public class MyApplication extends Application {
         Beta.upgradeDialogLayoutId = R.layout.upgrade_dialog;
 //        CrashReport.initCrashReport(getApplicationContext(), APP_ID, true);
         Bugly.init(this, APP_ID, false, strategy);
+        /**
+         *  开一个service完成所有第三方的初始化工作
+         */
+//        InitService.startService(this);
     }
 
     public static MyApplication getApplication(){

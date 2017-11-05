@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.tool;
+package juhe.jiangdajiuye.view.xuanJiang.parse;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,18 +8,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.view.xuanJiang.entity.XuanHolder;
 
 /**
  * Created by wangqiang on 2016/10/16.
  */
-public class parseOther {
-    public parseOther(){}
-    public List<MessageItem> parse(String response, int from, String url){
-        switch(from){
-            case 5:
+public class parseJiangSu {
+    private static final String TAG = "parseJiangSu";
+    public static parseJiangSu instance ;
+    public static parseJiangSu getInstance(){
+        if(instance == null)
+            instance = new parseJiangSu() ;
+        return instance ;
+    }
+    public parseJiangSu(){}
+    public List<MessageItem> parse(String response,XuanHolder holder){
+        switch(holder.getCollege()){
+            case "南京大学":
                 return nanjingdaxue(response);
             default:
-                return commonParse(response,url.substring(0,url.length()-14));
+                return commonParse(response,holder.getBaseUrl().substring(0,holder.getBaseUrl().length()-14));
         }
     }
 
@@ -47,29 +55,39 @@ public class parseOther {
         return list;
     }
 
-
     /**
      * 南京大学
      * http://job.nju.edu.cn:9081/login/nju/home.jsp?type=zph&pageNow=1
      */
     public List<MessageItem> nanjingdaxue(String response){
+        System.out.println(response);
         List<MessageItem> list = new ArrayList<>();
         Document doc = Jsoup.parse(response);
-
         Elements elements = doc.getElementsByClass("article-lists").select("li");
         for (int i = 0; i < elements.size(); i++) {
             MessageItem item = new MessageItem();
             Elements elements1 = elements.get(i).select("span");
-            if(elements1.size() ==0) continue;
-            item.setUrl("http://job.nju.edu.cn:9081/login/nju/"+elements1.get(1).select("a").attr("href"));
-            item.setTitle(elements1.get(1).select("a").text());
-            item.setTime(elements1.get(2).text());
-            if(elements1.size()>3)
-                item.setFrom(elements1.get(3).text());
+            if(elements1.size() <2) continue;
+            item.setUrl("http://job.nju.edu.cn:9081/login/nju/"+
+                    elements1.get(0).select("a").attr("href"));
+            item.setTitle(elements1.get(0).select("a").text());
+            String string[] = elements1.get(1).text().replaceAll("\u00A0", ":").split("::");
+            item.setLocate(string[0]);
+            item.setTime(string[1]+"\n"+string[2]);
+            item.setFrom("南京大学");
             list.add(item);
         }
         return list;
     }
-
+    public static int getPager(String string){
+        if(string == null) return  0 ;
+        Document doc = Jsoup.parse(string);
+        Elements elements = doc.getElementsByClass("artilce-nav").select("a");
+        String str[] = elements.get(0).text().split("/");
+        int total = Integer.parseInt(str[0]);
+        int num = Integer.parseInt(str[1]);
+        if(total % num == 0) return total / num ;
+        else return (total / num )+ 1;
+    }
 
 }

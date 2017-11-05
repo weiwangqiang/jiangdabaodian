@@ -1,6 +1,8 @@
 package juhe.jiangdajiuye.view;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -15,7 +17,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.tencent.connect.share.QQShare;
@@ -34,6 +35,7 @@ import java.util.Calendar;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.shareDialog;
@@ -45,12 +47,7 @@ import juhe.jiangdajiuye.view.constant.AppConstant;
  */
 public class browse extends BaseActivity {
     private String TAG = "WebBrowse";
-    private String title,company,location,time;
-    private int from;
-    private Boolean ischeck = false;
-    private Button back;
-//    private Toolbar toolbar;
-    private String url;
+    private Boolean isCheck = false;
     private WebView webView;
     private ProgressDialog myprogress;
     private Dialog dialog;
@@ -64,9 +61,27 @@ public class browse extends BaseActivity {
     private WXWebpageObject webpager ;
     private WXMediaMessage message;
     private SendMessageToWX.Req req;
-
+    private MessageItem mItem;
     private CollectSqlHelper helper;
     private SQLiteDatabase sqLiteDatabase;
+
+    /**
+     *
+     * @param context 上下文
+     * @param item 消息列表
+     *
+     */
+    public static void StartActivity(Context context,MessageItem item){
+        Intent intent = new Intent(context,browse.class);
+        intent.putExtra(MessageItem.keyVal.url,item.getUrl());
+        intent.putExtra(MessageItem.keyVal.title,item.getTitle());
+        intent.putExtra(MessageItem.keyVal.time,item.getTime());
+        intent.putExtra(MessageItem.keyVal.from,item.getFrom());
+        intent.putExtra(MessageItem.keyVal.locate,item.getLocate());
+        context.startActivity(intent);
+        if(context instanceof Activity)
+        ((Activity)context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,9 +95,8 @@ public class browse extends BaseActivity {
         findid();
         initToolbar();
         getParam();
-        setlister();
         initView();
-        initWeb(url);
+        initWeb(mItem.getUrl());
     }
     private Toolbar toolbar;
     public void initToolbar(){
@@ -108,14 +122,8 @@ public class browse extends BaseActivity {
         webView = (WebView)findViewById(R.id.webView);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
     }
-    public void setlister(){
-//        back.setOnClickListener(this);
-//        collect.setOnClickListener(this);
-//        share.setOnClickListener(this);
-
-    }
     public void initView(){
-        ischeck = helper.hasURL(url);
+        isCheck = helper.hasURL(mItem.getUrl());
     }
 
     /**
@@ -123,16 +131,13 @@ public class browse extends BaseActivity {
      */
     public void getParam(){
         Intent intent = getIntent();
-        url  =  intent.getStringExtra("url");
-        title = intent.getStringExtra("title");
-        time = intent.getStringExtra("time");
-        //1是从招聘会，宣讲会来的，2是从信息速递来的，3是从收藏栏来的
-        from = intent.getIntExtra("from",-1);
-        if(from != 2){
-            company = intent.getStringExtra("company");
-            location = intent.getStringExtra("location");
-        }
-       Log.e(TAG,"url is "+url+" title is "+title+ " time is "+time+" company is "+company+" location is "+location);
+        mItem = new MessageItem();
+        mItem.setUrl(intent.getStringExtra(MessageItem.keyVal.url));
+        mItem.setTitle(intent.getStringExtra(MessageItem.keyVal.title));
+        mItem.setTime(intent.getStringExtra(MessageItem.keyVal.time));
+        mItem.setFrom(intent.getStringExtra(MessageItem.keyVal.from));
+        mItem.setLocate(intent.getStringExtra(MessageItem.keyVal.locate));
+        Log.i(TAG, "getParam: "+mItem.getFrom()+mItem.getLocate());
     }
     public void initWeb(String url){
         WebSettings wSet = webView.getSettings();
@@ -176,7 +181,7 @@ public class browse extends BaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         this.menu = menu;
-        Menutitle = helper.hasURL(url) ? "取消收藏":"收藏";
+        Menutitle = helper.hasURL(mItem.getUrl()) ? "取消收藏":"收藏";
         menu.findItem(R.id.browse_collect).setTitle(Menutitle);
         invalidateOptionsMenu();
         return true;
@@ -205,53 +210,65 @@ public class browse extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
     public int SendCalendarCode = 0x12;
-    private void calendar() {
-        Log.i(TAG, "calendar: ");
-        String LOCATION;
 
-        if(company == null && location == null)
-            LOCATION = "地点未知，请点击修改";
-        else
-        {
-            LOCATION = company + "  "+ location ;
+    /**
+     * 添加到日历中
+     */
+    private void calendar() {
+        StringBuilder LOCATION = new StringBuilder();
+        if(mItem.getFrom()== null  &&  mItem.getLocate() == null){
+            LOCATION.append("地点未知");
         }
-        String TITLE = title ;
-        String[] tiems = time.split("-|:| ");
-        int size = tiems.length ;
-        for(String s : tiems){
+        else{
+            if(mItem.getFrom() != null)
+                LOCATION.append(mItem.getFrom());
+            if(mItem.getLocate() != null)
+                LOCATION.append(" "+mItem.getLocate()) ;
+        }
+        String[] times = mItem.getTime().split("-|:| |\\n|：");
+        for(String s : times){
             System.out.println(" ; "+s);
         }
         Calendar beginTime = Calendar.getInstance();
         Calendar endTime = Calendar.getInstance();
-        if(tiems.length >= 3){
-            int year = Integer.parseInt(tiems[0]);
-            int month = Integer.parseInt(tiems[1]);
+        if(times.length >=3){
+            int year = Integer.parseInt(times[0]);
+            int month = Integer.parseInt(times[1]);
             month--;
-            int day = Integer.parseInt(tiems[2]);
-            if(tiems.length == 3){
-                beginTime.set(year, month, day, 0, 0);
-                endTime.set(year, month, day+1, 0, 0);
-            }else {
-                int hourS = Integer.parseInt(tiems[3]);
-                int minuteS = Integer.parseInt(tiems[4]);
-                int hourE = Integer.parseInt(tiems[5]);
-                int minuteE = Integer.parseInt(tiems[6]);
-                beginTime.set(year, month, day, hourS, minuteS);
-                endTime.set(year, month, day, hourE, minuteE);
+            int day = Integer.parseInt(times[2]);
+            int hourS = 0;
+            int minuteS = 0 ;
+            int hourE = 0 ;
+            int minuteE = 0;
+            if(times.length == 3){//没有 hh:mm:ss
+            }else if(times.length == 5){//只有开始时间 的hh:mm:ss
+                 hourS = Integer.parseInt(times[3]);
+                 minuteS = Integer.parseInt(times[4]);
+            }else{//有具体时间段 hh:mm:ss - hh:mm:ss
+                 hourS = Integer.parseInt(times[3]);
+                 minuteS = Integer.parseInt(times[4]);
+                 hourE = Integer.parseInt(times[5]);
+                 minuteE = Integer.parseInt(times[6]);
+
             }
+            beginTime.set(year, month, day, hourS, minuteS);
+            endTime.set(year, month, day, hourE, minuteE);
         }
         Intent calendarIntent = new Intent(Intent.ACTION_INSERT, CalendarContract.Events.CONTENT_URI);
         calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
         calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
-        calendarIntent.putExtra(CalendarContract.Events.TITLE,title);
-        calendarIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, LOCATION);
+        calendarIntent.putExtra(CalendarContract.Events.TITLE,mItem.getTitle());
+        calendarIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, LOCATION.toString());
         startActivityForResult(calendarIntent,SendCalendarCode);
     }
 
+    /**
+     * 用浏览器打开
+     */
     private void openInBrowse() {
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
-        Uri content_url = Uri.parse(url);
+        Uri content_url = Uri.parse(mItem.getUrl());
         intent.setData(content_url);
         startActivity(intent);
     }
@@ -266,20 +283,11 @@ public class browse extends BaseActivity {
         sharedialog.setItemlister(new myItemlist());
     }
     private void showCollect(){
-        if(ischeck){
-            uiutils.showToast("取消成功");
-            Menutitle = "收藏";
-            menu.findItem(R.id.browse_collect).setTitle("收藏");
-
-        }
-        else if(!ischeck){
-            uiutils.showToast("收藏成功");
-            Menutitle = "取消收藏";
-            menu.findItem(R.id.browse_collect).setTitle("取消收藏");
-
-        }
+        String showText = isCheck ? "取消成功":"收藏成功";
+        Menutitle = isCheck ? "收藏" : "取消收藏";
+        uiutils.showToast(showText);
         invalidateOptionsMenu();
-        ischeck = !ischeck;
+        isCheck = !isCheck;
     }
     /**
      * popupwind的Item 监听
@@ -312,10 +320,10 @@ public class browse extends BaseActivity {
     private void shareToWX(){
         Toast.makeText(this,"正在跳转",Toast.LENGTH_SHORT).show();
         webpager = new WXWebpageObject();
-        webpager.webpageUrl = url;
+        webpager.webpageUrl = mItem.getUrl();
         message = new WXMediaMessage(webpager);
         message.title = AppConstant.AppName;
-        message.description = "我正在"+AppConstant.AppName+"看"+title;
+        message.description = "我正在"+AppConstant.AppName+"看"+mItem.getTitle();
         req.transaction = "webPager";
         req.message = message;
         Boolean get = api.sendReq(req);
@@ -326,8 +334,8 @@ public class browse extends BaseActivity {
         Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         params.putString(QQShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);
-        params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "我正在看"+title);
-        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, url);
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "我正在看"+mItem.getTitle());
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mItem.getUrl());
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, AppConstant.AppIcnUrl);
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  AppConstant.AppName);
         dialog.cancel();
@@ -339,8 +347,8 @@ public class browse extends BaseActivity {
         list.add(AppConstant.AppIcnUrl);
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);//必填
-        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,"我正在看"+title);//选填
-        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,"我正在看"+mItem.getTitle());//选填
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, mItem.getUrl());//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL,list);
         dialog.cancel();
         tencent.shareToQzone(browse.this, params,baseuiLister);
@@ -385,12 +393,17 @@ public class browse extends BaseActivity {
     @Override
     public void onPause(){
         super.onPause();
-        if(ischeck&&from!=3){
-            helper.addCollect(title,company,location,time,url);
+        //收藏
+        if(isCheck&& !helper.hasURL(mItem.getUrl())){
+            helper.addCollect(mItem.getTitle(),
+                    mItem.getFrom(),
+                    mItem.getLocate(),
+                    mItem.getTime(),
+                    mItem.getUrl());
         }
-        else if (helper.hasURL(url)&&!ischeck){
+        else if (helper.hasURL(mItem.getUrl())&&!isCheck){
             //取消收藏
-            helper.delete(url);
+            helper.delete(mItem.getUrl());
         }
 }
 

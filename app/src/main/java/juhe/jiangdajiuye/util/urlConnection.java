@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -66,10 +68,17 @@ public class urlConnection   {
                     "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0");
             connect.setRequestProperty("Connection",
                     "keep-alive");
+            connect.setRequestProperty("Accept-Charset", "utf-8");
+            connect.setRequestProperty("contentType", "utf-8");
             connect.connect();
-            reader = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+            Map<String, List<String>> map = connect.getHeaderFields();
+            String strings[] = map.get("Content-Type").get(0).split(";");
+            //如果响应头的编码格式是 GBK 就采用 GBK格式解码
+            if(strings.length ==2 && strings[1].equals("charset=GBK"))
+                reader = new BufferedReader(new InputStreamReader(connect.getInputStream(),"GBK"));
+            else
+                reader = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             String line ;
-
             while ((line = reader.readLine()) !=null){
                 result += line;
             }

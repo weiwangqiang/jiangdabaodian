@@ -1,6 +1,5 @@
 package juhe.jiangdajiuye.view;
 
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,14 +15,15 @@ import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.CollectRceAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.entity.MessageItem;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 
 /**
  * Created by wangqiang on 2016/10/6.
+ * 收藏夹
  */
 public class collect extends BaseActivity {
     private String TAG = "fragmentCollect";
-    private View view;
     private Boolean first = true;
     public RecyclerView recyclerView;
     private Toolbar toolbar;
@@ -63,15 +63,13 @@ public class collect extends BaseActivity {
             @Override
             public void ItemLister(int position) {
                 String url = date.get(position).get("url").toString();
-                Intent intent = new Intent(collect.this,browse.class);
-                intent.putExtra("url",url);
-                intent.putExtra("from",3);
-                intent.putExtra("title",date.get(position).get("title"));
-                intent.putExtra("company",date.get(position).get("company"));
-                intent.putExtra("location",date.get(position).get("place"));
-                intent.putExtra("time",date.get(position).get("time"));
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
+                MessageItem item = new MessageItem();
+                item.setUrl(url);
+                item.setTitle(date.get(position).get(MessageItem.keyVal.title));
+                item.setFrom(date.get(position).get(MessageItem.keyVal.from));
+                item.setLocate(date.get(position).get(MessageItem.keyVal.locate));
+                item.setTime(date.get(position).get(MessageItem.keyVal.time));
+                browse.StartActivity(collect.this,item);
             }
         });
     }

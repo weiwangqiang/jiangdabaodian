@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -49,20 +48,6 @@ public class welcome extends BaseActivity {
         isfirst = sharedPreferences.getBoolean("first",true);
         init();
         UserActionRecordUtils.setComeTime(System.currentTimeMillis());
-    }
-
-    @Override
-    protected void onStart() {
-        Log.i(TAG, "onStart: ------");
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onResume() {
-        Log.i(TAG, "onResume: -----------");
-        super.onResume();
-
     }
 
     private void init(){
