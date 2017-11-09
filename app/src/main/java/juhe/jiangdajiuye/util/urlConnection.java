@@ -42,7 +42,6 @@ public class urlConnection   {
      * @param url
      */
     public void get(final String url) {
-
         service.execute(new Runnable() {
             @Override
             public void run() {
@@ -55,10 +54,10 @@ public class urlConnection   {
     int ResponseCode = 0;
     public  void realget(String url1){
         result = "";
-        Log.i(TAG, "realget: "+url1);
         BufferedReader reader =  null;
         try{
             URL url = new URL(url1);
+            Log.i(TAG, "realget: "+url);
             connect = (HttpURLConnection)url.openConnection();
             connect.setConnectTimeout(10000);
             //设置请求属性

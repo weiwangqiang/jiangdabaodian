@@ -1,6 +1,7 @@
 package juhe.jiangdajiuye.view.Jpush;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -20,7 +21,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
@@ -37,7 +37,6 @@ import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.entity.JPushMes;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.shareDialog;
@@ -70,6 +69,14 @@ public class WebBrowse extends BaseActivity {
     private CollectSqlHelper helper;
     private SQLiteDatabase sqLiteDatabase;
     private String IcnUrl = "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3084594445,4206732502&fm=96";
+    public static Intent getActivityInt (Context context,String to){
+        Intent intent = new Intent(context,WebBrowse.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url",to);
+        intent.putExtras(bundle);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent ;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,9 +130,8 @@ public class WebBrowse extends BaseActivity {
     public void getParam(){
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        Gson gson = new Gson();
-        JPushMes jp = gson.fromJson(bundle.getString("cn.jpush.android.EXTRA"),JPushMes.class);
-        url = jp.getUrl();
+        String to = bundle.getString("url");
+         url = to;
     }
     public void initWeb(String url){
         if(url==null)

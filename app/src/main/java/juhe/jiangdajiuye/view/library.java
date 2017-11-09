@@ -28,8 +28,6 @@ import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.parseTools;
 import juhe.jiangdajiuye.util.urlConnection;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 
 /**
  * Created by wangqiang on 2016/10/6.
@@ -38,7 +36,7 @@ public class library extends BaseActivity implements
         Toolbar.OnMenuItemClickListener,OnLoadMoreListener {
     public EditText edit;
     private String TAG = "fragmentLibrary";
-    private OkHttpClient mOkHttpClient ;
+//    private OkHttpClient mOkHttpClient ;
     public ExecutorService service;
 
     private int page = 1;
@@ -60,7 +58,7 @@ public class library extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_fragment);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        mOkHttpClient = new OkHttpClient();
+//        mOkHttpClient = new OkHttpClient();
         service = Executors.newFixedThreadPool (Runtime.getRuntime().availableProcessors());
         initView();
     }
@@ -174,7 +172,7 @@ public class library extends BaseActivity implements
             }
         }
         //解决中文乱码问题
-        HttpUrl parsed = HttpUrl.parse(getUrl());
+//        HttpUrl parsed = HttpUrl.parse(getUrl());
         final urlConnection connection= new urlConnection(this);
         connection.setNetListener(new urlConnection.NetListener() {
             @Override
@@ -197,7 +195,7 @@ public class library extends BaseActivity implements
                 myprogress.cancel();
             }
         });
-        connection.get(parsed.toString());
+        connection.get(getUrl());
     }
     public void showProgress(){
         myprogress = new ProgressDialog(this,R.drawable.waiting);

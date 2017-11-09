@@ -56,12 +56,17 @@ public class about extends BaseActivity {
         initToolbar();
     }
     public void checkUpData(View view){
+        /**
+         * 参数1：isManual 用户手动点击检查，非用户点击操作请传false
+           参数2：isSilence 是否显示弹窗等交互，[true:没有弹窗和toast] [false:有弹窗或toast]
+         */
         Beta.checkUpgrade();
     }
     private void loadUpgradeInfo() {
+        Log.i(TAG, "loadUpgradeInfo: ");
         if (textViewUp == null)
             return;
-
+        Log.i(TAG, "loadUpgradeInfo: get message ");
         /***** 获取升级信息 *****/
         UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
 
