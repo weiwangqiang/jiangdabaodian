@@ -7,7 +7,6 @@ import android.util.Log;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.BuglyStrategy;
 import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
@@ -19,8 +18,6 @@ import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
 
-import static cn.bmob.v3.Bmob.getApplicationContext;
-
 /**
  * class description here
  *
@@ -28,15 +25,14 @@ import static cn.bmob.v3.Bmob.getApplicationContext;
  * @since 2017-11-05
  */
 
-public class InitWoker  {
+public class InitWorker {
 
     private static final String TAG = "InitWorker ";
 
     public static void initSDK(Context mCtx){
 
-         final String Bugly_APPId = "19ecb1a49a"; // TODO 替换成bugly上注册的appid
+         final String Bugly_APPId = "19ecb1a49a "; // TODO 替换成bugly上注册的appid
          String Bmob_AppId = "f1a3949757fdc914a823e15eef961ce6";//bmob
-        Bmob.initialize(mCtx, Bmob_AppId);
         // 初始化BmobSDK
         Bmob.initialize(mCtx, Bmob_AppId);
 // 使用推送服务时的初始化操作
@@ -98,9 +94,8 @@ public class InitWoker  {
         Beta.defaultBannerId = R.mipmap.logo;
         Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         Beta.upgradeDialogLayoutId = R.layout.upgrade_dialog;
-        CrashReport.initCrashReport(getApplicationContext(), Bugly_APPId, true);
-        Bugly.init(mCtx, Bugly_APPId, false, strategy);
-
+//        Bugly.init(mCtx, Bugly_APPId, true, strategy);
+        Bugly.init(mCtx,Bugly_APPId, true);
 
         Log.i(TAG, "onStartCommand: 初始化完成 ！ ");
     }

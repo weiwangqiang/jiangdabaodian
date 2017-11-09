@@ -26,7 +26,7 @@ public class MyApplication extends Application {
         /**
          *  开一个service完成所有第三方的初始化工作
          */
-        InitWoker.initSDK(this);
+        InitWorker.initSDK(this);
     }
 
     public static MyApplication getApplication(){

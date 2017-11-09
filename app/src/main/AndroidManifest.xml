@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="juhe.jiangdajiuye"
-    android:versionCode="307"
-    android:versionName="3.0.7">
+    android:versionCode="3"
+    android:versionName="3.0.0">
 
     <permission
         android:name="juhe.jiangdajiuye.permission.JPUSH_MESSAGE"
@@ -88,9 +88,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!-- 腾讯的activity -->
         <!-- 腾信bugly -->
-
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
