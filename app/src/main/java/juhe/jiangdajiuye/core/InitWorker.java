@@ -1,11 +1,7 @@
-package juhe.jiangdajiuye.Service;
+package juhe.jiangdajiuye.core;
 
-import android.app.IntentService;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.tencent.bugly.Bugly;
@@ -13,58 +9,46 @@ import com.tencent.bugly.BuglyStrategy;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
 
+import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobInstallationManager;
+import cn.bmob.v3.InstallationListener;
+import cn.bmob.v3.exception.BmobException;
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
 
+import static cn.bmob.v3.Bmob.getApplicationContext;
+
 /**
  * class description here
  *
- *  初始化工作的service  ,不要在application 中完成第三方的初始化工作
- *
  * @author wangqiang
- * @since 2017-09-15
+ * @since 2017-11-05
  */
 
-public class InitService extends IntentService {
-    private static final String TAG = "InitService";
-    private static Context mCtx ;
-    public static final String APP_ID = "19ecb1a49a"; // TODO 替换成bugly上注册的appid
-    private String Bmob_AppId = "f1a3949757fdc914a823e15eef961ce6";//bmob
+public class InitWoker  {
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public InitService(String name) {
-        super(name);
-    }
+    private static final String TAG = "InitWorker ";
 
-    public static void startService(Context context){
-        Intent intent = new Intent(context,InitService.class);
-        mCtx = context ;
-        mCtx.startService(intent);
-    }
+    public static void initSDK(Context mCtx){
 
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-
+         final String Bugly_APPId = "19ecb1a49a"; // TODO 替换成bugly上注册的appid
+         String Bmob_AppId = "f1a3949757fdc914a823e15eef961ce6";//bmob
         Bmob.initialize(mCtx, Bmob_AppId);
+        // 初始化BmobSDK
+        Bmob.initialize(mCtx, Bmob_AppId);
+// 使用推送服务时的初始化操作
+        BmobInstallationManager.getInstance().initialize(new InstallationListener<BmobInstallation>() {
+            @Override
+            public void done(BmobInstallation bmobInstallation, BmobException e) {
+
+            }
+        });
+// 启动推送服务
+        BmobPush.startWork(mCtx);
+
         NetStateUtils.initNetWorkState(mCtx);
         Log.i(TAG, "onCreate: init jpush ");
 
@@ -114,8 +98,10 @@ public class InitService extends IntentService {
         Beta.defaultBannerId = R.mipmap.logo;
         Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         Beta.upgradeDialogLayoutId = R.layout.upgrade_dialog;
-        CrashReport.initCrashReport(getApplicationContext(), APP_ID, true);
-        Bugly.init(mCtx, APP_ID, false, strategy);
+        CrashReport.initCrashReport(getApplicationContext(), Bugly_APPId, true);
+        Bugly.init(mCtx, Bugly_APPId, false, strategy);
+
+
         Log.i(TAG, "onStartCommand: 初始化完成 ！ ");
     }
 }

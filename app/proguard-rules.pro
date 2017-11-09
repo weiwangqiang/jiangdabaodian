@@ -15,15 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--ignorewarnings
 
 -keep class * {
     public private *;
 }
 -keep class android.support.**{*;}
 -dontwarn android.support.**
--keep juhe.jiangdajiuye.view.*
--keep juhe.jiangdajiuye.core.*
 -keepattributes Signature
 -keepattributes *Annotation*
 -dontoptimize
@@ -33,10 +30,6 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
 
--dontwarn cn.jpush.**
--keep class cn.jpush.** { *; }
--keep class * extends cn.jpush.android.helpers.JPushMessageReceiver { *; }
-
-#-dontwarn com.tencent.bugly.**
-#-keep public class com.tencent.bugly.**{*;}
-#-keep class android.support.**{*;}
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+-keep class android.support.**{*;}

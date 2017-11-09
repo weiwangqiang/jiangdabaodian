@@ -59,9 +59,10 @@ public class about extends BaseActivity {
         Beta.checkUpgrade();
     }
     private void loadUpgradeInfo() {
+        Log.i(TAG, "loadUpgradeInfo: ");
         if (textViewUp == null)
             return;
-
+        Log.i(TAG, "loadUpgradeInfo: get message ");
         /***** 获取升级信息 *****/
         UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
 

@@ -30,10 +30,7 @@ public abstract class AbsAdapter<T extends Object>  extends  RecyclerView.Adapte
     public static final int STATUS_END = 0x12;
     public static final int STATUS_ERROR = 0x13;
     public int getDataSize() {
-        if(data != null )
-            return data.size();
-        else
-            return 0 ;
+        return data == null ? 0 : data.size() ;
     }
 
     private List<T> data;
