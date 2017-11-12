@@ -13,4 +13,4 @@
 支持省份： <br />
 - 江苏、上海、浙江地区的高校 <br />
 
-<img src="https://raw.githubusercontent.com/weiwangqiang/ProjectIcn/master/picture/jiangdabaodian/Screenshot_2017-03-30-12-10-59_meitu_4.jpg" width="50%" height="50%">
+<img src="https://raw.githubusercontent.com/weiwangqiang/ProjectIcn/master/picture/jiangdabaodian/Screenshot_2017-03-30-12-10-59_meitu_4.jpg" width="30%" height="30%">
