@@ -15,14 +15,16 @@ import java.util.List;
 
 import juhe.jiangdajiuye.R;
 
-
-public class myExpandableListAdapter implements ExpandableListAdapter
+/**
+ *  图书馆详情列表
+ */
+public class MyExpandableListAdapter implements ExpandableListAdapter
 {
 	Context context;
 	String header;
 	List<List<String>> list;
 	List<String> itme_text1 = new ArrayList<String>();
-	public myExpandableListAdapter(Context context, String header,
+	public MyExpandableListAdapter(Context context, String header,
 								   List<List<String>> list){
 		this.context = context;
 		this.header = header;

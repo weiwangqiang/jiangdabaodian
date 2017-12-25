@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.myExpandableListAdapter;
+import juhe.jiangdajiuye.adapter.MyExpandableListAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.sql.LibrarySqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
@@ -36,7 +36,7 @@ public class searchBook extends BaseActivity{
     private RadioButton collect;
     private Boolean ischeck = false;
     private ExpandableListView listview;
-    private myExpandableListAdapter adapter;
+    private MyExpandableListAdapter adapter;
     private ProgressDialog myprogress;
     private String book,editor,available,number,url;
     private String TAG = "searchBook";
@@ -173,7 +173,7 @@ public class searchBook extends BaseActivity{
         bm.setText(bookMessage);
         listview.addHeaderView(v);
         listview.addFooterView(footer);
-        adapter = new myExpandableListAdapter(searchBook.this,title,list);
+        adapter = new MyExpandableListAdapter(searchBook.this,title,list);
         listview.setAdapter(adapter);
     }
     public void findfooter(){

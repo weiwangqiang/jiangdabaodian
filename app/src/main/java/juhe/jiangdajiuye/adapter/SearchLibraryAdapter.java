@@ -21,6 +21,8 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
 /**
  * class description here
  *
+ * 图书馆搜索列表
+ *
  * @author wangqiang
  * @since 2017-08-08
  */

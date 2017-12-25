@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.viewpagerAdapter;
+import juhe.jiangdajiuye.adapter.ViewPagerAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
 
 /**
@@ -30,7 +30,7 @@ public class guide extends BaseActivity {
     private Animation in,out;
     private int oldPosition = 0;
     private ArrayList<View> list = new ArrayList<>();
-    private viewpagerAdapter adapter;
+    private ViewPagerAdapter adapter;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -64,7 +64,7 @@ public class guide extends BaseActivity {
         list.add(view1);
         list.add(view2);
         list.add(view3);
-        adapter = new viewpagerAdapter(list);
+        adapter = new ViewPagerAdapter(list);
         viewpager.setAdapter(adapter);
         viewpager.setCurrentItem(0);
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

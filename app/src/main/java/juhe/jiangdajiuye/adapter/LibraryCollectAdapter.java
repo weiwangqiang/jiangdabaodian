@@ -15,7 +15,8 @@ import java.util.Map;
 import juhe.jiangdajiuye.InterFace.myitemLister;
 import juhe.jiangdajiuye.R;
 
-/**图书馆
+/**
+ *  图书馆 adapter
  * Created by wangqiang on 2016/9/28.
  */
 public class LibraryCollectAdapter extends  RecyclerView.Adapter<LibraryCollectAdapter.MyViewHolder> {

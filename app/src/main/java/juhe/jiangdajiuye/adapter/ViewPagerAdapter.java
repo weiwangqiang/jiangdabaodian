@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 import java.util.List;
 
 /**
- * Created by wangqiang on 2016/5/15.主界面的Viewpager
+ * Created by wangqiang on 2016/5/15.
+ * 主界面的Viewpager
  */
-public class viewpagerAdapter extends PagerAdapter {
+public class ViewPagerAdapter extends PagerAdapter {
     public List<View> mListViews;
 
-    public viewpagerAdapter(List<View> mListViews) {
+    public ViewPagerAdapter(List<View> mListViews) {
         this.mListViews = mListViews;
     }
     /**

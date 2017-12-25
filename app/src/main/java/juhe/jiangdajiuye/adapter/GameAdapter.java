@@ -17,9 +17,9 @@ import java.util.Map;
  * Created by wangqiang on 2016/6/12.
  * 主界面list 的adapter
  */
-public class gameAdapter extends SimpleAdapter
+public class GameAdapter extends SimpleAdapter
 {
-    private String TAG  = "gameAdapter";
+    private String TAG  = "GameAdapter";
     String filePath = Environment.getExternalStorageDirectory()+"/baodian/pictures";
     Context context;
     List<? extends Map<String ,?>> data ;
@@ -29,7 +29,7 @@ public class gameAdapter extends SimpleAdapter
     ViewHolder holder;
 
 
-    public gameAdapter(Context context, List<? extends Map<String ,?>> data, int resource, String[] from, int[] to) {
+    public GameAdapter(Context context, List<? extends Map<String ,?>> data, int resource, String[] from, int[] to) {
         super(context, data, resource, from, to);
         this.context = context;
         this.data  = data;

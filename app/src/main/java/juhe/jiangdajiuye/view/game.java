@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.gameAdapter;
+import juhe.jiangdajiuye.adapter.GameAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.tool.shareDialog;
 import juhe.jiangdajiuye.view.constant.AppConstant;
@@ -41,7 +41,7 @@ public class game extends BaseActivity implements ListView.OnItemClickListener{
     private String TAG = "game";
     private ArrayList<HashMap<String,String>> data;
     private ListView list;
-    private gameAdapter adapter ;
+    private GameAdapter adapter ;
     private Dialog dialog;
     private shareDialog sharedialog;
     private String APP_ID = "1105550872";
@@ -218,7 +218,7 @@ public class game extends BaseActivity implements ListView.OnItemClickListener{
 //        connection.get(url);
 //    }    //更新数据
     public void upDate(){
-        adapter = new gameAdapter(this,data,
+        adapter = new GameAdapter(this,data,
                 R.layout.game_item,
                 new String[]{"image","title","MessageItem","visit"},
                 new int[]{R.id.game_item_icn,R.id.game_item_title,
