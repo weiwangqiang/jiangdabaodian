@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,7 +23,6 @@ import juhe.jiangdajiuye.sql.LibrarySqlHelper;
  */
 public class Librarycollect extends BaseActivity {
     private String TAG = "Librarycollect";
-    private View view;
     private Boolean first = true;
     public RecyclerView recyclerView;
     private Toolbar toolbar;
@@ -79,7 +76,6 @@ public class Librarycollect extends BaseActivity {
     }
     public void initToolbar(){
         toolbar.setTitle("图书收藏");
-//        toolbar.setNavigationIcon(R.drawable.menue);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,12 +87,8 @@ public class Librarycollect extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
     public void initDate(){
-        Log.e(TAG,"init date first is false");
         data.clear();
         data = helper.selectAll();
-        for(int i =0;i<data.size();i++){
-            Log.e(TAG," book is "+data.get(i).get("book"));
-        }
         first = false;
         if(data.size()==0){
             nothing.setVisibility(View.VISIBLE);
@@ -108,7 +100,6 @@ public class Librarycollect extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case android.R.id.home:
-                Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

@@ -1,9 +1,7 @@
 package juhe.jiangdajiuye.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -11,19 +9,13 @@ import android.widget.TextView;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UploadFileListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.util.AppUtils;
-import juhe.jiangdajiuye.util.ToastUtils;
-import juhe.jiangdajiuye.util.getImageUtils.GetImageFromLocate;
 
 /**
  * class description here
@@ -63,10 +55,8 @@ public class about extends BaseActivity {
         Beta.checkUpgrade();
     }
     private void loadUpgradeInfo() {
-        Log.i(TAG, "loadUpgradeInfo: ");
         if (textViewUp == null)
             return;
-        Log.i(TAG, "loadUpgradeInfo: get message ");
         /***** 获取升级信息 *****/
         UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
 
@@ -125,65 +115,16 @@ public class about extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Log.i(TAG, "onOptionsItemSelected: finished");
                 finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
+
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            default:
-                break;
-        }
-    }
 
-    /**
-     * Called when an activity you launched exits
-     */
-    @Override
-    protected void onActivityResult(int requestCode,
-                                    int resultCode,
-                                    Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode != RESULT_OK)
-            return;
-        switch (requestCode){
-            case GetImageFromLocate.REQUEST_CODE:
-                postFile(GetImageFromLocate.getResult(this,data));
-                break;
-        }
-    }
-    BmobFile bmobFile ;
-    private void postFile(final File file) {
-        Log.i(TAG, "postFile:   ------------- "+file.getPath());
-        bmobFile = new BmobFile(file);
-        bmobFile.uploadblock(new UploadFileListener() {
-
-            @Override
-            public void done(BmobException e) {
-                if(e==null){
-                    ToastUtils.showToast("上传文件成功:");
-                    Log.i(TAG, "done: "+  bmobFile.getFileUrl());
-                }else{
-                    ToastUtils.showToast("上传文件失败：");
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onProgress(Integer value) {
-                Log.i(TAG, "onProgress: "+value );
-                // 返回的上传进度（百分比）
-            }
-        });
     }
 }

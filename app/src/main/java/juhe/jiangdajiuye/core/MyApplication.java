@@ -10,13 +10,14 @@ import android.content.Context;
  *  可以开一个service完成所有第三方的初始化工作
  */
 
-public class MyApplication extends Application {
+public class MyApplication extends Application{
     private static final String TAG = "MyApplication";
     protected static MyApplication application;
     public static Context getContext() {
         return context;
     }
-
+    public MyApplication() {
+    }
     public static Context context ;
     @Override
     public void onCreate() {
