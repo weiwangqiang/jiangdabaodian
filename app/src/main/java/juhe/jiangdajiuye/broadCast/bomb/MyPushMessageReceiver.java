@@ -23,7 +23,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 /**
  * class description here
  *
- *  推送消息
+ *  推送消息接收者
  *
  * @author wangqiang
  * @since 2017-11-05

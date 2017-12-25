@@ -11,7 +11,8 @@ import java.util.List;
 
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
 
-/**网络接口
+/**
+ * 网络状态 接收者
  * Created by wangqiang on 2016/7/14.
  */
 public class NetStateReceiver extends BroadcastReceiver {

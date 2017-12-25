@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.entity.MessageItem;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanHolder;
-import juhe.jiangdajiuye.view.xuanJiang.model.HanZhouDianZiKeJiUniversity;
+import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
+import juhe.jiangdajiuye.view.xuanJiang.entity.HanZhouDianZiKeJiUniversity;
 
 /**
  * class description here
@@ -26,7 +26,7 @@ import juhe.jiangdajiuye.view.xuanJiang.model.HanZhouDianZiKeJiUniversity;
 public class ParseHangZou {
     private static final String TAG = "parseHangZou";
 
-    public static List<MessageItem> parse(String response, XuanHolder holder) {
+    public static List<MessageItem> parse(String response, XuanMesBean holder) {
         switch(holder.getCollege()) {
             case "杭州电子科技大学":
                 return hangZhouDianZi(response);

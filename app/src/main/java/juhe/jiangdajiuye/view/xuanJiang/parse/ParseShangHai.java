@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.entity.MessageItem;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanHolder;
+import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
 
 /**
  * class description here
+ *
+ *  解析上海高校的宣讲会
  *
  * @author wangqiang
  * @since 2017-09-30
@@ -27,7 +29,7 @@ public class ParseShangHai {
     }
 
     public static ParseShangHai parseShangHai ;
-    public List<MessageItem> parse(String response,XuanHolder holder){
+    public List<MessageItem> parse(String response,XuanMesBean holder){
         switch (holder.getCollege()){
             case "上海交通大学":
                 return parseJiaoDa(response);

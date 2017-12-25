@@ -1,24 +1,18 @@
-package juhe.jiangdajiuye.view.Jpush;
+package juhe.jiangdajiuye.view;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tencent.connect.common.Constants;
@@ -36,22 +30,20 @@ import com.tencent.tauth.UiError;
 import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.sql.CollectSqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
 import juhe.jiangdajiuye.tool.ShareDialog;
+import juhe.jiangdajiuye.view.constant.AppConstant;
 
 /**
  * Created by wangqiang on 2016/10/1.
+ * 在线游戏
  */
-public class WebBrowse extends BaseActivity {
+public class GameOnline extends AppCompatActivity implements View.OnClickListener {
     private String TAG = "WebBrowse";
-    private String title,company,location,time;
-    private int from;
     private Boolean ischeck = false;
-    private Button back;
-//    private Toolbar toolbar;
+    private Button back,share;
     private String url;
+    private String title;
     private WebView webView;
     private ProgressDialog myprogress;
     private Dialog dialog;
@@ -65,48 +57,36 @@ public class WebBrowse extends BaseActivity {
     private WXWebpageObject webpager ;
     private WXMediaMessage message;
     private SendMessageToWX.Req req;
-
-    private CollectSqlHelper helper;
-    private SQLiteDatabase sqLiteDatabase;
-    private String IcnUrl = "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3084594445,4206732502&fm=96";
-    public static Intent getActivityInt (Context context,String to){
-        Intent intent = new Intent(context,WebBrowse.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("url",to);
-        intent.putExtras(bundle);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        return intent ;
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.browse);
+        setContentView(R.layout.game_online);
         myprogress = new ProgressDialog(this, R.drawable.waiting);
-        helper = new CollectSqlHelper(this);
-        sqLiteDatabase = helper.getWritableDatabase();
-        helper.setSQL(sqLiteDatabase);
         myprogress.show();
+        Intent intent = getIntent();
+        url = intent.getStringExtra("url");
+        title = intent.getStringExtra("title");
         init();
         findid();
-        getParam();
+        setlister();
         initToolbar();
-        initView();
         initWeb(url);
-        WebTitle.setText("推送详情");
-    }
-    private Toolbar toolbar;
-    public void initToolbar(){
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
     private void init(){
         initWEi();
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
-        tencent = Tencent.createInstance(APP_ID, WebBrowse.this);
-        dialog = sharedialog.getDialog(WebBrowse.this);
+        tencent = Tencent.createInstance(APP_ID, GameOnline.this);
+        dialog = sharedialog.getDialog(GameOnline.this);
+    }
+    private Toolbar toolbar;
+    public void initToolbar(){
+        toolbar.setTitle("");
+//        toolbar.setNavigationIcon(R.drawable.menue);
+        setSupportActionBar(toolbar);
+//        toolbar.setOnMenuItemClickListener(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
     /**初始化微信
      */
@@ -114,56 +94,22 @@ public class WebBrowse extends BaseActivity {
         api = WXAPIFactory.createWXAPI(this,WEI_ID,true);
         api.registerApp(WEI_ID);
     }
-    private TextView WebTitle ;
     public void findid(){
-        webView = (WebView)findViewById(R.id.webView);
+//        back = (Button)findViewById(R.id.gameOnline_back);
+        webView = (WebView)findViewById(R.id.gameOnline_WebView);
+//        share = (Button)findViewById(R.id.gameOnline_share);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-        WebTitle = (TextView)findViewById(R.id.WebTitle);
-    }
-    public void initView(){
-        ischeck = helper.hasURL(url);
-    }
 
-    /**
-     * 获取参数信息
-     */
-    public void getParam(){
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        String to = bundle.getString("url");
-         url = to;
+    }
+    public void setlister(){
     }
     public void initWeb(String url){
-        if(url==null)
-            return ;
-        WebSettings wSet = webView.getSettings();
-        wSet.setJavaScriptEnabled(true);
-//        wSet.setAppCacheEnabled(true);
-        wSet.setSupportZoom(true);
-        wSet.setBuiltInZoomControls(true);
-
-        wSet.setDisplayZoomControls(false);
-        wSet.setAllowFileAccess(true);//资源加载超时操作
-        wSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN );//适应屏幕，内容将自动缩放
-        wSet.setLoadWithOverviewMode(true);
-        wSet.setUseWideViewPort(true);
         webView.loadUrl(url);
-//        webView.setInitialScale(100);   //100代表不缩放
-        webView.setDownloadListener(new MyWebViewDownLoadListener());
-        webView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url)
-            {
-                view.loadUrl(url);
-                return true;
-            }
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-                webView.setVisibility(View.VISIBLE);
-                myprogress.cancel();
-//                Toast.makeText(WebBrowse.this,"加载失败",Toast.LENGTH_SHORT).show();
-            }
-        });
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setSavePassword(false);
+        webSettings.setSaveFormData(false);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setSupportZoom(false);
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -174,57 +120,36 @@ public class WebBrowse extends BaseActivity {
                     myprogress.cancel();
                 }
             }
-
-            @Override
-            public boolean onJsTimeout() {
-                webView.setVisibility(View.VISIBLE);
-                myprogress.cancel();
-                return super.onJsTimeout();
-
-            }
         });
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.webbrowse, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        return true;
-    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-      switch (id){
-         case android.R.id.home:
-             finish();
-             overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-             return true;
-         case R.id.browse_share:
-             showShare();
-             return true;
-          case R.id.browse_open:
-              openInBrowse();
-              return true;
-     }
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+                return true;
+            case R.id.nav_share:
+                showShare();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
-
-    private void openInBrowse() {
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.VIEW");
-        Uri content_url = Uri.parse(url);
-        intent.setData(content_url);
-        startActivity(intent);
-    }
-
     @Override
     public void onClick(View view) {
+        switch(view.getId()){
 
+            default:
+                break;
+        }
     }
-
     private void showShare(){
         dialog.show();
         sharedialog.setItemlister(new myItemlist());
@@ -263,36 +188,37 @@ public class WebBrowse extends BaseActivity {
         webpager = new WXWebpageObject();
         webpager.webpageUrl = url;
         message = new WXMediaMessage(webpager);
-        message.title = "江大宝典";
-        message.description = title;
+        message.title = AppConstant.AppName;
+        message.description = "我正在玩"+title;
         req.transaction = "webPager";
         req.message = message;
         Boolean get = api.sendReq(req);
+//        api.handleIntent(getIntent(),this);
         dialog.cancel();
         Log.e(TAG,"share return is "+get);
     }
     private void ToQQ(){
         Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-        params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
-        params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "我正在江大宝典看"+title);
+        params.putString(QQShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "我正在玩"+title);
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, url);
-        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,IcnUrl);
-        params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "江大宝典");
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,AppConstant.AppIcnUrl);
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, AppConstant.AppName);
         dialog.cancel();
-        tencent.shareToQQ(WebBrowse.this, params,baseuiLister);
+        tencent.shareToQQ(GameOnline.this, params,baseuiLister);
     }
     private void  ToQzone(){
         Bundle params = new Bundle();
         ArrayList<String> list = new ArrayList<>();
-        list.add(IcnUrl);
+        list.add(AppConstant.AppIcnUrl);
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);//必填
-        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,"我正在宝典看"+title);//选填
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,"我正在玩"+title);//选填
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL,list);
         dialog.cancel();
-        tencent.shareToQzone(WebBrowse.this, params,baseuiLister);
+        tencent.shareToQzone(GameOnline.this, params,baseuiLister);
     }
     /**
      * 腾讯的监听回调
@@ -301,7 +227,7 @@ public class WebBrowse extends BaseActivity {
 
         @Override
         public void onComplete(Object o) {
-            Toast.makeText(WebBrowse.this,"分享成功！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(GameOnline.this,"分享成功！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -310,7 +236,7 @@ public class WebBrowse extends BaseActivity {
 
         @Override
         public void onCancel() {
-            Toast.makeText(WebBrowse.this,"取消分享！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(GameOnline.this,"取消分享！", Toast.LENGTH_SHORT).show();
         }
     }
     //    //要想调用IUiListener 必须重写此函数
@@ -325,19 +251,10 @@ public class WebBrowse extends BaseActivity {
     @Override
     public void onPause(){
         super.onPause();
-        if(ischeck&&from!=3){
-            helper.addCollect(title,company,location,time,url);
-        }
-        else if (helper.hasURL(url)&&!ischeck){
-            //取消收藏
-            helper.delete(url);
-        }
 }
-
     @Override
     public void onBackPressed() {
         finish();
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
-
 }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import juhe.jiangdajiuye.InterFace.myitemLister;
+import juhe.jiangdajiuye.InterFace.MyItemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.entity.MessageItem;
 
@@ -20,7 +20,7 @@ import juhe.jiangdajiuye.entity.MessageItem;
  */
 public class CollectRceAdapter extends  RecyclerView.Adapter<CollectRceAdapter.MyViewHolder> {
     private String TAG = "CollectRceAdapter";
-    private myitemLister lister;
+    private MyItemLister lister;
     private MyViewHolder viewHolder;
     private Context context ;
     private int view;
@@ -36,7 +36,7 @@ public class CollectRceAdapter extends  RecyclerView.Adapter<CollectRceAdapter.M
                 from(context).inflate(view,parent,false),context);
         return viewHolder;
     }
-    public void setLister(myitemLister lister){
+    public void setLister(MyItemLister lister){
         this.lister = lister;
     }
     @Override

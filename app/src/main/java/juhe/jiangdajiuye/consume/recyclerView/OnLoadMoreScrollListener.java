@@ -3,7 +3,9 @@ package juhe.jiangdajiuye.consume.recyclerView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-
+/**
+ * 监听是否滑动到底部监听者
+ */
 public abstract class OnLoadMoreScrollListener extends RecyclerView.OnScrollListener {
 
     @Override

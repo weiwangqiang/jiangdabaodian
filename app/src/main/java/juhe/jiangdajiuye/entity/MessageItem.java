@@ -2,6 +2,7 @@ package juhe.jiangdajiuye.entity;
 
 /**
  * Created by wangqiang on 2016/10/19.
+ * 网页信息的item
  */
 public class MessageItem {
     private String url ;//网页资源路径

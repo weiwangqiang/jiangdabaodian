@@ -19,7 +19,7 @@ import juhe.jiangdajiuye.core.MyApplication;
 
 /**
  * class description here
- *
+ * 屏幕的utils
  * @author wangqiang
  * @since 2017-08-03
  */

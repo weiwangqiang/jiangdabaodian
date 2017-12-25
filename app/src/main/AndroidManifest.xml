@@ -45,7 +45,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".view.welcome"
+            android:name=".view.IndexView"
             android:theme="@style/StartAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,28 +57,28 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".view.searchBook" />
-        <activity android:name=".view.library" />
-        <activity android:name=".view.collect" />
+        <activity android:name=".view.SearchBook" />
+        <activity android:name=".view.Library" />
+        <activity android:name=".view.Collect" />
         <activity android:name=".view.xuanJiang.XuanEntrance"/>
         <!-- For test only 测试状态通知栏，需要打开的Activity -->
 
-        <activity android:name=".view.browse">
+        <activity android:name=".view.Browse">
             <intent-filter>
                 <action android:name="jpush.testAction" />
 
                 <category android:name="jpush.testCategory" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.guide" />
+        <activity android:name=".view.Guide" />
         <activity
-            android:name=".view.suggest"
+            android:name=".view.Suggest"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity android:name=".view.Librarycollect" />
-        <activity android:name=".view.game" />
-        <activity android:name=".view.gameOnline" />
-        <activity android:name=".view.about" />
-        <activity android:name=".view.xuanJiang.xuanjiang"/>
+        <activity android:name=".view.LibraryCollect" />
+        <activity android:name=".view.Game" />
+        <activity android:name=".view.GameOnline" />
+        <activity android:name=".view.About" />
+        <activity android:name=".view.xuanJiang.XuanJiangTab"/>
         <activity
             android:name=".view.Jpush.WebBrowse"
             android:launchMode="singleInstance">
@@ -111,8 +111,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <service android:name=".Service.MusicService" />
 
         <!-- 腾讯的activity -->
         <!-- 腾信bugly -->
