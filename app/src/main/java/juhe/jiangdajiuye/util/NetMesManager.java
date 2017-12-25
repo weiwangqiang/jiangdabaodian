@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -15,8 +14,6 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 import juhe.jiangdajiuye.entity.IPBean;
-
-import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
  * class description here
@@ -98,12 +95,10 @@ public class NetMesManager {
 
             @Override
             public void success(String response, int code) {
-                Log.i(TAG, "success: "+response);
                 if(code == 200){
                     Gson gson = new Gson();
                     IPBean ipbean = gson.fromJson(response,IPBean.class);
                     UserActionRecordUtils.setIpbean(ipbean);
-                    Log.i(TAG, "success: "+ipbean.getIp()+"　: " +ipbean.getAddress());
                 }
             }
 

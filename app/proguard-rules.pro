@@ -16,20 +16,18 @@
 #   public *;
 #}
 
--keep class * {
-    public private *;
-}
--keep class android.support.**{*;}
--dontwarn android.support.**
--keepattributes Signature
--keepattributes *Annotation*
--dontoptimize
--dontpreverify
+#-keep class * {
+#    public private *;
+#}
+#-dontwarn android.support.**
+#-keepattributes Signature
+#-keepattributes *Annotation*
+#-dontoptimize
+#-dontpreverify
 
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
-
-#-dontwarn com.tencent.bugly.**
-#-keep public class com.tencent.bugly.**{*;}
-#-keep class android.support.**{*;}
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+-keep class android.support.**{*;}

@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import cn.bmob.push.PushConstants;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.entity.bombPush.MessageType;
 import juhe.jiangdajiuye.entity.bombPush.XuanJiangPush;
@@ -37,9 +36,9 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         this.context = context ;
         mNM = (NotificationManager)context.getSystemService(NOTIFICATION_SERVICE);
-        if(intent.getAction().equals(PushConstants.ACTION_MESSAGE)){
-            parseMes(intent.getStringExtra("msg"));
-        }
+//        if(intent.getAction().equals(PushConstants.ACTION_MESSAGE)){
+//            parseMes(intent.getStringExtra("msg"));
+//        }
     }
     public void parseMes(String string){
         JsonParser parser=new JsonParser();  //创建JSON解析器
