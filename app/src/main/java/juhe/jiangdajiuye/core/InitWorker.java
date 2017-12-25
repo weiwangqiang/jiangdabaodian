@@ -15,7 +15,7 @@ import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
 
 /**
  * class description here
- *
+ * 初始化sdk 的worker
  * @author wangqiang
  * @since 2017-11-05
  */

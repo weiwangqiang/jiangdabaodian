@@ -7,7 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.List;
 
 /**
- * Created by wangqiang on 2016/5/15.主界面的Viewpager
+ * Created by wangqiang on 2016/5/15.
+ *首界面宣讲会tab的adapter
  */
 public class XJFragmentAdapter extends FragmentPagerAdapter {
     public List<Fragment> list;

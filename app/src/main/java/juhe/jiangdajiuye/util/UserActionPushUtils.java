@@ -2,7 +2,7 @@ package juhe.jiangdajiuye.util;
 
 import android.util.Log;
 
-import juhe.jiangdajiuye.entity.recordEntity.visitCount;
+import juhe.jiangdajiuye.entity.recordEntity.VisitCount;
 
 /**
  * class description here
@@ -13,7 +13,7 @@ import juhe.jiangdajiuye.entity.recordEntity.visitCount;
 
 public class UserActionPushUtils {
     private static String TAG = "UserActionPushUtils";
-    public static void pushVisitCount(visitCount count){
+    public static void pushVisitCount(VisitCount count){
         Log.i(TAG, "pushVisitCount: ");
 //        count.save(new SaveListener<String>() {
 //            @Override

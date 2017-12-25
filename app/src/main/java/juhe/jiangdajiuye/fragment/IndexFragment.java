@@ -18,12 +18,12 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
-import juhe.jiangdajiuye.consume.recyclerView.mRecyclerView;
+import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.entity.MessageItem;
-import juhe.jiangdajiuye.tool.parseTools;
+import juhe.jiangdajiuye.tool.ParseTools;
 import juhe.jiangdajiuye.util.ToastUtils;
-import juhe.jiangdajiuye.util.urlConnection;
-import juhe.jiangdajiuye.view.browse;
+import juhe.jiangdajiuye.util.UrlConnection;
+import juhe.jiangdajiuye.view.Browse;
 
 /**
  * Created by wangqiang on 2016/9/27.
@@ -37,7 +37,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     private String baseurl;
     private String TAG;
     private int tab ;
-    public mRecyclerView recyclerView;
+    public MyRecyclerView recyclerView;
     private LinearLayoutManager manager;
     public List<MessageItem> data = new ArrayList<>();
     public IndexFragmentAdapter adapter;
@@ -45,7 +45,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     private Boolean isfirst = true;
     private int page = 1; //当前页面数
     private SwipeRefreshLayout swipeRefreshLayout;
-    private parseTools parsetools =  parseTools.getparseTool() ;
+    private ParseTools parsetools =  ParseTools.getparseTool() ;
 
     public static IndexFragment newInstance(String url, String TAG, int tab) {
         IndexFragment f = new IndexFragment();
@@ -103,15 +103,15 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         @Override
         public void GetInternet(int type) {
             if(recyclerView != null){
-                if(recyclerView.getmStatus() == mRecyclerView.STATUS_ERROR){
-                    recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
+                if(recyclerView.getmStatus() == MyRecyclerView.STATUS_ERROR){
+                    recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
                 }
             }
         }
     };
     public void findId(){
         error = view.findViewById(R.id.error);
-        recyclerView = (mRecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView = (MyRecyclerView) view.findViewById(R.id.recyclerView);
         manager =  new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
@@ -130,9 +130,9 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(recyclerView.getmStatus() == mRecyclerView.STATUS_DEFAULT ||
-                        recyclerView.getmStatus() == mRecyclerView.STATUS_ERROR){
-                    recyclerView.setStatus(mRecyclerView.STATUS_PULLTOREFRESH);
+                if(recyclerView.getmStatus() == MyRecyclerView.STATUS_DEFAULT ||
+                        recyclerView.getmStatus() == MyRecyclerView.STATUS_ERROR){
+                    recyclerView.setStatus(MyRecyclerView.STATUS_PULLTOREFRESH);
                     getMessage();
                 }
             }
@@ -141,7 +141,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
             @Override
             public void run() {
                     if(tab == XUANJIANG ){
-                        recyclerView.setStatus(mRecyclerView.STATUS_PULLTOREFRESH);
+                        recyclerView.setStatus(MyRecyclerView.STATUS_PULLTOREFRESH);
                         swipeRefreshLayout.setRefreshing(true);
                         getMessage();
                     }
@@ -155,25 +155,25 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         adapter.setOnItemClickListener(new IndexFragmentAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(MessageItem item) {
-                browse.StartActivity(getActivity(),item);
+                Browse.StartActivity(getActivity(),item);
             }
         });
     }
     public void getMessage() {
         String url = getUrl();
-        urlConnection connection = new urlConnection(getActivity());
-        connection.setNetListener(new urlConnection.NetListener(){
+        UrlConnection connection = new UrlConnection(getActivity());
+        connection.setNetListener(new UrlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {
                 upDate(parsetools.parseMainMes(response.trim(),tab));
                 swipeRefreshLayout.setRefreshing(false);
-                recyclerView.setStatus(mRecyclerView.STATUS_DEFAULT);
+                recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
             }
 
             @Override
             public void failure(Exception e, String Error, int code) {
-                recyclerView.setStatus(mRecyclerView.STATUS_ERROR);
+                recyclerView.setStatus(MyRecyclerView.STATUS_ERROR);
                 swipeRefreshLayout.setRefreshing(false);
                 ToastUtils.showToast("网络不太顺畅哦！");
                 showError();
@@ -198,7 +198,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
             recyclerView.setCanLoadMoreRefresh(false);
             return;
         }
-        if(recyclerView.getmStatus() == mRecyclerView.STATUS_PULLTOREFRESH){
+        if(recyclerView.getmStatus() == MyRecyclerView.STATUS_PULLTOREFRESH){
             adapter.clearAll();
             adapter.upDate(list);
         }else {
@@ -210,15 +210,15 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
 
     public String getUrl(){
         String str = "";
-        if(recyclerView.getmStatus() == mRecyclerView.STATUS_PULLTOREFRESH)
+        if(recyclerView.getmStatus() == MyRecyclerView.STATUS_PULLTOREFRESH)
             page = 1;
         str = baseurl +"page="+page;
         return str;
     }
     @Override
     public void onLoadMore() {
-        if(recyclerView.getmStatus() == mRecyclerView.STATUS_DEFAULT){
-            recyclerView.setStatus(mRecyclerView.STATUS_REFRESHING);
+        if(recyclerView.getmStatus() == MyRecyclerView.STATUS_DEFAULT){
+            recyclerView.setStatus(MyRecyclerView.STATUS_REFRESHING);
             getMessage();
         }
     }
@@ -228,12 +228,12 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         super.setUserVisibleHint(isVisibleToUser);
         Log.i(TAG, "setUserVisibleHint: "+isVisibleToUser +" isfirst ： "+isfirst);
         if(isfirst &&isVisibleToUser && adapter != null &&adapter.getDataSize() ==0  ){
-            if(swipeRefreshLayout!=null && recyclerView.getmStatus()!=mRecyclerView.STATUS_ERROR){
+            if(swipeRefreshLayout!=null && recyclerView.getmStatus()!= MyRecyclerView.STATUS_ERROR){
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(true);
-                        recyclerView.setStatus(mRecyclerView.STATUS_PULLTOREFRESH);
+                        recyclerView.setStatus(MyRecyclerView.STATUS_PULLTOREFRESH);
                         getMessage();
                     }
                 });

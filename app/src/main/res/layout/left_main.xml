@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<juhe.jiangdajiuye.view.linearlayout xmlns:android="http://schemas.android.com/apk/res/android"
+<juhe.jiangdajiuye.view.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:orientation="vertical"
@@ -29,4 +29,4 @@
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
-</juhe.jiangdajiuye.view.linearlayout>
+</juhe.jiangdajiuye.view.MyLinearLayout>

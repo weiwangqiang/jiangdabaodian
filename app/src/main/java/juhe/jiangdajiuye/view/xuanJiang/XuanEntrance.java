@@ -13,6 +13,9 @@ import android.widget.SimpleAdapter;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
 
+/**
+ * 宣讲会入口
+ */
 public class XuanEntrance extends AppCompatActivity {
     ListView listView ;
     SimpleAdapter adapter ;
@@ -48,7 +51,7 @@ public class XuanEntrance extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int provinceId = (int) data.getData().get(position).get("provinceId");
                 Log.i(TAG, "onItemClick: "+provinceId);
-                Intent intent = new Intent(XuanEntrance.this,xuanjiang.class);
+                Intent intent = new Intent(XuanEntrance.this,XuanJiangTab.class);
                 intent.putExtra("provinceId",provinceId);
                 startActivity(intent);
             }

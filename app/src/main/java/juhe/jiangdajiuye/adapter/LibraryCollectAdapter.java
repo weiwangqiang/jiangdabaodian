@@ -12,14 +12,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Map;
 
-import juhe.jiangdajiuye.InterFace.myitemLister;
+import juhe.jiangdajiuye.InterFace.MyItemLister;
 import juhe.jiangdajiuye.R;
 
-/**图书馆
+/**
+ *  图书馆 adapter
  * Created by wangqiang on 2016/9/28.
  */
 public class LibraryCollectAdapter extends  RecyclerView.Adapter<LibraryCollectAdapter.MyViewHolder> {
-    private myitemLister lister;
+    private MyItemLister lister;
     private MyViewHolder viewHolder;
     private Context context ;
     private int view;
@@ -58,7 +59,7 @@ public class LibraryCollectAdapter extends  RecyclerView.Adapter<LibraryCollectA
                 from(context).inflate(view,parent,false));
         return viewHolder;
     }
-    public void setLister(myitemLister lister){
+    public void setLister(MyItemLister lister){
         this.lister = lister;
     }
     /**

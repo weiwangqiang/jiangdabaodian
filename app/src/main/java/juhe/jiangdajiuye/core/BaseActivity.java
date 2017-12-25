@@ -7,7 +7,9 @@ import android.view.View;
 
 import juhe.jiangdajiuye.util.ToastUtils;
 
-
+/**
+ * 基础activity
+ */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
     public static String EXIT_APP_ACTION = "com.joshua.exit";
     public final int NET_SUCCESS = 0x1;
@@ -26,7 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         super.onResume();
 //        if(b){
 //            UiUtils.setBackstage(false);
-//            Log.e(TAG,"------>> is  backStage and start welcome <<<<<-------------");
+//            Log.e(TAG,"------>> is  backStage and start IndexView <<<<<-------------");
 //            Intent intent = new Intent(BaseActivity.this, WelCome.class);
 //            startActivity(intent);
 //        }

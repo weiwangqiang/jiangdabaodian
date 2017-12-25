@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import juhe.jiangdajiuye.core.MyApplication;
-import juhe.jiangdajiuye.entity.IPBean;
-import juhe.jiangdajiuye.entity.recordEntity.visitCount;
+import juhe.jiangdajiuye.entity.IpBean;
+import juhe.jiangdajiuye.entity.recordEntity.VisitCount;
 
 /**
  * class description here
@@ -23,15 +23,15 @@ public class UserActionRecordUtils {
     public static long outTime ;
     public static Map<String,Integer> mRecordMap = new HashMap<>();
     public static String TAG = "UserActionRecordUtils";
-    public static void setIpbean(IPBean ipbean) {
+    public static void setIpbean(IpBean ipbean) {
         UserActionRecordUtils.ipbean = ipbean;
     }
 
-    public static IPBean getIpbean() {
+    public static IpBean getIpbean() {
         return ipbean;
     }
 
-    public static IPBean ipbean ;
+    public static IpBean ipbean ;
     public static void setComeTime(long comeTime) {
         UserActionRecordUtils.comeTime = comeTime;
     }
@@ -45,7 +45,7 @@ public class UserActionRecordUtils {
         long time = outTime - comeTime;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置显示
         String stayTime = df.format(new Date(time));
-        visitCount count = new visitCount();
+        VisitCount count = new VisitCount();
         if(ipbean == null){
             Log.i(TAG, "setOutTime: ipbean is null ");
             count.setIp(NetMesManager.getIp(MyApplication.getApplication()));

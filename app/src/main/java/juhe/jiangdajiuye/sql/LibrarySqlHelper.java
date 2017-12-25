@@ -17,7 +17,7 @@ import java.util.Map;
 public class LibrarySqlHelper extends SQLiteOpenHelper{
     private String TAG = "LibrarySqlHelper";
     private static final int version = 1;//数据库版本
-    private static final String name = "library";//数据库名
+    private static final String name = "Library";//数据库名
     private SQLiteDatabase sd;
     public LibrarySqlHelper(Context context){
         super(context, name, null, version);
@@ -38,34 +38,34 @@ public class LibrarySqlHelper extends SQLiteOpenHelper{
         Log.e("sql","sql is created");
         if(sqLiteDatabase!=null){
             Log.e("sql","sql is not null");
-            sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS "+ librarytable.tableName+" ( "
-                    + librarytable.book+" VARCHAR, "
-                    + librarytable.editor + " VARCHAR null, "
-                    + librarytable.available +" VARCHAR null, "
-                    + librarytable.number + " VARCHAR, "
-                    + librarytable.url + " VARCHAR unique);");
+            sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS "+ LibraryTable.tableName+" ( "
+                    + LibraryTable.book+" VARCHAR, "
+                    + LibraryTable.editor + " VARCHAR null, "
+                    + LibraryTable.available +" VARCHAR null, "
+                    + LibraryTable.number + " VARCHAR, "
+                    + LibraryTable.url + " VARCHAR unique);");
         }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("drop table if exists "+ librarytable.tableName);
+        sqLiteDatabase.execSQL("drop table if exists "+ LibraryTable.tableName);
         sqLiteDatabase.close();
     }
    public long addCollect(String book, String editor,String available,String number,String url){
         ContentValues cv = new ContentValues();
-        cv.put(librarytable.book,book);
-        cv.put(librarytable.editor,editor);
-        cv.put(librarytable.available,available);
-        cv.put(librarytable.number,number);
-        cv.put(librarytable.url,url);
+        cv.put(LibraryTable.book,book);
+        cv.put(LibraryTable.editor,editor);
+        cv.put(LibraryTable.available,available);
+        cv.put(LibraryTable.number,number);
+        cv.put(LibraryTable.url,url);
 //       sb.execSQL("insert into person("+name, age+") values(?,?)", new Object[]{"炸死特", 4});
-       long result = sd.insert(librarytable.tableName, librarytable.book,cv);
+       long result = sd.insert(LibraryTable.tableName, LibraryTable.book,cv);
        return result;
     }
     public ArrayList<Map<String,String>> selectAll(){
         ArrayList<Map<String,String>> list = new ArrayList<>();
-        Cursor cursor =  sd.rawQuery("SELECT * FROM "+ librarytable.tableName,null);
+        Cursor cursor =  sd.rawQuery("SELECT * FROM "+ LibraryTable.tableName,null);
         while(cursor.moveToNext()){
             HashMap<String,String> map =  new HashMap<>();
             map.put("book",cursor.getString(0));
@@ -87,8 +87,8 @@ public class LibrarySqlHelper extends SQLiteOpenHelper{
     }
     public boolean hasURL(String url){
         Cursor cursor = sd.rawQuery("select * from "+
-                librarytable.tableName+" where "
-                + librarytable.url+" =?",
+                LibraryTable.tableName+" where "
+                + LibraryTable.url+" =?",
                 new String[]{url});
         Boolean has = cursor.moveToFirst();
         try{
@@ -100,9 +100,9 @@ public class LibrarySqlHelper extends SQLiteOpenHelper{
     }
 
     public void delete(String url){
-        String where = librarytable.url+"=?";
+        String where = LibraryTable.url+"=?";
         String[] value = {url};
-        sd.delete(librarytable.tableName,where,value);
+        sd.delete(LibraryTable.tableName,where,value);
         Log.e(TAG,"delete success");
     }
 }

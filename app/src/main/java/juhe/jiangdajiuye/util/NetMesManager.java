@@ -13,7 +13,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import juhe.jiangdajiuye.entity.IPBean;
+import juhe.jiangdajiuye.entity.IpBean;
 
 /**
  * class description here
@@ -90,14 +90,14 @@ public class NetMesManager {
     }
 
     public static void setIP(Context mCtx) {
-        urlConnection connection = new urlConnection(mCtx);
-        connection.setNetListener(new urlConnection.NetListener(){
+        UrlConnection connection = new UrlConnection(mCtx);
+        connection.setNetListener(new UrlConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {
                 if(code == 200){
                     Gson gson = new Gson();
-                    IPBean ipbean = gson.fromJson(response,IPBean.class);
+                    IpBean ipbean = gson.fromJson(response,IpBean.class);
                     UserActionRecordUtils.setIpbean(ipbean);
                 }
             }

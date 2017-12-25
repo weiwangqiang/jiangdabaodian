@@ -3,6 +3,8 @@ package juhe.jiangdajiuye.entity.bombPush;
 /**
  * class description here
  *
+ *  推送消息的对象类
+ *
  * @author wangqiang
  * @since 2017-11-05
  */

@@ -14,6 +14,8 @@ import java.util.Map;
 /**
  * class description here
  *
+ *  adapter的抽象类
+ *
  * @author wangqiang
  * @project fourAssembly
  * @since 2017-08-08

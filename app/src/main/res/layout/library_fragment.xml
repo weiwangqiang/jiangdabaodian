@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <juhe.jiangdajiuye.consume.recyclerView.mRecyclerView
+    <juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView
         android:id="@+id/library_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal"
                 >
-                <juhe.jiangdajiuye.tool.myEdit
+                <juhe.jiangdajiuye.tool.MyEdit
                     android:id="@+id/library_edit"
                     android:layout_width="match_parent"
                     android:layout_margin="8dp"

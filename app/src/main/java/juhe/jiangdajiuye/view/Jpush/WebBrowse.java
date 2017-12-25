@@ -39,7 +39,7 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 import juhe.jiangdajiuye.tool.ProgressDialog;
-import juhe.jiangdajiuye.tool.shareDialog;
+import juhe.jiangdajiuye.tool.ShareDialog;
 
 /**
  * Created by wangqiang on 2016/10/1.
@@ -55,7 +55,7 @@ public class WebBrowse extends BaseActivity {
     private WebView webView;
     private ProgressDialog myprogress;
     private Dialog dialog;
-    private shareDialog sharedialog;
+    private ShareDialog sharedialog;
     private String APP_ID = "1105550872";
     private Tencent tencent;
     private baseUiLister baseuiLister;
@@ -103,7 +103,7 @@ public class WebBrowse extends BaseActivity {
     }
     private void init(){
         initWEi();
-        sharedialog = new shareDialog();
+        sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
         tencent = Tencent.createInstance(APP_ID, WebBrowse.this);
         dialog = sharedialog.getDialog(WebBrowse.this);
@@ -232,7 +232,7 @@ public class WebBrowse extends BaseActivity {
     /**
      * popupwind的Item 监听
      */
-    private class myItemlist implements shareDialog.Itemlister{
+    private class myItemlist implements ShareDialog.Itemlister{
 
         @Override
         public void shareToQzone() {

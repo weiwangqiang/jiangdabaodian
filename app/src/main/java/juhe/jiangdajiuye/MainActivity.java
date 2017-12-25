@@ -45,10 +45,10 @@ import cn.bmob.v3.listener.FindListener;
 import juhe.jiangdajiuye.adapter.FragmentAdapter;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.entity.bmobBean.bootPicture;
+import juhe.jiangdajiuye.entity.bmobBean.BootPicture;
 import juhe.jiangdajiuye.fragment.IndexFragment;
 import juhe.jiangdajiuye.imageUtil.ImageLocalLoad;
-import juhe.jiangdajiuye.tool.shareDialog;
+import juhe.jiangdajiuye.tool.ShareDialog;
 import juhe.jiangdajiuye.util.NetMesManager;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
 import juhe.jiangdajiuye.util.TabLayoutUtils;
@@ -56,13 +56,13 @@ import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.util.UserActionRecordUtils;
 import juhe.jiangdajiuye.util.UserBrowseRecordUtils;
 import juhe.jiangdajiuye.util.UserShareUtils;
-import juhe.jiangdajiuye.view.about;
-import juhe.jiangdajiuye.view.collect;
+import juhe.jiangdajiuye.view.About;
+import juhe.jiangdajiuye.view.Collect;
+import juhe.jiangdajiuye.view.Game;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 import juhe.jiangdajiuye.view.constant.FileConstant;
-import juhe.jiangdajiuye.view.game;
-import juhe.jiangdajiuye.view.library;
-import juhe.jiangdajiuye.view.suggest;
+import juhe.jiangdajiuye.view.Library;
+import juhe.jiangdajiuye.view.Suggest;
 import juhe.jiangdajiuye.view.xuanJiang.XuanEntrance;
 
 import static juhe.jiangdajiuye.core.MyApplication.context;
@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity
     private FragmentAdapter adapter;
     private ViewPager viewPager;
     private Dialog dialog;
-    private shareDialog sharedialog;
+    private ShareDialog sharedialog;
     private String APP_ID = "1105550872";
     private Tencent tencent;
     private baseUiLister baseuiLister;
@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity
         filter.addAction(MESSAGE_RECEIVED_ACTION);
     }
     public void initView(){
-        sharedialog = new shareDialog();
+        sharedialog = new ShareDialog();
         sharedialog.setItemlister(new myItemlist());
         dialog = sharedialog.getDialog(this);
         inithShare();
@@ -203,26 +203,26 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.nav_library:
                 UserBrowseRecordUtils.setmLibrary(1);
-                startActivity(new Intent(MainActivity.this,library.class));
+                startActivity(new Intent(MainActivity.this,Library.class));
                 break;
             case R.id.nav_favorite:
 
-                startActivity(new Intent(MainActivity.this,collect.class));
+                startActivity(new Intent(MainActivity.this,Collect.class));
                 break;
             case R.id.nav_xuanjianghui:
                 UserBrowseRecordUtils.setmXuanJiangCollect(1);
                 startActivity(new Intent(MainActivity.this,XuanEntrance.class));
                 break;
             case R.id.nav_send:
-                startActivity(new Intent(MainActivity.this,suggest.class));
+                startActivity(new Intent(MainActivity.this,Suggest.class));
                 break;
             case R.id.nav_game:
                 UserBrowseRecordUtils.setmOffLineGame(1);
-                startActivity(new Intent(MainActivity.this,game.class));
+                startActivity(new Intent(MainActivity.this,Game.class));
                 break;
             case R.id.nav_about:
                 UserBrowseRecordUtils.setmAboute(1);
-                startActivity(new Intent(MainActivity.this,about.class));
+                startActivity(new Intent(MainActivity.this,About.class));
                 break;
             default:
                 break;
@@ -254,12 +254,12 @@ public class MainActivity extends BaseActivity
         if(getAdvert) return;
         if(NetStateUtils.getNetWorkState() != NetStateUtils.TYPE_WIFI)
             return;
-        BmobQuery<bootPicture> query = new BmobQuery<>();
-        query.findObjects(new FindListener<bootPicture>() {
+        BmobQuery<BootPicture> query = new BmobQuery<>();
+        query.findObjects(new FindListener<BootPicture>() {
             @Override
-            public void done(List<bootPicture> object, BmobException e) {
+            public void done(List<BootPicture> object, BmobException e) {
                 if(e==null && object.size()!=0){
-                    bootPicture picture = object.get(object.size() - 1);
+                    BootPicture picture = object.get(object.size() - 1);
                     getAdvert = true ;
                     pictureUri =  picture.getUrl() ;
                     Glide.with(context ) // could be an issue!
@@ -293,7 +293,7 @@ public class MainActivity extends BaseActivity
     /**
      * popupwind的Item 监听
      */
-    private class myItemlist implements shareDialog.Itemlister{
+    private class myItemlist implements ShareDialog.Itemlister{
 
         @Override
         public void shareToQzone() {

@@ -19,6 +19,8 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
 /**
  * class description here
  *
+ *   首页的fragment 的adapter
+ *
  * @author wangqiang
  * @since 2017-08-08
  */

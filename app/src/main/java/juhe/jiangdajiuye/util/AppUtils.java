@@ -24,7 +24,7 @@ public class AppUtils {
     }
 
     //应用图片存储的绝对路径
-    public static final  String savePictureUrl = Environment.getExternalStorageDirectory()+"/game/";
+    public static final  String savePictureUrl = Environment.getExternalStorageDirectory()+"/Game/";
     public AppUtils() {
     }
 
