@@ -4,7 +4,7 @@ package juhe.jiangdajiuye.view.xuanJiang.control;
 import java.util.ArrayList;
 import java.util.List;
 
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
 import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
 import juhe.jiangdajiuye.view.xuanJiang.parse.ParseHangZou;

@@ -13,9 +13,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import cn.bmob.push.PushConstants;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.entity.bombPush.MessageType;
-import juhe.jiangdajiuye.entity.bombPush.XuanJiangPush;
+import juhe.jiangdajiuye.bean.bombPush.MessageType;
+import juhe.jiangdajiuye.bean.bombPush.XuanJiangPush;
 import juhe.jiangdajiuye.view.Jpush.WebBrowse;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -36,10 +37,11 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         this.context = context ;
         mNM = (NotificationManager)context.getSystemService(NOTIFICATION_SERVICE);
-//        if(intent.getAction().equals(PushConstants.ACTION_MESSAGE)){
-//            parseMes(intent.getStringExtra("msg"));
-//        }
+        if(intent.getAction().equals(PushConstants.ACTION_MESSAGE)){
+            parseMes(intent.getStringExtra("msg"));
+        }
     }
+    //解析推送的消息
     public void parseMes(String string){
         JsonParser parser=new JsonParser();  //创建JSON解析器
         JsonObject object = (JsonObject) parser.parse(string);
@@ -50,6 +52,7 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
                 break;
         }
     }
+    //推送的消息为宣讲会
     public void parseXuanJiang(String string){
         XuanJiangPush message = gson.
                 fromJson(string,
@@ -61,11 +64,12 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
     private Notification notification  ;
     private NotificationManager mNM;
     private int NOTIFICATION = 1;
+    //弹出通知
     public void sendNotify(XuanJiangPush message){
         //需要传入PendingIntent.FLAG_UPDATE_CURRENT intent方能传入数据
         //FLAG_UPDATE_CURRENT：如果该PendingIntent已经存在，则用新传入的Intent更新当前的数据。
         PendingIntent  contentIntent = PendingIntent.getActivity(context, 0,
-                WebBrowse.getActivityInt(context,message.getTargetUrl()),
+                WebBrowse.getActivityInt(context,message),
                 PendingIntent.FLAG_UPDATE_CURRENT);
         notification = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)  // the status icon

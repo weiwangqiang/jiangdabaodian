@@ -35,10 +35,10 @@ import java.util.Calendar;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
-import juhe.jiangdajiuye.tool.ProgressDialog;
-import juhe.jiangdajiuye.tool.ShareDialog;
+import juhe.jiangdajiuye.dialog.ProgressDialog;
+import juhe.jiangdajiuye.dialog.ShareDialog;
 import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 

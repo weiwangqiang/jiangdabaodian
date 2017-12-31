@@ -81,7 +81,7 @@
         <activity android:name=".view.xuanJiang.XuanJiangTab"/>
         <activity
             android:name=".view.Jpush.WebBrowse"
-            android:launchMode="singleInstance">
+            android:launchMode="standard">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -177,7 +177,7 @@
             </intent-filter>
         </receiver>
         <!--TODO 集成：1.2、bomb 添加推送所需要的服务和广播-->
-
+        <service android:name=".versionUpDate.DownLoadService"/>
     </application>
 
 </manifest>

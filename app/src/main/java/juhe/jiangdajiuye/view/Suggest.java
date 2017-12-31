@@ -15,8 +15,8 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.entity.recordEntity.LeaveMes;
-import juhe.jiangdajiuye.tool.ProgressDialog;
+import juhe.jiangdajiuye.bean.recordEntity.LeaveMes;
+import juhe.jiangdajiuye.dialog.ProgressDialog;
 import juhe.jiangdajiuye.util.AppUtils;
 import juhe.jiangdajiuye.util.ToastUtils;
 

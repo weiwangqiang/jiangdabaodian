@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#6000"
     android:gravity="center">
 
     <LinearLayout
@@ -25,18 +24,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/light_blue_transparency_900"
-            android:text="更新啦!"/>
+            android:text="@string/upgrade_prompt_title"/>
 
         <!-- 【必设】升级标题控件tag：beta_title-->
         <TextView
             android:tag="beta_title"
+            android:id="@+id/upgrade_dialog_title"
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:paddingLeft="10dp"
-            android:text="title"
+            android:text=""
             android:textColor="#273238"
             android:textSize="18sp" />
 
@@ -60,7 +60,9 @@
                     android:tag="beta_upgrade_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="info"
+                    android:text=""
+                    android:id="@+id/upgrade_dialog_info"
+
                     android:textColor="#757575"
                     android:textSize="14sp" />
 
@@ -91,13 +93,14 @@
             <!-- 【必设】取消按钮tag：beta_cancel_button-->
             <TextView
                 android:tag="beta_cancel_button"
+                android:id="@+id/upgrade_dialog_cancel_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="cancel"
+                android:text="@string/cancel"
                 android:textColor="#757575"
                 android:textSize="16sp" />
             <!-- 【必设】确认按钮tag：beta_confirm_button-->
@@ -109,7 +112,8 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="confirm"
+                android:text="@string/confirm"
+                android:id="@+id/upgrade_dialog_confirm_button"
                 android:textColor="#273238"
                 android:textSize="16sp"
                 android:textStyle="bold" />

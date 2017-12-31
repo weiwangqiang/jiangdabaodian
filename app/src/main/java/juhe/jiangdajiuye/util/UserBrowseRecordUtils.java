@@ -1,6 +1,6 @@
 package juhe.jiangdajiuye.util;
 
-import juhe.jiangdajiuye.entity.recordEntity.UserBrowseRecord;
+import juhe.jiangdajiuye.bean.recordEntity.UserBrowseRecord;
 
 /**
  * class description here

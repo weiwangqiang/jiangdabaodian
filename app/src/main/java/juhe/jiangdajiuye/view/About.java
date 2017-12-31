@@ -2,20 +2,15 @@ package juhe.jiangdajiuye.view;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.beta.UpgradeInfo;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.util.AppUtils;
+import juhe.jiangdajiuye.versionUpDate.BmobCheckUpgrade;
 
 /**
  * class description here
@@ -37,11 +32,22 @@ public class About extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
         init();
+        BmobCheckUpgrade.init(this);
+    }
+
+    /**
+     * Dispatch onPause() to fragments.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: ");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i(TAG, "onResume: ");
         loadUpgradeInfo();
     }
 
@@ -49,24 +55,28 @@ public class About extends BaseActivity {
         findId();
         initToolbar();
     }
+    public  boolean isClick = false ;
     public void checkUpData(View view){
         /**
          * 参数1：isManual 用户手动点击检查，非用户点击操作请传false
            参数2：isSilence 是否显示弹窗等交互，[true:没有弹窗和toast] [false:有弹窗或toast]
          */
-        Beta.checkUpgrade();
+//        Beta.checkUpgrade();
+        if(!isClick){
+//            isClick = true ;
+            BmobCheckUpgrade.checkUpgrade();
+        }
     }
     private void loadUpgradeInfo() {
-        if (textViewUp == null)
-            return;
-        /***** 获取升级信息 *****/
-        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
-
-        if (upgradeInfo == null) {
+            /***** 获取升级信息 *****/
+//        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
+        if (BmobCheckUpgrade.targetBean == null) {
             textViewUp.setText("无升级信息");
             return;
         }
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        textViewUp.setText(BmobCheckUpgrade.targetBean.getUpgradeMessage());
+
+      /*  DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String date = sdf.format(new Date(upgradeInfo.publishTime));
         StringBuilder info = new StringBuilder();
 //        info.append("id: ").append(upgradeInfo.id).append("\n");
@@ -83,7 +93,7 @@ public class About extends BaseActivity {
 //        info.append("发布类型（0:测试 1:正式）: ").append(upgradeInfo.publishType).append("\n");
 //        info.append("弹窗类型（1:建议 2:强制 3:手工）: ").append(upgradeInfo.upgradeType);
 
-        textViewUp.setText(info);
+        textViewUp.setText(info); */
     }
     public void initToolbar(){
         toolbar.setTitle("关于");

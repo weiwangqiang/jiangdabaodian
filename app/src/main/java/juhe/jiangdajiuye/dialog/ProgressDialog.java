@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.tool;
+package juhe.jiangdajiuye.dialog;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;

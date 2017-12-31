@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 
 import java.util.List;
 
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
 import juhe.jiangdajiuye.view.xuanJiang.control.XuanParseControl;
 import juhe.jiangdajiuye.view.xuanJiang.control.XuanUrlControl;

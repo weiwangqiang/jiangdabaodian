@@ -30,7 +30,7 @@ import java.util.HashMap;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.GameAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.tool.ShareDialog;
+import juhe.jiangdajiuye.dialog.ShareDialog;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 
 
@@ -200,8 +200,8 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
             }
     }
 //    public void getMessage() {
-//        final UrlConnection connection= new UrlConnection();
-//        connection.setgetLister(new UrlConnection.getLister() {
+//        final HttpConnection connection= new HttpConnection();
+//        connection.setgetLister(new HttpConnection.getLister() {
 //            @Override
 //            public void success(String response, int code) {
 //                upDate(parsetools.parseGame(response));

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
 
 /**
  * Created by wangqiang on 2016/9/27.

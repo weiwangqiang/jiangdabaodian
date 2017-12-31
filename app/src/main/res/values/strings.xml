@@ -7,7 +7,10 @@
     <string name="button_library">图书馆</string>
     <string name="collect_title">收藏栏</string>
     <string name="gameTitle">课间小游戏</string>
+    <string name="upgrade_prompt_title">更新啦！</string>
+
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
     <string name="aboute">\n author@weiwangqiang 版权所有 \nCopyright @2017-03-27 \n weiwangqiang.All Right Reserved  </string>
-
-
+    <string name="download_without_wifi">确定在非WiFi环境下载？</string>
 </resources>

@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
 
 /**
  * Created by wangqiang on 2016/10/12.

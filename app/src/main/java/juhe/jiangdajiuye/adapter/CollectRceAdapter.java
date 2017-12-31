@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 import juhe.jiangdajiuye.InterFace.MyItemLister;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
 
 /**收藏栏的adapter
  * Created by wangqiang on 2016/9/28.

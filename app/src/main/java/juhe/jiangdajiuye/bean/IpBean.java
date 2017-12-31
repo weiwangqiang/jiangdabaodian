@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.entity;
+package juhe.jiangdajiuye.bean;
 
 /**
  * class description here

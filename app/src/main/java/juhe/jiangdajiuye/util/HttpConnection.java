@@ -18,12 +18,12 @@ import java.util.concurrent.Executors;
  * Created by wangqiang on 2016/9/29.
  * 网络请求类
  */
-public class UrlConnection {
-    private String TAG = "UrlConnection";
+public class HttpConnection {
+    private String TAG = "HttpConnection";
     public NetListener lister;
     public ExecutorService service;
     public Context mCtx;
-    public UrlConnection(Context mCtx){
+    public HttpConnection(Context mCtx){
         //指定线程池数
         this.mCtx = mCtx;
         int size  = Runtime.getRuntime().availableProcessors() ;

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.entity;
+package juhe.jiangdajiuye.bean;
 
 /**
  * Created by wangqiang on 2016/10/19.

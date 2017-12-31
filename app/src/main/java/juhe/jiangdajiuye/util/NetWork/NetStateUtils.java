@@ -20,7 +20,10 @@ public class NetStateUtils {
     public static int getNetWorkState() {
         return mState;
     }
-
+    //判断是否处于WiFi状态
+    public static boolean isWifiState(){
+        return mState == TYPE_WIFI ;
+    }
     public static int mState = TYPE_ERROR;
     public static void setNetWorkState(int state){
         switch (state){
@@ -34,6 +37,7 @@ public class NetStateUtils {
                 mState = TYPE_ERROR ;
         }
     }
+    //初始化网络状态参数
     public static void initNetWorkState(Context context){
         ConnectivityManager manager = (ConnectivityManager)context.
                 getSystemService(Context.CONNECTIVITY_SERVICE);

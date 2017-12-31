@@ -1,6 +1,6 @@
 package juhe.jiangdajiuye.util;
 
-import juhe.jiangdajiuye.entity.recordEntity.ShareRecord;
+import juhe.jiangdajiuye.bean.recordEntity.ShareRecord;
 
 /**
  * class description here

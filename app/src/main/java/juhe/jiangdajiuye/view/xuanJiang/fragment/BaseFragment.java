@@ -18,9 +18,9 @@ import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
+import juhe.jiangdajiuye.util.HttpConnection;
 import juhe.jiangdajiuye.util.ToastUtils;
-import juhe.jiangdajiuye.util.UrlConnection;
 import juhe.jiangdajiuye.view.Browse;
 import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
 
@@ -40,14 +40,14 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
     //是否没有初始化数据
     private Boolean isfirst = true;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private UrlConnection connection ;
+    private HttpConnection connection ;
     private XuanMesBean holder ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(view != null)
             return view ;
         view = inflater.inflate(R.layout.fragment,container,false);
-        connection = new UrlConnection(getActivity());
+        connection = new HttpConnection(getActivity());
         init();
         return view;
     }
@@ -73,7 +73,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
     }
 
     private void initRequest() {
-        connection.setNetListener(new UrlConnection.NetListener(){
+        connection.setNetListener(new HttpConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {

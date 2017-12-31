@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.entity.bombPush;
+package juhe.jiangdajiuye.bean.bombPush;
 
 /**
  * class description here

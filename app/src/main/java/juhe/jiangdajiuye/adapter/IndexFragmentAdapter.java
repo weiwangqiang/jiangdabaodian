@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.util.SkinManager;
 
 import static juhe.jiangdajiuye.R.id.footerProgressBar;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
@@ -11,7 +12,9 @@ import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.InstallationListener;
 import cn.bmob.v3.exception.BmobException;
+import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
+import juhe.jiangdajiuye.versionUpDate.BmobCheckUpgrade;
 
 /**
  * class description here
@@ -87,7 +90,7 @@ public class InitWorker {
 //        Beta.smallIconId = R.mipmap.logo;
 //        Beta.defaultBannerId = R.mipmap.logo;
 //        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-//        Beta.upgradeDialogLayoutId = R.layout.upgrade_dialog;
+        Beta.upgradeDialogLayoutId = R.layout.dialog_upgrade;
 //        Bugly.init(mCtx, Bugly_APPId, true, strategy);
         Bugly.init(mCtx,Bugly_APPId, true);
         Log.i(TAG, "onStartCommand: 初始化完成 ！ ");

@@ -26,8 +26,8 @@ import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.tool.ParseTools;
-import juhe.jiangdajiuye.tool.ProgressDialog;
-import juhe.jiangdajiuye.util.UrlConnection;
+import juhe.jiangdajiuye.dialog.ProgressDialog;
+import juhe.jiangdajiuye.util.HttpConnection;
 
 /**
  * Created by wangqiang on 2016/10/6.
@@ -173,8 +173,8 @@ public class Library extends BaseActivity implements
         }
         //解决中文乱码问题
 //        HttpUrl parsed = HttpUrl.parse(getUrl());
-        final UrlConnection connection= new UrlConnection(this);
-        connection.setNetListener(new UrlConnection.NetListener() {
+        final HttpConnection connection= new HttpConnection(this);
+        connection.setNetListener(new HttpConnection.NetListener() {
             @Override
             public void success(final String response, int code) {
                 if(recyclerView.getmStatus() == MyRecyclerView.STATUS_PULLTOREFRESH){

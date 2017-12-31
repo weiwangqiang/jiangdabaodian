@@ -15,7 +15,7 @@ import juhe.jiangdajiuye.InterFace.MyItemLister;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.CollectRceAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 
 /**

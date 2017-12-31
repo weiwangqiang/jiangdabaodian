@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import juhe.jiangdajiuye.core.MyApplication;
-import juhe.jiangdajiuye.entity.IpBean;
-import juhe.jiangdajiuye.entity.recordEntity.VisitCount;
+import juhe.jiangdajiuye.bean.IpBean;
+import juhe.jiangdajiuye.bean.recordEntity.VisitCount;
 
 /**
  * class description here

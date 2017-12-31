@@ -1,5 +1,8 @@
 package juhe.jiangdajiuye.consume;
 
+import android.widget.ScrollView;
+import android.widget.Scroller;
+
 /**
  * class description here
  *
@@ -7,5 +10,5 @@ package juhe.jiangdajiuye.consume;
  * @since 2017-12-31
  */
 
-public class ItemScrollView {
+public class ItemScrollView extends  {
 }

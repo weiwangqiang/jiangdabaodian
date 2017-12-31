@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.entity.bmobBean;
+package juhe.jiangdajiuye.bean.bmobBean;
 
 import cn.bmob.v3.BmobObject;
 

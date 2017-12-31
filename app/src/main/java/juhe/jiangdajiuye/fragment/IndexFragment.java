@@ -19,10 +19,10 @@ import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
-import juhe.jiangdajiuye.entity.MessageItem;
+import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.tool.ParseTools;
+import juhe.jiangdajiuye.util.HttpConnection;
 import juhe.jiangdajiuye.util.ToastUtils;
-import juhe.jiangdajiuye.util.UrlConnection;
 import juhe.jiangdajiuye.view.Browse;
 
 /**
@@ -161,8 +161,8 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     }
     public void getMessage() {
         String url = getUrl();
-        UrlConnection connection = new UrlConnection(getActivity());
-        connection.setNetListener(new UrlConnection.NetListener(){
+        HttpConnection connection = new HttpConnection(getActivity());
+        connection.setNetListener(new HttpConnection.NetListener(){
 
             @Override
             public void success(String response, int code) {

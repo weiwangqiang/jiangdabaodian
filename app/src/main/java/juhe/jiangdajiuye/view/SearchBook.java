@@ -23,8 +23,8 @@ import juhe.jiangdajiuye.adapter.MyExpandableListAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.sql.LibrarySqlHelper;
 import juhe.jiangdajiuye.tool.ParseTools;
-import juhe.jiangdajiuye.tool.ProgressDialog;
-import juhe.jiangdajiuye.util.UrlConnection;
+import juhe.jiangdajiuye.dialog.ProgressDialog;
+import juhe.jiangdajiuye.util.HttpConnection;
 
 /** 搜索图书界面
  * Created by wangqiang on 2016/10/2.
@@ -103,8 +103,8 @@ public class SearchBook extends BaseActivity{
         Log.e(TAG,book + " "+ url +" "+editor+" "+available+" "+number);
     }
     public void getSearch(){
-        UrlConnection connection = new UrlConnection(this);
-        connection.setNetListener(new UrlConnection.NetListener(){
+        HttpConnection connection = new HttpConnection(this);
+        connection.setNetListener(new HttpConnection.NetListener(){
 
             @Override
             public void success(String result, int code) {
@@ -150,8 +150,8 @@ public class SearchBook extends BaseActivity{
 
 
 
-//        final UrlConnection connection= new UrlConnection();
-//        connection.setgetLister(new UrlConnection.getLister() {
+//        final HttpConnection connection= new HttpConnection();
+//        connection.setgetLister(new HttpConnection.getLister() {
 //            @Override
 //            public void success(String response, int code) {
 //

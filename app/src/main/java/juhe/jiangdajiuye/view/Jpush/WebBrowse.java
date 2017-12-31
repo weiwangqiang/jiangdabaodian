@@ -3,7 +3,6 @@ package juhe.jiangdajiuye.view.Jpush;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +16,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,23 +35,18 @@ import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.sql.CollectSqlHelper;
-import juhe.jiangdajiuye.tool.ProgressDialog;
-import juhe.jiangdajiuye.tool.ShareDialog;
+import juhe.jiangdajiuye.bean.bombPush.XuanJiangPush;
+import juhe.jiangdajiuye.dialog.ProgressDialog;
+import juhe.jiangdajiuye.dialog.ShareDialog;
 
 /**
  * Created by wangqiang on 2016/10/1.
  */
 public class WebBrowse extends BaseActivity {
     private String TAG = "WebBrowse";
-    private String title,company,location,time;
-    private int from;
-    private Boolean ischeck = false;
-    private Button back;
-//    private Toolbar toolbar;
-    private String url;
+    private String targetUrl,title;
     private WebView webView;
-    private ProgressDialog myprogress;
+    private ProgressDialog myProgress;
     private Dialog dialog;
     private ShareDialog sharedialog;
     private String APP_ID = "1105550872";
@@ -65,34 +58,23 @@ public class WebBrowse extends BaseActivity {
     private WXWebpageObject webpager ;
     private WXMediaMessage message;
     private SendMessageToWX.Req req;
-
-    private CollectSqlHelper helper;
-    private SQLiteDatabase sqLiteDatabase;
     private String IcnUrl = "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3084594445,4206732502&fm=96";
-    public static Intent getActivityInt (Context context,String to){
+    public static Intent getActivityInt (Context context,XuanJiangPush mes){
         Intent intent = new Intent(context,WebBrowse.class);
         Bundle bundle = new Bundle();
-        bundle.putString("url",to);
+        bundle.putString("url",mes.getTargetUrl());
+        bundle.putString("title",mes.getTitle());
         intent.putExtras(bundle);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent ;
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.browse);
-        myprogress = new ProgressDialog(this, R.drawable.waiting);
-        helper = new CollectSqlHelper(this);
-        sqLiteDatabase = helper.getWritableDatabase();
-        helper.setSQL(sqLiteDatabase);
-        myprogress.show();
+        myProgress = new ProgressDialog(this, R.drawable.waiting);
+        myProgress.show();
         init();
-        findid();
-        getParam();
-        initToolbar();
-        initView();
-        initWeb(url);
-        WebTitle.setText("推送详情");
     }
     private Toolbar toolbar;
     public void initToolbar(){
@@ -103,6 +85,11 @@ public class WebBrowse extends BaseActivity {
     }
     private void init(){
         initWEi();
+        findid();
+        getParam();
+        initToolbar();
+        initWeb(targetUrl);
+        WebTitle.setText("推送详情");
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
         tencent = Tencent.createInstance(APP_ID, WebBrowse.this);
@@ -120,21 +107,17 @@ public class WebBrowse extends BaseActivity {
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         WebTitle = (TextView)findViewById(R.id.WebTitle);
     }
-    public void initView(){
-        ischeck = helper.hasURL(url);
-    }
-
     /**
      * 获取参数信息
      */
     public void getParam(){
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        String to = bundle.getString("url");
-         url = to;
+        targetUrl= bundle.getString("url");
+        title = bundle.getString("title");
     }
-    public void initWeb(String url){
-        if(url==null)
+    public void initWeb(String targetUrl){
+        if(targetUrl==null)
             return ;
         WebSettings wSet = webView.getSettings();
         wSet.setJavaScriptEnabled(true);
@@ -147,7 +130,7 @@ public class WebBrowse extends BaseActivity {
         wSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN );//适应屏幕，内容将自动缩放
         wSet.setLoadWithOverviewMode(true);
         wSet.setUseWideViewPort(true);
-        webView.loadUrl(url);
+        webView.loadUrl(targetUrl);
 //        webView.setInitialScale(100);   //100代表不缩放
         webView.setDownloadListener(new MyWebViewDownLoadListener());
         webView.setWebViewClient(new WebViewClient() {
@@ -160,7 +143,7 @@ public class WebBrowse extends BaseActivity {
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 webView.setVisibility(View.VISIBLE);
-                myprogress.cancel();
+                myProgress.cancel();
 //                Toast.makeText(WebBrowse.this,"加载失败",Toast.LENGTH_SHORT).show();
             }
         });
@@ -171,14 +154,14 @@ public class WebBrowse extends BaseActivity {
                 // MainActivity.this.setProgress(newProgress * 100);
                 if(newProgress==100){
                     webView.setVisibility(View.VISIBLE);
-                    myprogress.cancel();
+                    myProgress.cancel();
                 }
             }
 
             @Override
             public boolean onJsTimeout() {
                 webView.setVisibility(View.VISIBLE);
-                myprogress.cancel();
+                myProgress.cancel();
                 return super.onJsTimeout();
 
             }
@@ -215,8 +198,8 @@ public class WebBrowse extends BaseActivity {
     private void openInBrowse() {
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
-        Uri content_url = Uri.parse(url);
-        intent.setData(content_url);
+        Uri contentUrl = Uri.parse(targetUrl);
+        intent.setData(contentUrl);
         startActivity(intent);
     }
 
@@ -261,7 +244,7 @@ public class WebBrowse extends BaseActivity {
         Toast.makeText(this,"正在跳转",Toast.LENGTH_SHORT).show();
         Log.e(TAG,"share to weixin");
         webpager = new WXWebpageObject();
-        webpager.webpageUrl = url;
+        webpager.webpageUrl = targetUrl;
         message = new WXMediaMessage(webpager);
         message.title = "江大宝典";
         message.description = title;
@@ -276,7 +259,7 @@ public class WebBrowse extends BaseActivity {
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "我正在江大宝典看"+title);
-        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, url);
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, targetUrl);
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,IcnUrl);
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "江大宝典");
         dialog.cancel();
@@ -289,7 +272,7 @@ public class WebBrowse extends BaseActivity {
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);//必填
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY,"我正在宝典看"+title);//选填
-        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, targetUrl);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL,list);
         dialog.cancel();
         tencent.shareToQzone(WebBrowse.this, params,baseuiLister);
@@ -325,13 +308,6 @@ public class WebBrowse extends BaseActivity {
     @Override
     public void onPause(){
         super.onPause();
-        if(ischeck&&from!=3){
-            helper.addCollect(title,company,location,time,url);
-        }
-        else if (helper.hasURL(url)&&!ischeck){
-            //取消收藏
-            helper.delete(url);
-        }
 }
 
     @Override

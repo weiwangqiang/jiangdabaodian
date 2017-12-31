@@ -30,8 +30,8 @@ import com.tencent.tauth.UiError;
 import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.tool.ProgressDialog;
-import juhe.jiangdajiuye.tool.ShareDialog;
+import juhe.jiangdajiuye.dialog.ProgressDialog;
+import juhe.jiangdajiuye.dialog.ShareDialog;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 
 /**
