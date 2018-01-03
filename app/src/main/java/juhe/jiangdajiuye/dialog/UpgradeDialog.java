@@ -12,7 +12,7 @@ import android.widget.TextView;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.bmobBean.AppVersionBean;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
-import juhe.jiangdajiuye.util.StringUtils;
+import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.versionUpDate.DownLoadService;
 
 /**
@@ -68,8 +68,8 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
     private void showConfirmDialog() {
         if (!NetStateUtils.isWifiState()) {
             new AlertDialog.Builder(mCtx)
-                    .setTitle(StringUtils.getString(R.string.download_without_wifi))
-                    .setPositiveButton(StringUtils.getString(R.string.confirm),
+                    .setTitle(ResourceUtils.getString(R.string.download_without_wifi))
+                    .setPositiveButton(ResourceUtils.getString(R.string.confirm),
                             new DialogInterface.OnClickListener() {
 
                                 @Override
@@ -78,7 +78,7 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
                                     dialog.cancel();
                                 }
                             })
-                    .setNeutralButton(StringUtils.getString(R.string.cancel),
+                    .setNeutralButton(ResourceUtils.getString(R.string.cancel),
                             new DialogInterface.OnClickListener() {
 
                                 @Override

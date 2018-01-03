@@ -16,10 +16,10 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:background="@color/baseColor"
             android:titleTextColor="@color/white"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            />
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <juhe.jiangdajiuye.consume.LibraryRecyclerView
         android:id="@+id/Collect_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

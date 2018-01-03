@@ -8,9 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Map;
-
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
 import juhe.jiangdajiuye.core.MyApplication;
 import juhe.jiangdajiuye.util.SkinManager;
@@ -27,9 +26,9 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
  * @since 2017-08-08
  */
 
-public class SearchLibraryAdapter extends AbsAdapter<Map<String,String>> {
+public class SearchLibraryAdapter extends AbsAdapter<BookBean> {
 
-    public mItemViewHodler itemViewHodler ;
+    public mItemViewHolder itemViewHodler ;
     public mFooterViewHolder footerViewHolder ;
     private Context mCtx ;
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
@@ -38,7 +37,7 @@ public class SearchLibraryAdapter extends AbsAdapter<Map<String,String>> {
 
     public OnItemClickListener itemClickListener ;
     public interface  OnItemClickListener{
-        void OnItemClick(Map<String,String> item);
+        void OnItemClick(BookBean item);
     }
 
     public SearchLibraryAdapter(Context mCtx , @LayoutRes int layout) {
@@ -55,7 +54,7 @@ public class SearchLibraryAdapter extends AbsAdapter<Map<String,String>> {
     @NonNull
     @Override
     public ItemViewHolder getItemViewHolder(ViewGroup parent) {
-        return new mItemViewHodler(SkinManager.inflater(mCtx,mLayout,parent,false));
+        return new mItemViewHolder(SkinManager.inflater(mCtx,mLayout,parent,false));
     }
 
     /**
@@ -81,18 +80,18 @@ public class SearchLibraryAdapter extends AbsAdapter<Map<String,String>> {
      * @param data
      */
     @Override
-    public void bindItemViewHolder(RecyclerView.ViewHolder holder, int position, final Map<String,String> data) {
-        if(!(holder instanceof mItemViewHodler)) return;
+    public void bindItemViewHolder(RecyclerView.ViewHolder holder, int position, final BookBean data) {
+        if(!(holder instanceof mItemViewHolder)) return;
         try
         {
-            ((mItemViewHodler) holder).book.setText(data.get("book").toString());
-            ((mItemViewHodler) holder).editor.setText(data.get("editor").toString());
-            ((mItemViewHodler) holder).available.setText(data.get("available").toString());
-            ((mItemViewHodler) holder).number.setText(data.get("number").toString());
+            ((mItemViewHolder) holder).book.setText((position+1)+"."+data.getBook());
+            ((mItemViewHolder) holder).editor.setText(data.getEditor());
+            ((mItemViewHolder) holder).available.setText(data.getAvailable());
+            ((mItemViewHolder) holder).number.setText(data.getNumber());
         }catch(Exception e){
             e.printStackTrace();
         }
-        ((mItemViewHodler)holder).root.setOnClickListener(new View.OnClickListener() {
+        ((mItemViewHolder)holder).root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(null!= itemClickListener )
@@ -117,9 +116,9 @@ public class SearchLibraryAdapter extends AbsAdapter<Map<String,String>> {
 
     }
 
-    public class mItemViewHodler extends ItemViewHolder{
+    public class mItemViewHolder extends ItemViewHolder{
         TextView book,editor,available,number;
-        public mItemViewHodler(View itemView) {
+        public mItemViewHolder(View itemView) {
             super(itemView);
             book = (TextView) itemView.findViewById(R.id.search_book);
             editor = (TextView)itemView.findViewById(R.id.search_editor);

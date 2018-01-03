@@ -1,7 +1,6 @@
 package juhe.jiangdajiuye.view;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,15 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.MyExpandableListAdapter;
+import juhe.jiangdajiuye.bean.BookBean;
+import juhe.jiangdajiuye.bean.BookMesBean;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.sql.LibrarySqlHelper;
-import juhe.jiangdajiuye.tool.ParseTools;
 import juhe.jiangdajiuye.dialog.ProgressDialog;
+import juhe.jiangdajiuye.sql.repository.LibraryRepository;
+import juhe.jiangdajiuye.tool.ParseTools;
 import juhe.jiangdajiuye.util.HttpConnection;
 
 /** 搜索图书界面
@@ -31,22 +31,20 @@ import juhe.jiangdajiuye.util.HttpConnection;
  */
 public class SearchBook extends BaseActivity{
     private Button back;
-    private TextView b,e,bm;
+    private TextView titleTextView,editerTextView,bookMesTextView;
     private View v,footer;
     private RadioButton collect;
     private Boolean ischeck = false;
     private ExpandableListView listview;
     private MyExpandableListAdapter adapter;
     private ProgressDialog myprogress;
-    private String book,editor,available,number,url;
     private String TAG = "SearchBook";
     private String title = "",editer = "",bookMessage = "";
-    public HashMap<String,String> map  = new HashMap<>();
+    private BookBean bookBean ;
+    private BookMesBean bookMesBean ;
     public static List<List<String>> list = new ArrayList<>();
     private ParseTools parsetools =  ParseTools.getparseTool() ;
-
-    private LibrarySqlHelper helper;
-    private SQLiteDatabase sqLiteDatabase;
+    private LibraryRepository libraryRepository ;
 
     private Handler handler = new Handler(){
         public void handleMessage(Message message){
@@ -67,12 +65,9 @@ public class SearchBook extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_book);
-        helper = new LibrarySqlHelper(this);
-        sqLiteDatabase = helper.getWritableDatabase();
-        helper.setSQL(sqLiteDatabase);
+        libraryRepository = LibraryRepository.getInstance() ;
         getParam();
         initView();
-        Log.e(TAG,"------url--------------"+url);
     }
     public void initView(){
         findid();
@@ -87,7 +82,7 @@ public class SearchBook extends BaseActivity{
         back.setOnClickListener(this);
         collect.setOnClickListener(this);
 
-        ischeck = helper.hasURL(url);
+        ischeck = libraryRepository.hasURL(bookBean.getUrl());
         collect.setChecked(ischeck);
     }
     /**
@@ -95,12 +90,12 @@ public class SearchBook extends BaseActivity{
      */
     public void getParam(){
         Intent intent = getIntent();
-        book  =  intent.getStringExtra("book");
-        url  =  intent.getStringExtra("url");
-        editor = intent.getStringExtra("editor");
-        available = intent.getStringExtra("available");
-        number = intent.getStringExtra("number");
-        Log.e(TAG,book + " "+ url +" "+editor+" "+available+" "+number);
+        bookBean = new BookBean();
+        bookBean.setBook(intent.getStringExtra("book"));
+        bookBean.setUrl(intent.getStringExtra("url"));
+        bookBean.setEditor(intent.getStringExtra("editor"));
+        bookBean.setAvailable(intent.getStringExtra("available"));
+        bookBean.setNumber(intent.getStringExtra("number"));
     }
     public void getSearch(){
         HttpConnection connection = new HttpConnection(this);
@@ -109,7 +104,7 @@ public class SearchBook extends BaseActivity{
             @Override
             public void success(String result, int code) {
                 Log.d(TAG, "onSuccess: "+result);
-                map = parsetools.parseBookMessage(result);
+                bookMesBean = parsetools.parseBookMessage(result);
                 list = parsetools.parseSearchBookAvailabale(result);
                 handler.sendEmptyMessage(0x1);
             }
@@ -120,68 +115,27 @@ public class SearchBook extends BaseActivity{
                 handler.sendEmptyMessage(0x2);
             }
         });
-        connection.get(url);
-//        RequestParams params = new RequestParams(url);
-//        x.http().get(params,new Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String result) {
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable ex, boolean isOnCallback) {
-//                ex.printStackTrace();
-////                Log.e(TAG," Error response is "+ Error+"code is "+code);
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(CancelledException cex) {
-//                handler.sendEmptyMessage(0x2);
-//
-//            }
-//
-//            @Override
-//            public void onFinished() {
-//
-//            }
-//        });
-
-
-
-
-//        final HttpConnection connection= new HttpConnection();
-//        connection.setgetLister(new HttpConnection.getLister() {
-//            @Override
-//            public void success(String response, int code) {
-//
-//            }
-//            @Override
-//            public void failure(Exception e,String Error, int code) {
-//
-//            }
-//        });
-//        connection.get(url);
+        connection.get(bookBean.getUrl());
     }
     public void showDate(){
-        findfooter();
-        title = map.get("book");
-        b.setText(title);
-        editer = map.get("editer");
-        e.setText(editer);
-        bookMessage = map.get("bookMessage");
-        bm.setText(bookMessage);
+        findFooter();
+        title = bookMesBean.getBook();
+        titleTextView.setText(title);
+        editer = bookMesBean.getEditer();
+        editerTextView.setText(editer);
+        bookMessage = bookMesBean.getBookMessage();
+        bookMesTextView.setText(bookMessage);
         listview.addHeaderView(v);
         listview.addFooterView(footer);
         adapter = new MyExpandableListAdapter(SearchBook.this,title,list);
         listview.setAdapter(adapter);
     }
-    public void findfooter(){
+    public void findFooter(){
         v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.library_search_list_header,null);
         footer = LayoutInflater.from(getApplicationContext()).inflate(R.layout.search_book_footer,null);
-        b = (TextView)v.findViewById(R.id.library_search_book_message_book);
-        e = (TextView)v.findViewById(R.id.library_search_book_message_editer);
-        bm = (TextView)v.findViewById(R.id.library_search_book_message_bookMessage);
+        titleTextView = (TextView)v.findViewById(R.id.library_search_book_message_book);
+        editerTextView = (TextView)v.findViewById(R.id.library_search_book_message_editer);
+        bookMesTextView = (TextView)v.findViewById(R.id.library_search_book_message_bookMessage);
     }
 
     @Override
@@ -199,7 +153,6 @@ public class SearchBook extends BaseActivity{
 
     private void showCollect(){
         if(ischeck){
-            Log.e(TAG,"is false");
             collect.setChecked(false);
         }
         else if(!ischeck){
@@ -214,12 +167,12 @@ public class SearchBook extends BaseActivity{
     @Override
     public void onPause(){
         super.onPause();
-        if(collect.isChecked()){
-            helper.addCollect(title,editor,available,number,url);
-        }
-        else if (helper.hasURL(url)&&!collect.isChecked()){
+        boolean containUrl = libraryRepository.hasURL(bookBean.getUrl()) ;
+        if(!containUrl&&collect.isChecked()){
+            libraryRepository.addCollect(bookBean);
+        }else if (containUrl&&!collect.isChecked()){
             //取消收藏
-            helper.delete(url);
+            libraryRepository.delete(bookBean.getUrl());
         }
     }
 

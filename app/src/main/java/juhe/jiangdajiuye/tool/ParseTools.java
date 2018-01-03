@@ -8,10 +8,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import juhe.jiangdajiuye.bean.BookBean;
+import juhe.jiangdajiuye.bean.BookMesBean;
 import juhe.jiangdajiuye.bean.MessageItem;
 
 /**
@@ -110,28 +110,31 @@ public class ParseTools {
     }
 
     //解析图书馆搜索
-    public List<Map<String,String>> parseSearch(String response){
-        List<Map<String,String>> list = new ArrayList<>();
+    public List<BookBean> parseSearch(String response){
+        List<BookBean> list = new ArrayList<>();
         if(response.length()<=0) return null;
         Document doc = Jsoup.parse(response);
         Elements elements =  doc.getElementsByClass("book_list_info");
         for(int i = 0;i<elements.size();i++){
-            HashMap<String,String > map = new HashMap<>();
+           BookBean bookBean = new BookBean();
             Element h = elements.get(i).select("h3").get(0);
             Elements p = elements.get(i).select("p");
-            map.put("url","http://huiwen.ujs.edu.cn:8080/opac/"+ h.select("a").get(0).attr("href"));
-            map.put("book", h.select("a").text());
-            map.put("number",h.ownText());
-            map.put("available",p.get(0).select("span").text());
-            map.put("editor",p.get(0).ownText().replace("(0)",""));
-            Log.e("parse"," url is "+map.get("url")+" name is "+map.get("book"));
-            list.add(map);
+            bookBean.setUrl("http://huiwen.ujs.edu.cn:8080/opac/"+ h.select("a").get(0).attr("href"));
+            String book = h.select("a").text() ;
+            if(book.length() >2)
+                bookBean.setBook(book.substring(2 ,book.length()));
+            else
+                bookBean.setBook(book);
+            bookBean.setNumber(h.ownText());
+            bookBean.setAvailable(p.get(0).select("span").text());
+            bookBean.setEditor(p.get(0).ownText().replace("(0)",""));
+            list.add(bookBean);
         }
         Log.e("parse","return data"+"data size is "+list.size());
         return list;
     }
     //解析图书馆详情
-    public static HashMap<String,String> parseBookMessage(String response){
+    public static BookMesBean parseBookMessage(String response){
         String book = "";
         String editer = "";
         String bookMessage = "";
@@ -149,11 +152,11 @@ public class ParseTools {
             bookMessage = bookMessage+elements.get(i).select("dt").text()+"\n";
             bookMessage = bookMessage+elements.get(i).select("dd").text()+"\n";
         }
-        HashMap<String,String> map = new HashMap<String,String>();
-        map.put("book",book);
-        map.put("editer",editer);
-        map.put("bookMessage",bookMessage);
-        return map;
+        BookMesBean bookMesBean = new BookMesBean();
+        bookMesBean.setBook(book);
+        bookMesBean.setEditer(editer);
+        bookMesBean.setBookMessage(bookMessage);
+        return bookMesBean;
     }
 
     public List<List<String>> parseSearchBookAvailabale(String response){

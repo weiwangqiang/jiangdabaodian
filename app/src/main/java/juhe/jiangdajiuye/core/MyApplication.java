@@ -3,6 +3,8 @@ package juhe.jiangdajiuye.core;
 import android.app.Application;
 import android.content.Context;
 
+import juhe.jiangdajiuye.tool.MyExceptionHolder;
+
 /**
  * Created by wangqiang on 2017/4/23.
  *
@@ -28,6 +30,7 @@ public class MyApplication extends Application{
          *  开一个service完成所有第三方的初始化工作
          */
         InitWorker.initSDK(this);
+        MyExceptionHolder holder = new MyExceptionHolder(this);
     }
 
     public static MyApplication getApplication(){

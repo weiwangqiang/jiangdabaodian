@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.consume.ItemScrollView;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.util.AppUtils;
+import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.versionUpDate.BmobCheckUpgrade;
 
 /**
@@ -109,10 +111,16 @@ public class About extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
     private TextView currentVersion;
+    private ItemScrollView itemScrollView ;
     public void findId() {
         toolbar = (Toolbar)findViewById(R.id.aboute_toolbar);
         textViewUp = (TextView) findViewById(R.id.textViewUp);
         currentVersion = (TextView) findViewById(R.id.currentVersion);
+        itemScrollView = (ItemScrollView) findViewById(R.id.ItemScrollView) ;
+        TextView textView = new TextView(this);
+        textView.setBackgroundColor(ResourceUtils.getColor(R.color.green_transparency_950));
+        itemScrollView.addItemView(textView);
+        itemScrollView.addBoth();
         String s = "";
             try{
                 s = "当前版本："+ AppUtils.getVersionName();

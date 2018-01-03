@@ -25,7 +25,7 @@ import juhe.jiangdajiuye.core.MyApplication;
  */
 
 public class ScreenSizeUtil {
-
+    public static ScreenSize screenSize  = null ;
     public static class ScreenSize{
         public final double size;
         public final int widthPixels;
@@ -41,6 +41,8 @@ public class ScreenSizeUtil {
      * @return screensize
      */
     public static ScreenSize getScreenSize(){
+        if(screenSize != null)
+            return screenSize ;
         WindowManager w = (WindowManager) MyApplication.getApplication().getSystemService(Context.WINDOW_SERVICE);
         Display d = w.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
@@ -76,6 +78,10 @@ public class ScreenSizeUtil {
 
     public static int getAvailScreenHeight() {
         return ScreenSizeUtil.getScreenSize().heightPixels - getStatusBarHeight() - getNavBarHeight();
+    }
+
+    public static int getScreenWith(){
+        return getScreenSize().widthPixels ;
     }
 
     public static int getStatusBarHeight() {

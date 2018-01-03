@@ -15,18 +15,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.SearchLibraryAdapter;
+import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
-import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
+import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.tool.ParseTools;
 import juhe.jiangdajiuye.dialog.ProgressDialog;
+import juhe.jiangdajiuye.tool.ParseTools;
 import juhe.jiangdajiuye.util.HttpConnection;
 
 /**
@@ -36,7 +36,6 @@ public class Library extends BaseActivity implements
         Toolbar.OnMenuItemClickListener,OnLoadMoreListener {
     public EditText edit;
     private String TAG = "fragmentLibrary";
-//    private OkHttpClient mOkHttpClient ;
     public ExecutorService service;
 
     private int page = 1;
@@ -58,19 +57,18 @@ public class Library extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_fragment);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-//        mOkHttpClient = new OkHttpClient();
         service = Executors.newFixedThreadPool (Runtime.getRuntime().availableProcessors());
         initView();
     }
     public void initView(){
         imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        findid();
+        findId();
         initList();
         initToolbar();
         setLister();
         bindNetState();
     }
-    public void findid(){
+    public void findId(){
         edit = (EditText) findViewById(R.id.library_edit);
         search = (TextView)findViewById(R.id.library_search);
         recyclerView = (MyRecyclerView)findViewById(R.id.library_listView);
@@ -84,13 +82,13 @@ public class Library extends BaseActivity implements
         recyclerView.setmOnLoadMoreListener(this);
         adapter.setOnItemClickListener(new SearchLibraryAdapter.OnItemClickListener() {
             @Override
-            public void OnItemClick(Map<String,String> data) {
+            public void OnItemClick(BookBean data) {
                     Intent intent = new Intent(Library.this,SearchBook.class);
-                    intent.putExtra("url",data.get("url"));
-                    intent.putExtra("book",data.get("book"));
-                    intent.putExtra("editor",data.get("editor"));
-                    intent.putExtra("available",data.get("available"));
-                    intent.putExtra("number",data.get("number"));
+                    intent.putExtra("url",data.getUrl());
+                    intent.putExtra("book",data.getBook());
+                    intent.putExtra("editor",data.getEditor());
+                    intent.putExtra("available",data.getAvailable());
+                    intent.putExtra("number",data.getNumber());
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
@@ -107,10 +105,8 @@ public class Library extends BaseActivity implements
             }
             @Override
             public void GetInternet(int type) {
-                Log.i(TAG, "GetInternet: ----------------");
                 if(recyclerView != null){
                     if(recyclerView.getmStatus() == MyRecyclerView.STATUS_ERROR){
-                        Log.i(TAG, "GetInternet: set default value ");
                         recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
                     }
                 }
@@ -201,7 +197,7 @@ public class Library extends BaseActivity implements
         myprogress = new ProgressDialog(this,R.drawable.waiting);
         myprogress.show();
     }
-    public void upData(List<Map<String,String>> d){
+    public void upData(List<BookBean> d){
         if(d.size()==0){
             if(recyclerView.getmStatus() == MyRecyclerView.STATUS_PULLTOREFRESH){
                 uiutils.showToast("没有你要找的书哦!");
@@ -228,12 +224,10 @@ public class Library extends BaseActivity implements
          recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
     }
     public String  getUrl(){
-        String str = "";
         if(recyclerView.getmStatus() == MyRecyclerView.STATUS_PULLTOREFRESH){
             page = 1 ;
         }
-        str = url +"&page="+page+"&title="+title;
-        return str;
+        return  url +"&page="+page+"&title="+title;
     }
 
     @Override
