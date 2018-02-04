@@ -43,7 +43,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import juhe.jiangdajiuye.adapter.FragmentAdapter;
-import juhe.jiangdajiuye.bean.bmobBean.BootPicture;
+import juhe.jiangdajiuye.bean.bmobAppMes.BootPicture;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.dialog.ShareDialog;
@@ -51,16 +51,17 @@ import juhe.jiangdajiuye.fragment.IndexFragment;
 import juhe.jiangdajiuye.imageUtil.ImageLocalLoad;
 import juhe.jiangdajiuye.util.NetMesManager;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
-import juhe.jiangdajiuye.util.TabLayoutUtils;
 import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.util.UserActionRecordUtils;
 import juhe.jiangdajiuye.util.UserBrowseRecordUtils;
 import juhe.jiangdajiuye.util.UserShareUtils;
+import juhe.jiangdajiuye.versionUpGrade.BmobCheckUpgrade;
 import juhe.jiangdajiuye.view.About;
 import juhe.jiangdajiuye.view.Collect;
+import juhe.jiangdajiuye.view.FeedBack;
 import juhe.jiangdajiuye.view.Game;
 import juhe.jiangdajiuye.view.Library;
-import juhe.jiangdajiuye.view.Suggest;
+import juhe.jiangdajiuye.view.LoginActivity;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 import juhe.jiangdajiuye.view.constant.FileConstant;
 import juhe.jiangdajiuye.view.xuanJiang.XuanEntrance;
@@ -76,10 +77,10 @@ public class MainActivity extends BaseActivity
     private List<Fragment> list = new ArrayList<>();
     private Toolbar toolbar;
     private TabLayout tabLayout;
-    private DrawerLayout drawer;
     private FragmentAdapter adapter;
     private ViewPager viewPager;
     private Dialog dialog;
+    private DrawerLayout drawer;
     private ShareDialog sharedialog;
     private String APP_ID = "1105550872";
     private Tencent tencent;
@@ -92,14 +93,13 @@ public class MainActivity extends BaseActivity
     private SendMessageToWX.Req req;
     //分享的信息
     private String content = "我正在使用江大宝典，你也来看看吧";
-    private String[] res = {"首页", "图书馆", "职位收藏"};
     private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(savedInstanceState != null) return;
+        if (savedInstanceState != null) return;
         bindNetState();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -112,6 +112,7 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
         initView();
         initPush();
+        BmobCheckUpgrade.getUpgradeInfo(false);
     }
 
     public static final String MESSAGE_RECEIVED_ACTION
@@ -127,7 +128,7 @@ public class MainActivity extends BaseActivity
         sharedialog = new ShareDialog();
         sharedialog.setItemlister(new myItemlist());
         dialog = sharedialog.getDialog(this);
-        inithShare();
+        initShare();
         findId();
         initViewPager();
         initTabLayout();
@@ -136,7 +137,7 @@ public class MainActivity extends BaseActivity
     /**
      * 初始化微信
      */
-    private void inithShare() {
+    private void initShare() {
         api = WXAPIFactory.createWXAPI(this, WEI_ID, true);
         api.registerApp(WEI_ID);
         baseuiLister = new baseUiLister();
@@ -145,11 +146,11 @@ public class MainActivity extends BaseActivity
 
     private void initViewPager() {
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/teachin/index?",
-                "XUANJIANG", IndexFragment.XUANJIANG));
+                "xuanJiang", IndexFragment.XUANJIANG));
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/job/search?",
-                "ZHAOPIN", IndexFragment.ZHAOPIN));
+                "zhaoPin", IndexFragment.ZHAOPIN));
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/news/index?tag=tzgg&",
-                "XINXI", IndexFragment.XINXI));
+                "xinXi", IndexFragment.XINXI));
         //刚开始只会加载前两个fragment
         adapter = new FragmentAdapter(getSupportFragmentManager(), list);
         viewPager.setAdapter(adapter);
@@ -170,7 +171,7 @@ public class MainActivity extends BaseActivity
             tabLayout.addTab(tab);
         }
         tabLayout.setupWithViewPager(viewPager);
-        TabLayoutUtils.setIndicator(this, tabLayout, 15, 15);
+//        TabLayoutUtils.setIndicator(this, tabLayout, 15, 15);
         //给left mian 的item 设置监听事件
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -180,11 +181,13 @@ public class MainActivity extends BaseActivity
     public void findId() {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getHeaderView(0).findViewById(R.id.main_my_icn).setOnClickListener(this);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -214,26 +217,30 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.nav_library:
                 UserBrowseRecordUtils.setmLibrary(1);
-                startActivity(new Intent(MainActivity.this, Library.class));
+                startActivitySlideInRight(this, Library.class);
                 break;
             case R.id.nav_favorite:
-
-                startActivity(new Intent(MainActivity.this, Collect.class));
+                startActivitySlideInRight(this, Collect.class);
                 break;
             case R.id.nav_xuanjianghui:
                 UserBrowseRecordUtils.setmXuanJiangCollect(1);
-                startActivity(new Intent(MainActivity.this, XuanEntrance.class));
+                startActivitySlideInRight(this, XuanEntrance.class);
                 break;
             case R.id.nav_send:
-                startActivity(new Intent(MainActivity.this, Suggest.class));
+                startActivitySlideInRight(this, FeedBack.class);
+
                 break;
             case R.id.nav_game:
                 UserBrowseRecordUtils.setmOffLineGame(1);
-                startActivity(new Intent(MainActivity.this, Game.class));
+                startActivitySlideInRight(this, Game.class);
+
                 break;
             case R.id.nav_about:
                 UserBrowseRecordUtils.setmAboute(1);
-                startActivity(new Intent(MainActivity.this, About.class));
+                startActivitySlideInRight(this, About.class);
+                break;
+            case R.id.nav_login:
+                startActivitySlideInRight(this,LoginActivity.class);
                 break;
             default:
                 break;
@@ -245,8 +252,13 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.main_my_icn:
+                startActivitySlideInRight(this, LoginActivity.class);
+                break;
+        }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

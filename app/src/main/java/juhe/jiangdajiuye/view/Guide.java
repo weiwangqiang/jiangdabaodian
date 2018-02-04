@@ -40,7 +40,7 @@ public class Guide extends BaseActivity {
         setContentView(R.layout.guide);
         sharedPreferences = getSharedPreferences("IndexView", Context.MODE_PRIVATE);
         getView();
-        findid();
+        findId();
         initViewpager();
     }
     public void getView(){
@@ -50,7 +50,7 @@ public class Guide extends BaseActivity {
         view2 = getLayoutInflater().inflate(R.layout.guideimage,null);
         view3 = getLayoutInflater().inflate(R.layout.guideimage,null);
     }
-    public void findid(){
+    public void findId(){
         viewpager = (ViewPager)findViewById(R.id.guideViewpager);
         begin = (Button)findViewById(R.id.guideButton);
         image1 = (ImageView)view1.findViewById(R.id.guideImage);

@@ -92,7 +92,12 @@ public abstract class AbsAdapter<T extends Object>  extends  RecyclerView.Adapte
 
     @Override
     public int getItemCount() {
-        return data == null ? 1: data.size() + 1;
+        if(data == null) {
+            return 0 ;
+        }
+        else{
+            return data.size() == 0 ? 0 : data.size() + 1;
+        }
     }
 
     public class ItemViewHolder extends  RecyclerView.ViewHolder{
@@ -150,12 +155,12 @@ public abstract class AbsAdapter<T extends Object>  extends  RecyclerView.Adapte
      * @param holder
      * @param position
      */
-    public abstract void bindItemViewHolder(RecyclerView.ViewHolder holder, int position , T t);
+    protected abstract void bindItemViewHolder(RecyclerView.ViewHolder holder, int position , T t);
 
     /**
      * 绑定footerView
      * @param holder
      * @param position
      */
-    public abstract void bindFooterViewHolder(RecyclerView.ViewHolder holder, int position);
+    protected abstract void bindFooterViewHolder(RecyclerView.ViewHolder holder, int position);
 }

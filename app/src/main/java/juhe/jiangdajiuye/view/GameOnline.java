@@ -3,9 +3,7 @@ package juhe.jiangdajiuye.view;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,15 +28,17 @@ import com.tencent.tauth.UiError;
 import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.dialog.ProgressDialog;
 import juhe.jiangdajiuye.dialog.ShareDialog;
+import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 
 /**
  * Created by wangqiang on 2016/10/1.
  * 在线游戏
  */
-public class GameOnline extends AppCompatActivity implements View.OnClickListener {
+public class GameOnline extends BaseActivity {
     private String TAG = "WebBrowse";
     private Boolean ischeck = false;
     private Button back,share;
@@ -67,8 +67,7 @@ public class GameOnline extends AppCompatActivity implements View.OnClickListene
         url = intent.getStringExtra("url");
         title = intent.getStringExtra("title");
         init();
-        findid();
-        setlister();
+        findId();
         initToolbar();
         initWeb(url);
     }
@@ -82,9 +81,7 @@ public class GameOnline extends AppCompatActivity implements View.OnClickListene
     private Toolbar toolbar;
     public void initToolbar(){
         toolbar.setTitle("");
-//        toolbar.setNavigationIcon(R.drawable.menue);
         setSupportActionBar(toolbar);
-//        toolbar.setOnMenuItemClickListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
@@ -94,14 +91,10 @@ public class GameOnline extends AppCompatActivity implements View.OnClickListene
         api = WXAPIFactory.createWXAPI(this,WEI_ID,true);
         api.registerApp(WEI_ID);
     }
-    public void findid(){
-//        back = (Button)findViewById(R.id.gameOnline_back);
+    public void findId(){
         webView = (WebView)findViewById(R.id.gameOnline_WebView);
-//        share = (Button)findViewById(R.id.gameOnline_share);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
 
-    }
-    public void setlister(){
     }
     public void initWeb(String url){
         webView.loadUrl(url);
@@ -114,7 +107,6 @@ public class GameOnline extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 // TODO Auto-generated method stub
-                // MainActivity.this.setProgress(newProgress * 100);
                 if(newProgress==100){
                     webView.setVisibility(View.VISIBLE);
                     myprogress.cancel();
@@ -131,10 +123,6 @@ public class GameOnline extends AppCompatActivity implements View.OnClickListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-                return true;
             case R.id.nav_share:
                 showShare();
                 return true;
@@ -142,22 +130,22 @@ public class GameOnline extends AppCompatActivity implements View.OnClickListene
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public void onClick(View view) {
         switch(view.getId()){
-
             default:
                 break;
         }
     }
     private void showShare(){
         dialog.show();
-        sharedialog.setItemlister(new myItemlist());
+        sharedialog.setItemlister(new myItemListener());
     }
     /**
      * popupwind的Item 监听
      */
-    private class myItemlist implements ShareDialog.Itemlister{
+    private class myItemListener implements ShareDialog.Itemlister{
 
         @Override
         public void shareToQzone() {
@@ -183,8 +171,7 @@ public class GameOnline extends AppCompatActivity implements View.OnClickListene
         }
     }
     private void shareToWX(){
-        Toast.makeText(this,"正在跳转",Toast.LENGTH_SHORT).show();
-        Log.e(TAG,"share to weixin");
+        Toast.makeText(this, ResourceUtils.getString(R.string.share_toast),Toast.LENGTH_SHORT).show();
         webpager = new WXWebpageObject();
         webpager.webpageUrl = url;
         message = new WXMediaMessage(webpager);
@@ -192,10 +179,7 @@ public class GameOnline extends AppCompatActivity implements View.OnClickListene
         message.description = "我正在玩"+title;
         req.transaction = "webPager";
         req.message = message;
-        Boolean get = api.sendReq(req);
-//        api.handleIntent(getIntent(),this);
         dialog.cancel();
-        Log.e(TAG,"share return is "+get);
     }
     private void ToQQ(){
         Bundle params = new Bundle();
@@ -251,10 +235,6 @@ public class GameOnline extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onPause(){
         super.onPause();
-}
-    @Override
-    public void onBackPressed() {
-        finish();
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        webView.reload();
     }
 }

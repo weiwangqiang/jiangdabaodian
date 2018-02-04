@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,13 +22,16 @@ import juhe.jiangdajiuye.bean.BookMesBean;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.dialog.ProgressDialog;
 import juhe.jiangdajiuye.sql.repository.LibraryRepository;
-import juhe.jiangdajiuye.tool.ParseTools;
+import juhe.jiangdajiuye.util.ParseUtils;
 import juhe.jiangdajiuye.util.HttpConnection;
+import juhe.jiangdajiuye.util.ResourceUtils;
 
 /** 搜索图书界面
  * Created by wangqiang on 2016/10/2.
  */
 public class SearchBook extends BaseActivity{
+    private final int UPDATE_AND_CANCEL = 0x10 ;
+    private final int CANCEL = 0x20 ;
     private Button back;
     private TextView titleTextView,editerTextView,bookMesTextView;
     private View v,footer;
@@ -43,17 +45,17 @@ public class SearchBook extends BaseActivity{
     private BookBean bookBean ;
     private BookMesBean bookMesBean ;
     public static List<List<String>> list = new ArrayList<>();
-    private ParseTools parsetools =  ParseTools.getparseTool() ;
+    private ParseUtils parseTools =  ParseUtils.getInstance() ;
     private LibraryRepository libraryRepository ;
 
     private Handler handler = new Handler(){
         public void handleMessage(Message message){
             switch (message.what){
-                case 0x1:
+                case UPDATE_AND_CANCEL:
                     showDate();
                     myprogress.cancel();
                     break;
-                case 0x2:
+                case CANCEL:
                     myprogress.cancel();
                     break;
                 default:
@@ -70,11 +72,11 @@ public class SearchBook extends BaseActivity{
         initView();
     }
     public void initView(){
-        findid();
+        findId();
         changeView();
         getSearch();
     }
-    public void findid(){
+    public void findId(){
         back = (Button)findViewById(R.id.search_back);
         listview = (ExpandableListView)findViewById(R.id.search_list);
         collect = (RadioButton)findViewById(R.id.browse_collect);
@@ -103,16 +105,15 @@ public class SearchBook extends BaseActivity{
 
             @Override
             public void success(String result, int code) {
-                Log.d(TAG, "onSuccess: "+result);
-                bookMesBean = parsetools.parseBookMessage(result);
-                list = parsetools.parseSearchBookAvailabale(result);
-                handler.sendEmptyMessage(0x1);
+                bookMesBean = parseTools.parseBookMessage(result);
+                list = parseTools.parseSearchBookAvailable(result);
+                handler.sendEmptyMessage(UPDATE_AND_CANCEL);
             }
 
             @Override
             public void failure(Exception e, String Error, int code) {
-                Toast.makeText(SearchBook.this,"失败，请重试",Toast.LENGTH_SHORT).show();
-                handler.sendEmptyMessage(0x2);
+                Toast.makeText(SearchBook.this, ResourceUtils.getString(R.string.error_try_again),Toast.LENGTH_SHORT).show();
+                handler.sendEmptyMessage(CANCEL);
             }
         });
         connection.get(bookBean.getUrl());
@@ -121,7 +122,7 @@ public class SearchBook extends BaseActivity{
         findFooter();
         title = bookMesBean.getBook();
         titleTextView.setText(title);
-        editer = bookMesBean.getEditer();
+        editer = bookMesBean.getAuthor();
         editerTextView.setText(editer);
         bookMessage = bookMesBean.getBookMessage();
         bookMesTextView.setText(bookMessage);
@@ -169,17 +170,10 @@ public class SearchBook extends BaseActivity{
         super.onPause();
         boolean containUrl = libraryRepository.hasURL(bookBean.getUrl()) ;
         if(!containUrl&&collect.isChecked()){
-            libraryRepository.addCollect(bookBean);
+            libraryRepository.add(bookBean);
         }else if (containUrl&&!collect.isChecked()){
             //取消收藏
-            libraryRepository.delete(bookBean.getUrl());
+            libraryRepository.delete(bookBean);
         }
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        finish();
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 }

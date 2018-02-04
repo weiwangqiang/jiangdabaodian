@@ -13,11 +13,12 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import juhe.jiangdajiuye.bean.IpBean;
+import juhe.jiangdajiuye.bean.bmobAppMes.IpBean;
 
 /**
  * class description here
- *   获取用户网络状态
+ * 获取用户网络状态
+ *
  * @author wangqiang
  * @since 2017-08-02
  */
@@ -25,6 +26,7 @@ import juhe.jiangdajiuye.bean.IpBean;
 public class NetMesManager {
     /**
      * 获取IP
+     *
      * @param context
      * @return
      */
@@ -43,7 +45,7 @@ public class NetMesManager {
         // 如果3G网络和wifi网络都未连接，且不是处于正在连接状态 则进入Network Setting界面 由用户配置网络连接
         if (mobile == android.net.NetworkInfo.State.CONNECTED
                 || mobile == android.net.NetworkInfo.State.CONNECTING) {
-            ip =  getLocalIpAddress();
+            ip = getLocalIpAddress();
         }
         if (wifi == android.net.NetworkInfo.State.CONNECTED
                 || wifi == android.net.NetworkInfo.State.CONNECTING) {
@@ -55,21 +57,19 @@ public class NetMesManager {
             }
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             int ipAddress = wifiInfo.getIpAddress();
-            ip =(ipAddress & 0xFF ) + "." +
-                    ((ipAddress >> 8 ) & 0xFF) + "." +
-                    ((ipAddress >> 16 ) & 0xFF) + "." +
-                    ( ipAddress >> 24 & 0xFF) ;
+            ip = (ipAddress & 0xFF) + "." +
+                    ((ipAddress >> 8) & 0xFF) + "." +
+                    ((ipAddress >> 16) & 0xFF) + "." +
+                    (ipAddress >> 24 & 0xFF);
         }
         return ip;
 
     }
 
     /**
-     *
      * @return 手机GPRS网络的IP
      */
-    private static String getLocalIpAddress()
-    {
+    private static String getLocalIpAddress() {
         try {
             //Enumeration<NetworkInterface> en=NetworkInterface.getNetworkInterfaces();
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
@@ -91,14 +91,19 @@ public class NetMesManager {
 
     public static void setIP(Context mCtx) {
         HttpConnection connection = new HttpConnection(mCtx);
-        connection.setNetListener(new HttpConnection.NetListener(){
+        connection.setNetListener(new HttpConnection.NetListener() {
 
             @Override
             public void success(String response, int code) {
-                if(code == 200){
+                if (code == 200) {
                     Gson gson = new Gson();
-                    IpBean ipbean = gson.fromJson(response,IpBean.class);
-                    UserActionRecordUtils.setIpbean(ipbean);
+                    try {
+
+                        IpBean ipbean = gson.fromJson(response, IpBean.class);
+                        UserActionRecordUtils.setIpbean(ipbean);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

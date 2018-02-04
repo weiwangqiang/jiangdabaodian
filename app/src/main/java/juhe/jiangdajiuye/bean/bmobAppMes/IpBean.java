@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.bean;
+package juhe.jiangdajiuye.bean.bmobAppMes;
 
 /**
  * class description here

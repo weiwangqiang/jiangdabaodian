@@ -2,14 +2,15 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="titleTextColor">@android:color/white</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+        <!--<item name="android:listDivider">@drawable/recyclerview_library_collect_divider</item>-->
         <!-- 這裡可以設置window的背景 充当启动界面-->
     </style>
+
     //item menu 的Style
     <style name="OverflowMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
         <!-- 是否覆盖锚点，默认为true，即盖住Toolbar -->
@@ -97,4 +98,5 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
 </resources>

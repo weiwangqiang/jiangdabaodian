@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.consume;
+package juhe.jiangdajiuye.consume.SlipRecyclerView;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -17,31 +17,37 @@ import juhe.jiangdajiuye.util.ScreenSizeUtil;
 
 /**
  * class description here
+ * <p>
+ * slipRecyclerView的 item布局
  *
  * @author wangqiang
  * @since 2017-12-31
  */
 
-public class ItemScrollView extends HorizontalScrollView {
-    private final String TAG = "ItemScrollView";
-    private int viewWith = ScreenSizeUtil.getScreenWith() / 6;
-    private OnSubItemClickListener listener;
+public class SlipItemView extends HorizontalScrollView {
+    private final String TAG = "SlipItemView";
+    private int viewWith = ScreenSizeUtil.getScreenWith() / 6;//subView的默认宽度
+    private OnSlipItemViewClickListener listener;
     //id常量
     private final int ID_ITEMVIEW = 0x10;
     private final int ID_DELETE = 0x20;
     private final int ID_COLLECT = 0x30;
 
+    private final int CLICK_DISTANCE = 5;//默认点击的触摸距离小于此
+    //手指第一次点击的X位置
+    private float downX;
     private int subViewWith = 0; //需要滑动的距离
     private LinearLayout parenView = null;
     private boolean close = true; //是否处于关闭状态
 
+    //获取主view
     public View getItemView() {
         return itemView;
     }
 
-    private View itemView = null;
+    private View itemView = null; // 即主View
 
-    public ItemScrollView(Context context) {
+    public SlipItemView(Context context) {
         super(context);
         init(context);
     }
@@ -57,55 +63,34 @@ public class ItemScrollView extends HorizontalScrollView {
         setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
-    public ItemScrollView(Context context, AttributeSet attrs) {
+    public SlipItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ItemScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SlipItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-    private final int CLICK_DISTANCE = 5 ;//默认点击的触摸距离小于此
-    private final int TOUCH_DEFAULT = 0;
-    private final int TOUCH_CLICK = 1;
-    private final int TOUCH_SCROLL = 2;
-    private int TOUCH_STATE = TOUCH_DEFAULT;
-    private int upX = 0;
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downX = ev.getRawX();
-                TOUCH_STATE = TOUCH_DEFAULT ;
-                if(!close && (downX < (ScreenSizeUtil.getScreenWith() - subViewWith))) {
-                    close();
-                    Log.i(TAG, "onInterceptTouchEvent: close ");
-                    return true ;
+                if (!close && (downX < (ScreenSizeUtil.getScreenWith() - subViewWith))) {
+                    return true;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.i(TAG, "onInterceptTouchEvent: down ");
                 int cur = (int) ev.getRawX();
                 if (Math.abs(cur - downX) > CLICK_DISTANCE) {
-                    TOUCH_STATE = TOUCH_SCROLL;
-                }
-                if(TOUCH_STATE == TOUCH_SCROLL){
                     return true ;
                 }
                 break;
-            case MotionEvent.ACTION_UP:
-                upX = (int) ev.getRawX();
-                if ( (TOUCH_STATE == TOUCH_SCROLL ) ||  (Math.abs(upX - downX) > CLICK_DISTANCE)) {
-                    return true;
-                }
-
-                    default:
+            default:
                 break;
 
         }
         return super.onInterceptTouchEvent(ev);
     }
-    //手指第一次点击的X位置
-    private float downX;
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -114,16 +99,8 @@ public class ItemScrollView extends HorizontalScrollView {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downX = ev.getRawX();
-                Log.i(TAG, "onTouchEvent: down ");
-                break;
-            case MotionEvent.ACTION_MOVE:
                 break;
             case MotionEvent.ACTION_UP:
-                float distance = Math.abs(ev.getRawX() - downX);
-                if(!close && (ScreenSizeUtil.getScreenWith() - downX < subViewWith)){
-                    Log.i(TAG, "onInterceptTouchEvent: give to delete ");
-                    return false  ;
-                }
                 if (close) {
                     return tryToOpen(ev);
                 } else {
@@ -135,12 +112,12 @@ public class ItemScrollView extends HorizontalScrollView {
 
     private boolean tryToClose(MotionEvent ev) {
         float distance = ev.getRawX() - downX;
-        Log.i(TAG, "tryToClose: " + distance);
-        if (distance < 0) {
-            return super.onTouchEvent(ev);
+        if(Math.abs(distance)<CLICK_DISTANCE){
+            close();
+            return true ;
         }
-        //满足关闭条件
-        if (distance >= (subViewWith / 3)) {
+        //满足关闭条件 1、用户向一个方向移动，满足close状态，2、用户来回移动，但最终位置满足close状态
+        if (((getScrollX() != subViewWith)&& Math.abs(getScrollX() - subViewWith) >=(subViewWith / 3 ))) {
             close();
         } else {  //打开
             open();
@@ -150,12 +127,8 @@ public class ItemScrollView extends HorizontalScrollView {
 
     private boolean tryToOpen(MotionEvent ev) {
         float distance = downX - ev.getRawX();
-        Log.i(TAG, "tryToOpen: " + distance);
-        if (distance < 0) {
-            return super.onTouchEvent(ev);
-        }
-        //满足打开条件
-        if (distance >= (subViewWith / 3)) {
+        //满足打开条件 1、用户向一个方向移动，满足open状态，2、用户来回移动，但最终位置满足open状态
+        if (((getScrollX() != 0 )&& getScrollX() >= (subViewWith / 3))) {
             open();
         } else { //关闭
             close();
@@ -170,15 +143,10 @@ public class ItemScrollView extends HorizontalScrollView {
         parenView.addView(view, 0);
         itemView = view;
         itemView.setTag(ID_ITEMVIEW);
-        itemView.setOnClickListener( new SubViewClickListener());
+        itemView.setOnClickListener(new SubViewClickListener());
     }
 
-    public void addBoth() {
-        addDeleteSubItem();
-        addCollectSubItem();
-    }
-
-    public void addDeleteSubItem() {
+    public void addDeleteSubView() {
         TextView delete = new TextView(getContext());
         delete.setTag(ID_DELETE);
         LayoutParams deleteParam = new LayoutParams(viewWith, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -192,7 +160,8 @@ public class ItemScrollView extends HorizontalScrollView {
         subViewWith += viewWith;
     }
 
-    public void addCollectSubItem() {
+    //添加收藏的SubView
+    public void addCollectSubView() {
         TextView collect = new TextView(getContext());
         collect.setTag(ID_COLLECT);
         LayoutParams deleteParam = new LayoutParams(viewWith, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -205,27 +174,38 @@ public class ItemScrollView extends HorizontalScrollView {
         subViewWith += viewWith;
     }
 
+    //添加自定义的SubView
+    public void addSubView(View view) {
+        LayoutParams deleteParam = new LayoutParams(viewWith, ViewGroup.LayoutParams.MATCH_PARENT);
+        view.setLayoutParams(deleteParam);
+        view.setOnClickListener(new SubViewClickListener());
+        parenView.addView(view);
+        subViewWith += viewWith;
+    }
+
     /**
      * 关闭
      */
     public void close() {
+        Log.i(TAG, "close: ");
         ScrollTo(0);
         close = true;
-        if(listener != null)
-        listener.onStateChange(true);
+        if (listener != null)
+            listener.onStateChange(true);
     }
 
 
     public void open() {
         ScrollTo(subViewWith);
-        close = false;
         Log.i(TAG, "open: ");
-        if(listener != null)
+        close = false;
+        if (listener != null)
             listener.onStateChange(false);
     }
 
 
     private void ScrollTo(final int distance) {
+        Log.i(TAG, "ScrollTo: " + distance);
         this.post(new Runnable() {
             @Override
             public void run() {
@@ -233,12 +213,14 @@ public class ItemScrollView extends HorizontalScrollView {
             }
         });
     }
+
     //是否处于打开状态
     public boolean isClose() {
         return close;
     }
 
-    public void setOnSubItemClickListener(OnSubItemClickListener listener) {
+    //slipItemView 的点击事件
+    public void setOnSlipItemViewClickListener(OnSlipItemViewClickListener listener) {
         this.listener = listener;
     }
 
@@ -246,16 +228,14 @@ public class ItemScrollView extends HorizontalScrollView {
 
         @Override
         public void onClick(View v) {
-            Log.i(TAG, "onClick: ");
             if (null == listener)
                 return;
-            Log.i(TAG, "onClick: list is not null ");
             listener.onItemClick(v);
 
         }
     }
 
-    public interface OnSubItemClickListener {
+    public interface OnSlipItemViewClickListener {
         /**
          * 点击
          *
@@ -264,7 +244,7 @@ public class ItemScrollView extends HorizontalScrollView {
         void onItemClick(View view);
 
         /**
-         *   状态改变的时候触发
+         * 状态改变的时候触发
          *
          * @param isClose 是否处于关闭状态
          */

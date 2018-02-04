@@ -22,12 +22,10 @@ public class ToastUtils {
     private ToastUtils(Context context){
         toast = Toast.makeText(context,"",Toast.LENGTH_SHORT);
     }
-    public static ToastUtils inStance(Context context){
-        if(toastUtils == null)
-            toastUtils = new ToastUtils(context);
-        return toastUtils ;
-    }
     public static void showToast(String content){
+        if(null == toast ){
+            toast = Toast.makeText(MyApplication.getContext(),"",Toast.LENGTH_SHORT);
+        }
         toast.setText(content);
         toast.show();
     }

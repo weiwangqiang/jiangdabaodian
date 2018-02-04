@@ -9,9 +9,11 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import juhe.jiangdajiuye.bean.BookBean;
+import juhe.jiangdajiuye.bean.BookMesBean;
 
 /**
  * Created by wangqiang on 2016/10/12.
@@ -45,10 +47,10 @@ public class LibrarySqlHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("drop table if exists "+ LibraryTable.tableName);
-        sqLiteDatabase.close();
+//        sqLiteDatabase.execSQL("drop table if exists "+ LibraryTable.tableName);
+//        sqLiteDatabase.close();
     }
-   public long addCollect(BookBean bookBean){
+   public boolean add(BookBean bookBean){
         ContentValues cv = new ContentValues();
         cv.put(LibraryTable.book,bookBean.getBook());
         cv.put(LibraryTable.editor,bookBean.getEditor());
@@ -56,7 +58,13 @@ public class LibrarySqlHelper extends SQLiteOpenHelper{
         cv.put(LibraryTable.number,bookBean.getNumber());
         cv.put(LibraryTable.url,bookBean.getUrl());
        long result = getWritableDatabase().insert(LibraryTable.tableName, LibraryTable.book,cv);
-       return result;
+       return result > 0 ? true : false ;
+    }
+    public boolean add(List<BookBean> data){
+       for(BookBean bookBean : data){
+           add(bookBean);
+       }
+       return true ;
     }
     public ArrayList<BookBean> selectAll(){
         ArrayList<BookBean> list = new ArrayList<>();
@@ -82,7 +90,7 @@ public class LibrarySqlHelper extends SQLiteOpenHelper{
     public boolean hasURL(String url){
         Cursor cursor = getReadableDatabase().rawQuery("select * from "+
                 LibraryTable.tableName+" where "
-                + LibraryTable.url+"=?",
+                + LibraryTable.url+" =? ",
                 new String[]{url});
         Boolean has = cursor.moveToFirst();
         try{
@@ -93,9 +101,9 @@ public class LibrarySqlHelper extends SQLiteOpenHelper{
         return has;
     }
 
-    public void delete(String url){
-        String where = LibraryTable.url+"=?";
-        String[] value = {url};
+    public void delete(BookBean bookBean){
+        String where = LibraryTable.url+" =? ";
+        String[] value = {bookBean.getUrl()};
         getWritableDatabase().delete(LibraryTable.tableName,where,value);
     }
 }

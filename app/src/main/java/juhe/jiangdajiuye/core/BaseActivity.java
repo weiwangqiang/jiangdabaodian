@@ -1,10 +1,14 @@
 package juhe.jiangdajiuye.core;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 
+import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.util.ToastUtils;
 
 /**
@@ -15,23 +19,39 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public final int NET_SUCCESS = 0x1;
     public final int NET_ERROR = 0x2;
     private String TAG = "BaseActivity";
-    public static ToastUtils uiutils;
+    public static ToastUtils toastUtils;
+
+    /**
+     * Take care of popping the fragment back stack or finishing the activity
+     * as appropriate.
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uiutils =  ToastUtils.inStance(MyApplication.getContext());
         initScreen();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        if(b){
-//            UiUtils.setBackstage(false);
-//            Log.e(TAG,"------>> is  backStage and start IndexView <<<<<-------------");
-//            Intent intent = new Intent(BaseActivity.this, WelCome.class);
-//            startActivity(intent);
-//        }
     }
     @Override
     protected void onStop() {
@@ -56,4 +76,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//设置竖屏
     }
 
+    //通用的启动activity动画
+    protected void startActivitySlideInRight(Context mCtx , Class target) {
+        startActivity(new Intent(mCtx, target));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
 }

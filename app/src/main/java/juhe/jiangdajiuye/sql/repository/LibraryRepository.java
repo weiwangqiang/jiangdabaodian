@@ -1,6 +1,7 @@
 package juhe.jiangdajiuye.sql.repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.core.MyApplication;
@@ -27,10 +28,13 @@ public class LibraryRepository {
         collectSqlHelper = new LibrarySqlHelper(MyApplication.getContext());
     }
 
-    public long addCollect(BookBean bookBean) {
-        return collectSqlHelper.addCollect(bookBean);
+    public boolean add(BookBean bookBean) {
+        return collectSqlHelper.add(bookBean);
     }
 
+    public boolean add(List<BookBean> data){
+        return collectSqlHelper.add(data);
+    }
     public ArrayList<BookBean> selectAll() {
         return collectSqlHelper.selectAll();
     }
@@ -39,7 +43,7 @@ public class LibraryRepository {
         return collectSqlHelper.hasURL(url);
     }
 
-    public void delete(String url) {
-        collectSqlHelper.delete(url);
+    public void delete(BookBean bookBean) {
+        collectSqlHelper.delete(bookBean);
     }
 }

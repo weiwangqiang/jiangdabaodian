@@ -7,13 +7,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.bean.bmobBean.AppVersionBean;
+import juhe.jiangdajiuye.bean.bmobAppMes.AppVersionBean;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
 import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.versionUpDate.DownLoadService;
+import juhe.jiangdajiuye.versionUpGrade.DownLoadService;
 
 /**
  * class description here
@@ -44,6 +45,9 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_upgrade);
+
+        Window window = getWindow();
+        window.setBackgroundDrawableResource(R.color.transparent);
         ((TextView) findViewById(R.id.upgrade_dialog_title)).setText(bean.getUpgradeTitle());
         ((TextView) findViewById(R.id.upgrade_dialog_info)).setText(bean.getUpgradeMessage());
         findViewById(R.id.upgrade_dialog_cancel_button).setOnClickListener(this);

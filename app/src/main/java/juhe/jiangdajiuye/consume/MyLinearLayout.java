@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view;
+package juhe.jiangdajiuye.consume;
 
 import android.content.Context;
 import android.util.AttributeSet;

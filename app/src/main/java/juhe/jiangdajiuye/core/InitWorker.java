@@ -14,7 +14,6 @@ import cn.bmob.v3.InstallationListener;
 import cn.bmob.v3.exception.BmobException;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
-import juhe.jiangdajiuye.versionUpDate.BmobCheckUpgrade;
 
 /**
  * class description here
@@ -30,7 +29,6 @@ public class InitWorker {
     public static void initSDK(Context mCtx) {
 
         final String Bugly_APPId = "a40ad72c38 "; // TODO 替换成bugly上注册的appid
-//        final String Bugly_APPId = "f928f6fe1c "; // TODO 替换成bugly上注册的appid
         String Bmob_AppId = "f1a3949757fdc914a823e15eef961ce6";//bmob
         // 初始化BmobSDK
         Bmob.initialize(mCtx, Bmob_AppId);
@@ -43,7 +41,6 @@ public class InitWorker {
         });
 // 启动推送服务
         BmobPush.startWork(mCtx);
-
         NetStateUtils.initNetWorkState(mCtx);
 //        /***** Beta高级设置 *****/
 //        /**

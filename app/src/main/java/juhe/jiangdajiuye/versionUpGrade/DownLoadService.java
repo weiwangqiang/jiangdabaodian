@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.versionUpDate;
+package juhe.jiangdajiuye.versionUpGrade;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -15,7 +15,8 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.DownloadFileListener;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.bean.bmobBean.AppVersionBean;
+import juhe.jiangdajiuye.bean.bmobAppMes.AppVersionBean;
+import juhe.jiangdajiuye.util.ResourceUtils;
 
 /**
  * class description here
@@ -26,13 +27,13 @@ import juhe.jiangdajiuye.bean.bmobBean.AppVersionBean;
 
 public class DownLoadService extends IntentService {
     private static final String TAG = "DownLoadService ";
+    private final String FILE_NAME = "jiangdabaodian.apk";
+    private int NOTIFICATION = 1;
     public static AppVersionBean bean = null;
     private NotificationManager mNM = null;
     private NotificationCompat.Builder builder = null  ;
-    private int NOTIFICATION = 1;
-
     public DownLoadService() {
-        super("jiangdabaodian");
+        super("DownLoadService");
     }
 
     @Override
@@ -41,8 +42,8 @@ public class DownLoadService extends IntentService {
         mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.mipmap.logo);
-        builder.setContentTitle("正在下载中");
-        builder.setContentText("下载");
+        builder.setContentTitle(ResourceUtils.getString(R.string.download_ing));
+        builder.setContentText(ResourceUtils.getString(R.string.download));
         builder.setProgress(100, 0, false);
     }
 
@@ -65,27 +66,22 @@ public class DownLoadService extends IntentService {
     }
 
     public void downLoad(String urlPath) {
-        final BmobFile bmobFile = new BmobFile("jiangdabaodian.apk","",urlPath);
+        final BmobFile bmobFile = new BmobFile(FILE_NAME,"",urlPath);
         if (bmobFile != null) {
-            //调用bmobfile.download方法
             BmobCheckUpgrade.ApkFile = new File(BmobCheckUpgrade.downLoadFilePath,bmobFile.getFilename()) ;
-//            if(BmobCheckUpgrade.ApkFile.exists()){
-//                BmobCheckUpgrade.ApkFile.delete();
-//            }
-//            BmobCheckUpgrade.ApkFile.mkdirs() ;
             bmobFile.download(BmobCheckUpgrade.ApkFile, new DownloadFileListener() {
 
                 @Override
                 public void onProgress(Integer integer, long l) {
                     builder.setProgress(100, integer, false);
-                    builder.setContentText("已下载"+integer+"%");
+                    builder.setContentText(ResourceUtils.getString(R.string.has_downloaded)+integer+"%");
                     mNM.notify(NOTIFICATION, builder.build());
                 }
 
                 @Override
                     public void done(String s, BmobException e) {
                     builder.setProgress(100, 100, false);
-                    builder.setContentText("下载完成！");
+                    builder.setContentText(ResourceUtils.getString(R.string.downloaded));
                     mNM.notify(NOTIFICATION, builder.build());
                     install(BmobCheckUpgrade.ApkFile);
                     }

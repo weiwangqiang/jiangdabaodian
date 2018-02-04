@@ -15,8 +15,8 @@ import com.google.gson.JsonParser;
 
 import cn.bmob.push.PushConstants;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.bean.bombPush.MessageType;
-import juhe.jiangdajiuye.bean.bombPush.XuanJiangPush;
+import juhe.jiangdajiuye.bean.push.MessageType;
+import juhe.jiangdajiuye.bean.push.XuanJiangPush;
 import juhe.jiangdajiuye.view.Jpush.WebBrowse;
 
 import static android.content.Context.NOTIFICATION_SERVICE;

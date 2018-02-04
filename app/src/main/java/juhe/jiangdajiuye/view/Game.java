@@ -4,10 +4,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -56,8 +54,6 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
     private String[] url = {
             "http://www.kkxyx.com/jianfengchazhen/",
             "http://www.kkxyx.com/chengganguohe/",
-            "http://kkxyx.com/ceshi/thy/",
-            "http://www.kkxyx.com/znm/",
             "http://www.kkxyx.com/wuzi/",
             "http://www.kkxyx.com/cwdyj/",
             "http://www.kkxyx.com/glgs/",
@@ -72,14 +68,10 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
             "http://www.kkxyx.com/shenjingcat2/",
             "http://www.kkxyx.com/xiaoniaofeifei/ ",
             "http://www.kkxyx.com/zqyl/ ",
-            "http://www.kkxyx.com/zstz/",
-            "http://www.kkxyx.com/2048jd/",
     };
     private String[] image = {
             "http://kkxyx.com/jianfengchazhen/2000.jpg",
             "http://kkxyx.com/chengganguohe/2000.jpg",
-            "http://kkxyx.com/ceshi/thy/img/icon.jpg",
-            "http://www.kkxyx.com/znm/icon.png",
             "http://www.kkxyx.com/wuzi/icon.png",
             "http://www.kkxyx.com/cwdyj/icon.png",
             "http://www.kkxyx.com/glgs/icon.png",
@@ -94,14 +86,10 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
             "http://www.kkxyx.com/resources/images/icons/shenjingmao.png",
             "http://www.kkxyx.com/resources/images/icons/flappybird.png",
             "http://www.kkxyx.com/resources/images/icons/zqyl.png",
-            "http://www.kkxyx.com/resources/images/icons/iqtest.png",
-            "http://www.kkxyx.com/2048jd/24.jpg"
     };
     private String[] title = {
             "见缝插针",
             "撑杆过河",
-            "你的桃花运在哪旺",
-            "转你妹  ",
             "五子棋  ",
             "宠物大营救  ",
             "灌篮高手   ",
@@ -115,15 +103,11 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
             "堆木头游戏 ",
             "神经猫2",
             "小鸟飞呀飞",
-            "最强眼力 ",
-            "智商测试 ",
-            "经典2048 "
+            "最强眼力 "
     };
     private String[] content = {
             "全世界只有四人能过17关",
             "据说IQ超过180的人，才能玩到第四十关",
-            "你的桃花运在哪里最旺 | ",
-            "转你妹 |",
             "五子棋！ |",
             "宠物大营救  ",
             "灌篮高手   ",
@@ -136,8 +120,6 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
             "休闲益智",
             "动作游戏",
             "休闲益智 ",
-            "动作游戏 ",
-            "动作游戏 ",
             "动作游戏 ",
             "动作游戏 "
 
@@ -164,9 +146,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
     private Toolbar toolbar;
     public void initToolbar(){
         toolbar.setTitle("");
-//        toolbar.setNavigationIcon(R.drawable.menue);
         setSupportActionBar(toolbar);
-//        toolbar.setOnMenuItemClickListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
@@ -178,8 +158,6 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
     }
     public void findid(){
         list = (ListView)findViewById(R.id.game_list);
-//        back = (Button)findViewById(R.id.game_back);
-//        share = (Button)findViewById(R.id.game_share);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
 
     }
@@ -187,8 +165,6 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
 
     }
     public void getMessage(){
-        Log.e(TAG,"url is "+url.length + " title is "+title.length +" MessageItem is "+content.length
-         +" image is "+image.length);
             for(int i = 0;i<url.length;i++){
                 HashMap<String,String> map = new HashMap<>();
                 map.put("url",url[i]);
@@ -199,24 +175,6 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
                 data.add(map);
             }
     }
-//    public void getMessage() {
-//        final HttpConnection connection= new HttpConnection();
-//        connection.setgetLister(new HttpConnection.getLister() {
-//            @Override
-//            public void success(String response, int code) {
-//                upDate(parsetools.parseGame(response));
-//                Log.e(TAG," response code is "+code+"date size is "+data.size());
-//                header.sendEmptyMessage(0x1);
-//            }
-//            @Override
-//            public void failure(Exception e,String Error, int code) {
-//                e.printStackTrace();
-//                Log.e(TAG," Error response is "+ Error+"code is "+code);
-//                header.sendEmptyMessage(0x2);
-//            }
-//        });
-//        connection.get(url);
-//    }    //更新数据
     public void upDate(){
         adapter = new GameAdapter(this,data,
                 R.layout.game_item,
@@ -225,22 +183,6 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
                         R.id.game_item_message,R.id.game_item_visit});
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
-        list.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-                Log.i(TAG, "onScroll: "+firstVisibleItem +"  "+visibleItemCount+"  "+totalItemCount);
-                if(totalItemCount==visibleItemCount+firstVisibleItem){
-//                    getMessage();
-//                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
 
     }
     @Override
@@ -252,20 +194,11 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
     }
     private void showShare(){
         dialog.show();
-        sharedialog.setItemlister(new myItemlist());
+        sharedialog.setItemlister(new myItemListener());
     }
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-                return true;
             case R.id.nav_share:
                 showShare();
                 return true;
@@ -286,7 +219,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
     /**
      * popupwind的Item 监听
      */
-    private class myItemlist implements ShareDialog.Itemlister{
+    private class myItemListener implements ShareDialog.Itemlister{
 
         @Override
         public void shareToQzone() {
@@ -320,8 +253,6 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
         message.description = AppConstant.AppDescription;
         req.transaction = "webPager";
         req.message = message;
-        Boolean get = api.sendReq(req);
-//        api.handleIntent(getIntent(),this);
         dialog.cancel();
     }
     private void ToQQ(){

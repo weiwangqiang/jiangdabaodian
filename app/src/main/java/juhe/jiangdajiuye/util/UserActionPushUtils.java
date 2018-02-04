@@ -2,7 +2,7 @@ package juhe.jiangdajiuye.util;
 
 import android.util.Log;
 
-import juhe.jiangdajiuye.bean.recordEntity.VisitCount;
+import juhe.jiangdajiuye.bean.bmobRecordEntity.VisitCount;
 
 /**
  * class description here

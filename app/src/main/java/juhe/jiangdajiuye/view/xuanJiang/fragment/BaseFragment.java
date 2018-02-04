@@ -15,10 +15,11 @@ import java.util.List;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
-import juhe.jiangdajiuye.broadCast.NetStateReceiver;
-import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
-import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.bean.MessageItem;
+import juhe.jiangdajiuye.broadCast.NetStateReceiver;
+import juhe.jiangdajiuye.consume.recyclerView.LibraryCollectDecoration;
+import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
+import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.util.HttpConnection;
 import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.view.Browse;
@@ -77,6 +78,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
 
             @Override
             public void success(String response, int code) {
+                Log.i(TAG, "success: ------------------------------");
                 upDate(parseMes(response.trim(),holder));
                 swipeRefreshLayout.setRefreshing(false);
                 recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
@@ -124,7 +126,6 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         recyclerView.setHasFixedSize(true);
         recyclerView.setmOnLoadMoreListener(this);
         swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
-        Log.i(TAG, "findId:  findid ");
     }
     public void initRefresh(){
         swipeRefreshLayout.setSize(SwipeRefreshLayout.MEASURED_STATE_TOO_SMALL);
@@ -148,7 +149,6 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
             swipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i(TAG, "run:  post ");
                     swipeRefreshLayout.setRefreshing(true);
                     recyclerView.setStatus(MyRecyclerView.STATUS_PULLTOREFRESH);
                     getMessage();
@@ -160,6 +160,9 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
     public void initList(){
         adapter = new IndexFragmentAdapter(getActivity(),R.layout.main_list_item);
         recyclerView.setAdapter(adapter);
+
+        recyclerView.addItemDecoration(new LibraryCollectDecoration(getActivity(),
+                LibraryCollectDecoration.VERTICAL_LIST));
         adapter.setOnItemClickListener(new IndexFragmentAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(MessageItem item) {

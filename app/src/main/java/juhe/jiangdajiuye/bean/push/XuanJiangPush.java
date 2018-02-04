@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.bean.bombPush;
+package juhe.jiangdajiuye.bean.push;
 
 /**
  * class description here

@@ -8,17 +8,19 @@ package juhe.jiangdajiuye.bean;
  */
 
 public class BookMesBean {
-   public String book ;
-    public String editer ;
-    public String bookMessage;
+   public String book ;//书名
 
-    public String getEditer() {
-        return editer;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setEditer(String editer) {
-        this.editer = editer;
+    public void setAuthor(String author) {
+        this.author = author;
     }
+
+    public String author ;//作者
+    public String bookMessage;//数详情
+
 
     public String getBookMessage() {
         return bookMessage;

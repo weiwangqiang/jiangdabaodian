@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.bean.bombPush.XuanJiangPush;
+import juhe.jiangdajiuye.bean.push.XuanJiangPush;
 import juhe.jiangdajiuye.dialog.ProgressDialog;
 import juhe.jiangdajiuye.dialog.ShareDialog;
 

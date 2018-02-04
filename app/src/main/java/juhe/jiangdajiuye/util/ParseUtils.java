@@ -1,6 +1,4 @@
-package juhe.jiangdajiuye.tool;
-
-import android.util.Log;
+package juhe.jiangdajiuye.util;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,31 +15,31 @@ import juhe.jiangdajiuye.bean.MessageItem;
 /**
  * Created by wangqiang on 2016/9/27.
  */
-public class ParseTools {
-    private String TAG = "ParseTools";
-    public static ParseTools parse;
+public class ParseUtils {
+    private String TAG = "ParseUtils";
+    public static ParseUtils parse;
     public static final int XUANJIANG = 1;
     public static final int ZHAOPIN = 2;
     public static final int XINXI = 3;
-    public static ParseTools getparseTool(){
+    public static ParseUtils getInstance(){
         if(parse==null){
-            parse = new ParseTools();
+            parse = new ParseUtils();
         }
         return parse;
     }
     public List<MessageItem> parseMainMes(String response,int tab){
         switch (tab){
             case XUANJIANG:
-                return parseXuanjiang(response);
+                return parseXuanJiang(response);
             case ZHAOPIN:
-                return parseZhaopin(response);
+                return parseZhaoPin(response);
             case XINXI:
-                return parseShudi(response);
+                return parseShuDi(response);
         }
         return null ;
     }
     //宣讲会
-     public List<MessageItem> parseXuanjiang(String response) {
+     private List<MessageItem> parseXuanJiang(String response) {
          List<MessageItem> list = new ArrayList<>();
          if (response.length() <= 0) return null;
          Document doc = Jsoup.parse(response);
@@ -61,7 +59,7 @@ public class ParseTools {
          return list;
      }
     //招聘
-    public List<MessageItem> parseZhaopin(String response){
+    private List<MessageItem> parseZhaoPin(String response){
         List<MessageItem> list = new ArrayList<>();
         if(response.length()<=0) return null;
         Document doc = Jsoup.parse(response);
@@ -80,7 +78,7 @@ public class ParseTools {
         return list;
     }
     //信息速递
-    public List<MessageItem> parseShudi(String response){
+    private List<MessageItem> parseShuDi(String response){
         List<MessageItem> list = new ArrayList<>();
         if(response.length()<=0) return null;
         Document doc = Jsoup.parse(response);
@@ -96,6 +94,7 @@ public class ParseTools {
         }
         return list;
     }
+    //解析搜索图书的结果数量
     public int parseSearchNumber(String response){
         Document doc = Jsoup.parse(response);
         Elements number =  doc.getElementsByClass("bulk-actions");
@@ -121,8 +120,9 @@ public class ParseTools {
             Elements p = elements.get(i).select("p");
             bookBean.setUrl("http://huiwen.ujs.edu.cn:8080/opac/"+ h.select("a").get(0).attr("href"));
             String book = h.select("a").text() ;
-            if(book.length() >2)
-                bookBean.setBook(book.substring(2 ,book.length()));
+            if(book.length() >2){
+                bookBean.setBook(parseBook(book));
+            }
             else
                 bookBean.setBook(book);
             bookBean.setNumber(h.ownText());
@@ -130,9 +130,20 @@ public class ParseTools {
             bookBean.setEditor(p.get(0).ownText().replace("(0)",""));
             list.add(bookBean);
         }
-        Log.e("parse","return data"+"data size is "+list.size());
         return list;
     }
+    //解析书名，把抓取到的书名去掉前面的序列号
+    private String parseBook(String book) {
+        int index ;
+        for(index = 0;index<book.length();index++){
+            if(book.charAt(index) == '.')
+                break;
+        }
+        if(index<book.length()-1)
+            return book.substring(index+1,book.length());
+        return "";
+    }
+
     //解析图书馆详情
     public static BookMesBean parseBookMessage(String response){
         String book = "";
@@ -154,14 +165,14 @@ public class ParseTools {
         }
         BookMesBean bookMesBean = new BookMesBean();
         bookMesBean.setBook(book);
-        bookMesBean.setEditer(editer);
+        bookMesBean.setAuthor(editer);
         bookMesBean.setBookMessage(bookMessage);
         return bookMesBean;
     }
-
-    public List<List<String>> parseSearchBookAvailabale(String response){
+//    解析图书可以利用数量
+    public List<List<String>> parseSearchBookAvailable(String response){
         List<List<String>> data = new ArrayList<>();
-        String searchnumber  = "";
+        String searchNumber  = "";
         String number = "";
         String time = "";
         String locate = "";
@@ -170,13 +181,13 @@ public class ParseTools {
         Elements elements = doc.getElementsByClass("whitetext");
         for(int i = 0;i<elements.size();i++){
             Elements e = elements.get(i).select("td");
-            searchnumber = e.get(0).text();
+            searchNumber = e.get(0).text();
             number  = e.get(1).text();
             time  = e.get(2).text();
             locate = e.get(3).text();
             state = e.get(4).text();
             List<String> list = new ArrayList<String>();
-            list.add(searchnumber);
+            list.add(searchNumber);
             list.add(number);
             list.add(time);
             list.add(locate);

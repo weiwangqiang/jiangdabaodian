@@ -1,6 +1,6 @@
 package juhe.jiangdajiuye.util;
 
-import juhe.jiangdajiuye.bean.recordEntity.UserBrowseRecord;
+import juhe.jiangdajiuye.bean.bmobRecordEntity.UserBrowseRecord;
 
 /**
  * class description here
@@ -19,7 +19,9 @@ public class UserBrowseRecordUtils {
     public static void setmLibrary(int Library) {
         mLibrary += Library;
         userBrowseRecord.setmLibrary(mLibrary);
+
     }
+
 
     public static void setmXuanJiangCollect(int XuanJiangCollect) {
         mXuanJiangCollect += XuanJiangCollect;

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.versionUpDate;
+package juhe.jiangdajiuye.versionUpGrade;
 
 import android.content.Context;
 import android.os.Environment;
@@ -9,9 +9,11 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import juhe.jiangdajiuye.bean.bmobBean.AppVersionBean;
+import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.bean.bmobAppMes.AppVersionBean;
 import juhe.jiangdajiuye.dialog.UpgradeDialog;
 import juhe.jiangdajiuye.util.AppUtils;
+import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.util.ToastUtils;
 
 /**
@@ -42,14 +44,17 @@ public class BmobCheckUpgrade {
         }
     }
     public static void checkUpgrade(){
-        ToastUtils.showToast("正在检查更新");
         if(null == targetBean){
-            getUpgradeInfo();
+            getUpgradeInfo(true);
         }else{
             showDialog(mCtx,targetBean);
         }
     }
-    public static void getUpgradeInfo(){
+    public static void getUpgradeInfo(final boolean showToast){
+        if(null != targetBean)
+            return;
+        if(showToast)
+        ToastUtils.showToast(ResourceUtils.getString(R.string.check_upgrade_ing));
         BmobQuery<AppVersionBean> bmobQuery = new BmobQuery<>();
         bmobQuery.findObjects(new FindListener<AppVersionBean>() {
             @Override
@@ -60,11 +65,13 @@ public class BmobCheckUpgrade {
                 for (AppVersionBean appVersionBean : object) {
                     if(AppUtils.getVersionName().compareTo(appVersionBean.getVersion()) < 0 ){
                         targetBean = appVersionBean ;
+                        if(showToast)
                         showDialog(mCtx,targetBean);
                         return;
                     }
                 }
-                ToastUtils.showToast("已经是最新了哦~");
+                if(showToast)
+                ToastUtils.showToast(ResourceUtils.getString(R.string.be_last_version));
             }
         });
     }

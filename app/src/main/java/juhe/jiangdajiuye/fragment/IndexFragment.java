@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,13 @@ import java.util.List;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
-import juhe.jiangdajiuye.broadCast.NetStateReceiver;
-import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
-import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.bean.MessageItem;
-import juhe.jiangdajiuye.tool.ParseTools;
+import juhe.jiangdajiuye.broadCast.NetStateReceiver;
+import juhe.jiangdajiuye.consume.recyclerView.LibraryCollectDecoration;
+import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
+import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.util.HttpConnection;
+import juhe.jiangdajiuye.util.ParseUtils;
 import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.view.Browse;
 
@@ -45,7 +45,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     private Boolean isfirst = true;
     private int page = 1; //当前页面数
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ParseTools parsetools =  ParseTools.getparseTool() ;
+    private ParseUtils parsetools =  ParseUtils.getInstance() ;
 
     public static IndexFragment newInstance(String url, String TAG, int tab) {
         IndexFragment f = new IndexFragment();
@@ -152,6 +152,8 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     public void initList(){
         adapter = new IndexFragmentAdapter(getActivity(),R.layout.main_list_item);
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new LibraryCollectDecoration(getActivity(),
+                LibraryCollectDecoration.VERTICAL_LIST));
         adapter.setOnItemClickListener(new IndexFragmentAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(MessageItem item) {
@@ -226,7 +228,6 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.i(TAG, "setUserVisibleHint: "+isVisibleToUser +" isfirst ： "+isfirst);
         if(isfirst &&isVisibleToUser && adapter != null &&adapter.getDataSize() ==0  ){
             if(swipeRefreshLayout!=null && recyclerView.getmStatus()!= MyRecyclerView.STATUS_ERROR){
                 swipeRefreshLayout.post(new Runnable() {

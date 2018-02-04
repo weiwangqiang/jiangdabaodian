@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -16,8 +15,9 @@ import java.util.List;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.XJFragmentAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.view.xuanJiang.fragment.JiangSuFragment;
+import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanJiangData;
+import juhe.jiangdajiuye.view.xuanJiang.fragment.JiangSuFragment;
 
 /**
  * Created by wangqiang on 2016/10/1.
@@ -40,11 +40,11 @@ public class XuanJiangTab extends BaseActivity {
         Intent intent = getIntent();
         provinceId = intent.getIntExtra("provinceId",0);
         Log.i(TAG, "onCreate: "+provinceId);
-        findid();
+        findId();
         initList();
         initTabLayout();
     }
-    public void findid(){
+    public void findId(){
         viewPager = (ViewPager) findViewById(R.id.xuanjiang_viewpager);
         toolbar = (Toolbar)findViewById(R.id.xuanjiang_toolbar);
         tabLayout = (TabLayout) findViewById(R.id.xuanjiang_tabLayout);
@@ -64,7 +64,7 @@ public class XuanJiangTab extends BaseActivity {
     }
 
     private void initTabLayout(){
-        toolbar.setTitle("宣讲大全");
+        toolbar.setTitle(ResourceUtils.getString(R.string.title_xuangjiang_tab));
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,8 +87,6 @@ public class XuanJiangTab extends BaseActivity {
         }
         @Override
         public void onPageSelected(int position) {
-            Log.e(TAG,"pager is changed  position is "+position);
-//            lister.showFrament(position);
             adapter.getItem(position).onResume();
         }
 
@@ -104,15 +102,6 @@ public class XuanJiangTab extends BaseActivity {
             default:
                 break;
         }
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
     @Override
     public void onPause(){

@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +54,7 @@ public class GameAdapter extends SimpleAdapter
         else
             holder = (ViewHolder) convertView.getTag();
         String url = this.data.get(position).get(from[0]).toString();
-//        Glide.with(context).load(url).into(holder.imageView);
+        Glide.with(context).load(url).into(holder.imageView);
         holder.title.setText(this.data.get(position).get(from[1]).toString());
         holder.message.setText(this.data.get(position).get(from[2]).toString());
         holder.visit.setText(this.data.get(position).get(from[3]).toString());

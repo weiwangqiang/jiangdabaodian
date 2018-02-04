@@ -68,11 +68,6 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <juhe.jiangdajiuye.consume.ItemScrollView
-        android:layout_height="100dp"
-        android:layout_width="match_parent"
-        android:id="@+id/ItemScrollView">
-    </juhe.jiangdajiuye.consume.ItemScrollView>
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
@@ -80,7 +75,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:text="@string/aboute" />
+        android:text="@string/about" />
 </RelativeLayout>
 
 

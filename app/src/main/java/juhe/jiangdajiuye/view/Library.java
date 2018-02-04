@@ -26,8 +26,9 @@ import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.dialog.ProgressDialog;
-import juhe.jiangdajiuye.tool.ParseTools;
+import juhe.jiangdajiuye.util.ParseUtils;
 import juhe.jiangdajiuye.util.HttpConnection;
+import juhe.jiangdajiuye.util.ToastUtils;
 
 /**
  * Created by wangqiang on 2016/10/6.
@@ -48,7 +49,7 @@ public class Library extends BaseActivity implements
     private Toolbar toolbar;
     private InputMethodManager imm;
     private SearchLibraryAdapter adapter;
-    private ParseTools parsetools =  ParseTools.getparseTool() ;
+    private ParseUtils parsetools =  ParseUtils.getInstance() ;
     public static String url = "http://huiwen.ujs.edu.cn:8080/opac/openlink.php?" +
             "location=ALL&doctype=ALL&lang_code=ALL&match_flag=forward" +
             "&displaypg=10&showmode=list&orderby=DESC&sort=CATA_DATE&onlylendable=no";
@@ -121,12 +122,6 @@ public class Library extends BaseActivity implements
         toolbar.setTitle("图书馆");
         setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(this);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
@@ -137,7 +132,7 @@ public class Library extends BaseActivity implements
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
                 if(edit.getText().length()==0)
                 {
-                    uiutils.showToast("请输入搜索词");
+                    ToastUtils.showToast("请输入搜索词");
                     return;
                 }
                 title = edit.getText().toString() ;
@@ -149,21 +144,12 @@ public class Library extends BaseActivity implements
                 break;
         }
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     public void getSearch(){
         if(recyclerView.getmStatus() != MyRecyclerView.STATUS_PULLTOREFRESH){
             if((page * 10)>=totalPage && adapter.getDataSize() != 0 ){
                 recyclerView.setStatus(MyRecyclerView.STATUS_END);
-                uiutils.showToast("没有更多了");
+                ToastUtils.showToast("没有更多了");
                 return;
             }
         }
@@ -187,7 +173,7 @@ public class Library extends BaseActivity implements
             public void failure(Exception e,String Error, int code) {
                 e.printStackTrace();
                 recyclerView.setStatus(MyRecyclerView.STATUS_ERROR);
-                uiutils.showToast("网络不在服务区哦！请重试");
+                ToastUtils.showToast("网络不在服务区哦！请重试");
                 myprogress.cancel();
             }
         });
@@ -200,7 +186,7 @@ public class Library extends BaseActivity implements
     public void upData(List<BookBean> d){
         if(d.size()==0){
             if(recyclerView.getmStatus() == MyRecyclerView.STATUS_PULLTOREFRESH){
-                uiutils.showToast("没有你要找的书哦!");
+                ToastUtils.showToast("没有你要找的书哦!");
                 myprogress.cancel();
                 recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
             }else
