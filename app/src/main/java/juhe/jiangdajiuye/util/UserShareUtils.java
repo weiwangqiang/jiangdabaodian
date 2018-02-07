@@ -1,5 +1,7 @@
 package juhe.jiangdajiuye.util;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.ShareRecord;
 
 /**
@@ -51,13 +53,13 @@ public class UserShareUtils {
     public static void save(){
         if(shareRecord == null)
             return;
-//        shareRecord.save(new SaveListener<String>(){
-//
-//            @Override
-//            public void done(String s, BmobException e) {
-//
-//            }
-//        });
+        shareRecord.save(new SaveListener<String>(){
+
+            @Override
+            public void done(String s, BmobException e) {
+
+            }
+        });
     }
 
 }

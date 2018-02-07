@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageItem;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
+import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 
 /**
  * class description here
@@ -29,7 +29,7 @@ public class ParseShangHai {
     }
 
     public static ParseShangHai parseShangHai ;
-    public List<MessageItem> parse(String response,XuanMesBean holder){
+    public List<MessageItem> parse(String response,XuanJiangMesHolder holder){
         switch (holder.getCollege()){
             case "上海交通大学":
                 return parseJiaoDa(response);

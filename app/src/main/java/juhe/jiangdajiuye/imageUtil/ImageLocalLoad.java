@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import juhe.jiangdajiuye.util.AppUtils;
+import juhe.jiangdajiuye.util.AppConfigUtils;
 
 /**
  * class description here
@@ -19,7 +19,7 @@ import juhe.jiangdajiuye.util.AppUtils;
  */
 public class ImageLocalLoad {
     private String TAG = "ImageLocalLoad";
-    private String rootUrl = AppUtils.savePictureUrl;
+    private String rootUrl = AppConfigUtils.savePictureUrl;
     private StringBuilder sb = new StringBuilder(rootUrl);
     public ImageLocalLoad() {
         File file  = new File(rootUrl);

@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.SearchLibraryAdapter;
 import juhe.jiangdajiuye.bean.BookBean;
+import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
@@ -157,6 +158,11 @@ public class Library extends BaseActivity implements
 //        HttpUrl parsed = HttpUrl.parse(getUrl());
         final HttpConnection connection= new HttpConnection(this);
         connection.setNetListener(new HttpConnection.NetListener() {
+            @Override
+            public void success(List<MessageItem> data, int code) {
+
+            }
+
             @Override
             public void success(final String response, int code) {
                 if(recyclerView.getmStatus() == MyRecyclerView.STATUS_PULLTOREFRESH){

@@ -61,7 +61,7 @@ public abstract class SlipRecyclerAdapter<T> extends RecyclerView.Adapter<SlipRe
     }
 
     @Override
-    public void onBindViewHolder(SlipRecyclerAdapter.SlipViewHolder holder, final int position) {
+    public void onBindViewHolder(final SlipRecyclerAdapter.SlipViewHolder holder, final int position) {
         Log.i(TAG, "onBindViewHolder: ---------------------");
         if (!holder.getSlipItemView().isClose())
             holder.getSlipItemView().close();
@@ -81,6 +81,7 @@ public abstract class SlipRecyclerAdapter<T> extends RecyclerView.Adapter<SlipRe
                         data.remove(position);
                         notifyDataSetChanged();
                         changeToCloseState();
+                        holder.getSlipItemView().close();
                         break;
                     case ID_COLLECT:
                         break;
@@ -101,15 +102,15 @@ public abstract class SlipRecyclerAdapter<T> extends RecyclerView.Adapter<SlipRe
              */
             @Override
             public void onStateChange(boolean isClose) {
-                changeOpenState(isClose, position);
+                changeSlipItemState(isClose, position);
             }
         });
     }
     private void changeToCloseState(){
-        changeOpenState(true,-1);
+        changeSlipItemState(true,-1);
     }
     //改变子view的打开状态
-    private void changeOpenState(boolean isClose, int position) {
+    private void changeSlipItemState(boolean isClose, int position) {
         openPosition = position;
         if (!isClose) {
             hasChildOpen = true;

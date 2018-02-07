@@ -12,7 +12,7 @@ import cn.bmob.v3.listener.FindListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.bmobAppMes.AppVersionBean;
 import juhe.jiangdajiuye.dialog.UpgradeDialog;
-import juhe.jiangdajiuye.util.AppUtils;
+import juhe.jiangdajiuye.util.AppConfigUtils;
 import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.util.ToastUtils;
 
@@ -63,7 +63,7 @@ public class BmobCheckUpgrade {
                     return ;
                 }
                 for (AppVersionBean appVersionBean : object) {
-                    if(AppUtils.getVersionName().compareTo(appVersionBean.getVersion()) < 0 ){
+                    if(AppConfigUtils.getVersionName().compareTo(appVersionBean.getVersion()) < 0 ){
                         targetBean = appVersionBean ;
                         if(showToast)
                         showDialog(mCtx,targetBean);

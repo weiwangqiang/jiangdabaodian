@@ -1,23 +1,25 @@
 package juhe.jiangdajiuye.util;
 
-import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 
-import juhe.jiangdajiuye.core.MyApplication;
+import juhe.jiangdajiuye.core.BaseApplication;
 
 /**
  * class description here
+ * <p>
  * 获取系统资源的utils
+ *
  * @author wangqiang
  * @since 2017-12-31
  */
 
 public class ResourceUtils {
     public static String getString(@StringRes int stringId) {
-        return MyApplication.getContext().getResources().getString(stringId);
+        return BaseApplication.getContext().getResources().getString(stringId);
     }
 
-    public static  @ColorInt int getColor(int colorId){
-        return MyApplication.getContext().getResources().getColor(colorId);
+    public static int getColor(@ColorRes int colorId) {
+        return BaseApplication.getContext().getResources().getColor(colorId);
     }
 }

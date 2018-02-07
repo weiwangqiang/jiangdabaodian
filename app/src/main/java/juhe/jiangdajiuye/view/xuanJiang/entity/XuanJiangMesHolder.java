@@ -3,13 +3,13 @@ package juhe.jiangdajiuye.view.xuanJiang.entity;
 /**
  * class description here
  *
- * 宣讲省份，学校等信息的bean
+ * 宣讲省份，学校等信息的 holder
  *
  * @author wangqiang
  * @since 2017-09-30
  */
 
-public class XuanMesBean {
+public class XuanJiangMesHolder {
     public int provinceId;
 
     public boolean isPull() {

@@ -19,6 +19,7 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.MyExpandableListAdapter;
 import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.bean.BookMesBean;
+import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.dialog.ProgressDialog;
 import juhe.jiangdajiuye.sql.repository.LibraryRepository;
@@ -102,6 +103,11 @@ public class SearchBook extends BaseActivity{
     public void getSearch(){
         HttpConnection connection = new HttpConnection(this);
         connection.setNetListener(new HttpConnection.NetListener(){
+
+            @Override
+            public void success(List<MessageItem> data, int code) {
+
+            }
 
             @Override
             public void success(String result, int code) {

@@ -21,7 +21,6 @@ import juhe.jiangdajiuye.consume.recyclerView.LibraryCollectDecoration;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.util.HttpConnection;
-import juhe.jiangdajiuye.util.ParseUtils;
 import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.view.Browse;
 
@@ -34,7 +33,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     public static final int ZHAOPIN = 2;
     public static final int XINXI = 3;
     private View view,error;
-    private String baseurl;
+    private String baseUrl;
     private String TAG;
     private int tab ;
     public MyRecyclerView recyclerView;
@@ -42,10 +41,10 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     public List<MessageItem> data = new ArrayList<>();
     public IndexFragmentAdapter adapter;
     //下拉刷新
-    private Boolean isfirst = true;
+    private Boolean isFirst = true;
     private int page = 1; //当前页面数
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ParseUtils parsetools =  ParseUtils.getInstance() ;
+    private HttpConnection connection ;
 
     public static IndexFragment newInstance(String url, String TAG, int tab) {
         IndexFragment f = new IndexFragment();
@@ -76,13 +75,14 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     }
     public void init(){
         Bundle bundle = getArguments();
-        baseurl = bundle.getString("url");
+        baseUrl = bundle.getString("url");
         TAG = bundle.getString("TAG");
         tab = bundle.getInt("tab");//控制用哪个解析方法
         findId();
         initRefresh();
         initList();
         bindNetState();
+        connection = new HttpConnection(getActivity());
     }
 
     /**
@@ -95,7 +95,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
 
         @Override
         public void OutInternet() {
-            if(isfirst){
+            if(isFirst){
                 error.setVisibility(View.VISIBLE);
             }
         }
@@ -163,14 +163,18 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     }
     public void getMessage() {
         String url = getUrl();
-        HttpConnection connection = new HttpConnection(getActivity());
         connection.setNetListener(new HttpConnection.NetListener(){
 
             @Override
-            public void success(String response, int code) {
-                upDate(parsetools.parseMainMes(response.trim(),tab));
+            public void success(List<MessageItem> data, int code) {
+                upDate(data);
                 swipeRefreshLayout.setRefreshing(false);
                 recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+            }
+
+            @Override
+            public void success(String data, int code) {
+
             }
 
             @Override
@@ -181,7 +185,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
                 showError();
             }
         });
-        connection.get(url);
+        connection.get(url,tab);
     }
 
     private void showError() {
@@ -191,7 +195,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         }
         else
         {
-            isfirst = false;
+            isFirst = false;
             error.setVisibility(View.GONE);
         }
     }
@@ -214,7 +218,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         String str = "";
         if(recyclerView.getmStatus() == MyRecyclerView.STATUS_PULLTOREFRESH)
             page = 1;
-        str = baseurl +"page="+page;
+        str = baseUrl +"page="+page;
         return str;
     }
     @Override
@@ -228,7 +232,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isfirst &&isVisibleToUser && adapter != null &&adapter.getDataSize() ==0  ){
+        if(isFirst &&isVisibleToUser && adapter != null &&adapter.getDataSize() ==0  ){
             if(swipeRefreshLayout!=null && recyclerView.getmStatus()!= MyRecyclerView.STATUS_ERROR){
                 swipeRefreshLayout.post(new Runnable() {
                     @Override

@@ -12,7 +12,9 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.List;
 
+import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.bean.bmobAppMes.IpBean;
 
 /**
@@ -94,13 +96,18 @@ public class NetMesManager {
         connection.setNetListener(new HttpConnection.NetListener() {
 
             @Override
+            public void success(List<MessageItem> data, int code) {
+
+            }
+
+            @Override
             public void success(String response, int code) {
                 if (code == 200) {
                     Gson gson = new Gson();
                     try {
 
                         IpBean ipbean = gson.fromJson(response, IpBean.class);
-                        UserActionRecordUtils.setIpbean(ipbean);
+                        UserActionRecordUtils.setIpBean(ipbean);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

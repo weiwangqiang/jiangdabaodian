@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.util.ScreenSizeUtil;
+import juhe.jiangdajiuye.util.ScreenSizeUtils;
 
 /**
  * class description here
@@ -26,7 +26,7 @@ import juhe.jiangdajiuye.util.ScreenSizeUtil;
 
 public class SlipItemView extends HorizontalScrollView {
     private final String TAG = "SlipItemView";
-    private int viewWith = ScreenSizeUtil.getScreenWith() / 6;//subView的默认宽度
+    private int viewWith = ScreenSizeUtils.getScreenWith() / 6;//subView的默认宽度
     private OnSlipItemViewClickListener listener;
     //id常量
     private final int ID_ITEMVIEW = 0x10;
@@ -75,7 +75,7 @@ public class SlipItemView extends HorizontalScrollView {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downX = ev.getRawX();
-                if (!close && (downX < (ScreenSizeUtil.getScreenWith() - subViewWith))) {
+                if (!close && (downX < (ScreenSizeUtils.getScreenWith() - subViewWith))) {
                     return true;
                 }
                 break;
@@ -137,7 +137,7 @@ public class SlipItemView extends HorizontalScrollView {
     }
 
     public void addItemView(View view) {
-        LayoutParams layoutParams = new LayoutParams(ScreenSizeUtil.getScreenWith(),
+        LayoutParams layoutParams = new LayoutParams(ScreenSizeUtils.getScreenWith(),
                 ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(layoutParams);
         parenView.addView(view, 0);

@@ -23,7 +23,7 @@ import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.util.HttpConnection;
 import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.view.Browse;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
+import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 
 /**
  * class description here
@@ -42,7 +42,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
     private Boolean isfirst = true;
     private SwipeRefreshLayout swipeRefreshLayout;
     private HttpConnection connection ;
-    private XuanMesBean holder ;
+    private XuanJiangMesHolder holder ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(view != null)
@@ -60,7 +60,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
 
     public void init(){
         Bundle bundle = getArguments();
-        holder = new XuanMesBean();
+        holder = new XuanJiangMesHolder();
         holder.setBaseUrl(bundle.getString("BaseUrl"));
         holder.setCollege(bundle.getString("college"));
         holder.setCollegeId(bundle.getInt("collegeId"));
@@ -77,11 +77,15 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         connection.setNetListener(new HttpConnection.NetListener(){
 
             @Override
-            public void success(String response, int code) {
-                Log.i(TAG, "success: ------------------------------");
-                upDate(parseMes(response.trim(),holder));
+            public void success(List<MessageItem> data, int code) {
+                upDate(data);
                 swipeRefreshLayout.setRefreshing(false);
                 recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+            }
+
+            @Override
+            public void success(String data, int code) {
+
             }
 
             @Override
@@ -179,7 +183,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         String url = getUrl(recyclerView.getmStatus() == MyRecyclerView.STATUS_PULLTOREFRESH
                   ,holder);
         Log.i(TAG, "getMessage: "+url);
-        connection.get(url);
+        connection.get(url,holder);
     }
 
     /**
@@ -210,8 +214,8 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         RequestSuccess();
         showError();
     }
-    public abstract String getUrl(boolean isPull,XuanMesBean holder);
-    public abstract List<MessageItem> parseMes(String result,XuanMesBean holder);
+    public abstract String getUrl(boolean isPull,XuanJiangMesHolder holder);
+    public abstract List<MessageItem> parseMes(String result,XuanJiangMesHolder holder);
     public abstract void RequestSuccess();
     @Override
     public void onLoadMore() {

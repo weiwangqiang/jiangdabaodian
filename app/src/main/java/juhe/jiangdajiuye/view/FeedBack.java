@@ -14,7 +14,7 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.LeaveMes;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.dialog.ProgressDialog;
-import juhe.jiangdajiuye.util.AppUtils;
+import juhe.jiangdajiuye.util.AppConfigUtils;
 import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.util.ToastUtils;
 
@@ -85,9 +85,9 @@ public class FeedBack extends BaseActivity {
         LeaveMes mes = new LeaveMes();
         mes.setEmail(ETEmail.getText().toString().trim());
         mes.setContent(ETContent.getText().toString().trim());
-        mes.setAppLevel(AppUtils.getVersionName());
-        mes.setDevice(AppUtils.getDevice());
-        mes.setDeviceLevel(AppUtils.getDeviceLevel());
+        mes.setAppLevel(AppConfigUtils.getVersionName());
+        mes.setDevice(AppConfigUtils.getDevice());
+        mes.setDeviceLevel(AppConfigUtils.getDeviceLevel());
         try {
             onRequestYun(mes);
         } catch (Exception e) {

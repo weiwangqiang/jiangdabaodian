@@ -43,7 +43,7 @@ import juhe.jiangdajiuye.util.ToastUtils;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
+public class LoginCopyActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -64,7 +64,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.fragment_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mEmailView.setText(SharePreferHelper.
@@ -293,7 +293,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
+                new ArrayAdapter<>(LoginCopyActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageItem;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
+import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 
 /**
  * Created by wangqiang on 2016/10/16.
@@ -23,7 +23,7 @@ public class ParseJiangSu {
         return instance ;
     }
     public ParseJiangSu(){}
-    public List<MessageItem> parse(String response,XuanMesBean holder){
+    public List<MessageItem> parse(String response,XuanJiangMesHolder holder){
         switch(holder.getCollege()){
             case "南京大学":
                 return nanjingdaxue(response);
@@ -61,7 +61,6 @@ public class ParseJiangSu {
      * http://job.nju.edu.cn:9081/login/nju/home.jsp?type=zph&pageNow=1
      */
     public List<MessageItem> nanjingdaxue(String response){
-        System.out.println(response);
         List<MessageItem> list = new ArrayList<>();
         Document doc = Jsoup.parse(response);
         Elements elements = doc.getElementsByClass("article-lists").select("li");

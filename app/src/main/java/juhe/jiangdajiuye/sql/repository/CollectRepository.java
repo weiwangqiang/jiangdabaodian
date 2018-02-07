@@ -3,7 +3,7 @@ package juhe.jiangdajiuye.sql.repository;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageItem;
-import juhe.jiangdajiuye.core.MyApplication;
+import juhe.jiangdajiuye.core.BaseApplication;
 import juhe.jiangdajiuye.sql.CollectSqlHelper;
 
 /**
@@ -23,7 +23,7 @@ public class CollectRepository{
         return collectRepository ;
     }
     private CollectRepository(){
-        collectSqlHelper = new CollectSqlHelper(MyApplication.getContext());
+        collectSqlHelper = new CollectSqlHelper(BaseApplication.getContext());
     }
     public void add(MessageItem messageItem){
         collectSqlHelper.add(messageItem);

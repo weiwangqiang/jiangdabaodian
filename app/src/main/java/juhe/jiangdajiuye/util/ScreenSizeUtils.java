@@ -15,7 +15,7 @@ import android.view.WindowManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import juhe.jiangdajiuye.core.MyApplication;
+import juhe.jiangdajiuye.core.BaseApplication;
 
 /**
  * class description here
@@ -24,7 +24,7 @@ import juhe.jiangdajiuye.core.MyApplication;
  * @since 2017-08-03
  */
 
-public class ScreenSizeUtil {
+public class ScreenSizeUtils {
     public static ScreenSize screenSize  = null ;
     public static class ScreenSize{
         public final double size;
@@ -43,7 +43,7 @@ public class ScreenSizeUtil {
     public static ScreenSize getScreenSize(){
         if(screenSize != null)
             return screenSize ;
-        WindowManager w = (WindowManager) MyApplication.getApplication().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager w = (WindowManager) BaseApplication.getApplication().getSystemService(Context.WINDOW_SERVICE);
         Display d = w.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         d.getMetrics(metrics);
@@ -68,7 +68,7 @@ public class ScreenSizeUtil {
                 ignored.printStackTrace();
             }
         }
-        DisplayMetrics dm = MyApplication.getApplication().getResources().getDisplayMetrics();
+        DisplayMetrics dm = BaseApplication.getApplication().getResources().getDisplayMetrics();
         double heightInch = heightPixels/(double)dm.densityDpi;
         double widthInch =  widthPixels/(double)dm.densityDpi;
         double inch = Math.sqrt(widthInch * widthInch + heightInch * heightInch);
@@ -76,8 +76,12 @@ public class ScreenSizeUtil {
         return screenSize;
     }
 
+    /**
+     * 获取屏幕可利用的高度
+     * @return 高度
+     */
     public static int getAvailScreenHeight() {
-        return ScreenSizeUtil.getScreenSize().heightPixels - getStatusBarHeight() - getNavBarHeight();
+        return ScreenSizeUtils.getScreenSize().heightPixels - getStatusBarHeight() - getNavBarHeight();
     }
 
     public static int getScreenWith(){
@@ -85,7 +89,7 @@ public class ScreenSizeUtil {
     }
 
     public static int getStatusBarHeight() {
-        Resources resources = MyApplication.getApplication().getResources();
+        Resources resources = BaseApplication.getApplication().getResources();
         int result = 0;
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
@@ -95,7 +99,7 @@ public class ScreenSizeUtil {
     }
 
     public static int getNavBarHeight() {
-        Context context = MyApplication.getApplication();
+        Context context = BaseApplication.getApplication();
         Resources resources = context.getResources();
         int result = 0;
         int resourceId = 0;
@@ -123,7 +127,7 @@ public class ScreenSizeUtil {
 
     public static boolean hasPermanentMenuKey() {
         boolean hasMenuKey;
-        ViewConfiguration vc = ViewConfiguration.get(MyApplication.getApplication());
+        ViewConfiguration vc = ViewConfiguration.get(BaseApplication.getApplication());
         if (Build.VERSION.SDK_INT >= 14) {
             try {
                 Method m = vc.getClass().getMethod("hasPermanentMenuKey",

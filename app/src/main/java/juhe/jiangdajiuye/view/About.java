@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.util.AppUtils;
+import juhe.jiangdajiuye.util.AppConfigUtils;
 import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.versionUpGrade.BmobCheckUpgrade;
 
@@ -78,7 +78,7 @@ public class About extends BaseActivity {
         currentVersion = (TextView) findViewById(R.id.currentVersion);
         String s = "";
         try {
-            s = ResourceUtils.getString(R.string.current_version) + AppUtils.getVersionName();
+            s = ResourceUtils.getString(R.string.current_version) + AppConfigUtils.getVersionName();
         } catch (Exception e) {
             e.printStackTrace();
         }

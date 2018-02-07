@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.BookBean;
-import juhe.jiangdajiuye.core.MyApplication;
+import juhe.jiangdajiuye.core.BaseApplication;
 import juhe.jiangdajiuye.sql.LibrarySqlHelper;
 
 /**
@@ -25,7 +25,7 @@ public class LibraryRepository {
     }
 
     private LibraryRepository() {
-        collectSqlHelper = new LibrarySqlHelper(MyApplication.getContext());
+        collectSqlHelper = new LibrarySqlHelper(BaseApplication.getContext());
     }
 
     public boolean add(BookBean bookBean) {

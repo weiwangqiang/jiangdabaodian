@@ -66,7 +66,7 @@ import juhe.jiangdajiuye.view.constant.AppConstant;
 import juhe.jiangdajiuye.view.constant.FileConstant;
 import juhe.jiangdajiuye.view.xuanJiang.XuanEntrance;
 
-import static juhe.jiangdajiuye.core.MyApplication.context;
+import static juhe.jiangdajiuye.core.BaseApplication.context;
 
 
 public class MainActivity extends BaseActivity
@@ -476,7 +476,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (UserActionRecordUtils.getIpbean() == null)
+        if (UserActionRecordUtils.getIpBean() == null)
             NetMesManager.setIP(this);
         getAdvert();
     }

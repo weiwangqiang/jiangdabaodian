@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.widget.Toast;
 
-import juhe.jiangdajiuye.core.MyApplication;
+import juhe.jiangdajiuye.core.BaseApplication;
 
 /**
  * class description here
@@ -24,12 +24,12 @@ public class ToastUtils {
     }
     public static void showToast(String content){
         if(null == toast ){
-            toast = Toast.makeText(MyApplication.getContext(),"",Toast.LENGTH_SHORT);
+            toast = Toast.makeText(BaseApplication.getContext(),"",Toast.LENGTH_SHORT);
         }
         toast.setText(content);
         toast.show();
     }
     public static Resources getResource() {
-        return MyApplication.getApplication().getResources();
+        return BaseApplication.getApplication().getResources();
     }
 }

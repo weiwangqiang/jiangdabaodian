@@ -5,18 +5,20 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 
-import juhe.jiangdajiuye.core.MyApplication;
+import juhe.jiangdajiuye.core.BaseApplication;
 
 /**
  * class description here
+ *
+ *  应用配置信息
  *
  * @version 1.0.0
  * @outher wangqiang
  * @project jiangdajiuye
  * @since 2017-04-02
  */
-public class AppUtils {
-    private String TAG = "AppUtils";
+public class AppConfigUtils {
+    private String TAG = "AppConfigUtils";
 
 
     public static String getSavePictureUrl() {
@@ -25,7 +27,7 @@ public class AppUtils {
 
     //应用图片存储的绝对路径
     public static final  String savePictureUrl = Environment.getExternalStorageDirectory()+"/Game/";
-    public AppUtils() {
+    public AppConfigUtils() {
     }
 
     /**
@@ -66,6 +68,6 @@ public class AppUtils {
         return "系统："+android.os.Build.VERSION.RELEASE+" \n sdk :"+currentapiVersion+"";
     }
     private static Application getApplication(){
-        return MyApplication.getApplication();
+        return BaseApplication.getApplication();
     }
 }

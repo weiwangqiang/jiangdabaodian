@@ -8,7 +8,7 @@ import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
+import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 import juhe.jiangdajiuye.view.xuanJiang.parse.ParseHangZou;
 import juhe.jiangdajiuye.view.xuanJiang.parse.ParseShangHai;
 import juhe.jiangdajiuye.view.xuanJiang.parse.ParseJiangSu;
@@ -28,7 +28,7 @@ public class XuanParseControl {
             instance = new XuanParseControl();
         return instance ;
     }
-    public List<MessageItem> parse(String result , XuanMesBean holder){
+    public List<MessageItem> parse(String result , XuanJiangMesHolder holder){
         Log.i(TAG, "parse: ---------------------");
         switch (holder.getProvinceId()){
             case XuanEntranceData.JIANGSU:

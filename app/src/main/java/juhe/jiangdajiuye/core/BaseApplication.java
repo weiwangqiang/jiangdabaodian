@@ -12,13 +12,13 @@ import juhe.jiangdajiuye.tool.MyExceptionHolder;
  *  可以开一个service完成所有第三方的初始化工作
  */
 
-public class MyApplication extends Application{
-    private static final String TAG = "MyApplication";
-    protected static MyApplication application;
+public class BaseApplication extends Application{
+    private static final String TAG = "BaseApplication";
+    protected static BaseApplication application;
     public static Context getContext() {
         return context;
     }
-    public MyApplication() {
+    public BaseApplication() {
     }
     public static Context context ;
     @Override
@@ -33,7 +33,7 @@ public class MyApplication extends Application{
         InitWorker.initSDK(this);
     }
 
-    public static MyApplication getApplication(){
+    public static BaseApplication getApplication(){
         return application;
     }
 }

@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageItem;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
+import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 import juhe.jiangdajiuye.view.xuanJiang.control.XuanParseControl;
 import juhe.jiangdajiuye.view.xuanJiang.control.XuanUrlControl;
 
@@ -14,16 +14,16 @@ import juhe.jiangdajiuye.view.xuanJiang.control.XuanUrlControl;
 /**
  * class description here
  *
- *  江苏省宣讲的fragment
+ *  具体实现 宣讲的fragment
  *
  * @author wangqiang
  * @since 2017-09-30
  */
 
-public class JiangSuFragment extends BaseFragment {
+public class BaseFragmentImpl extends BaseFragment {
     XuanUrlControl xuanUrlControl = XuanUrlControl.getInStance();
     public static Fragment newInstance(String BaseUrl, String college, int collegeId,int provinceId) {
-        JiangSuFragment f = new JiangSuFragment();
+        BaseFragmentImpl f = new BaseFragmentImpl();
         Bundle b = new Bundle();
         b.putString("BaseUrl",BaseUrl);
         b.putString("college",college);
@@ -34,7 +34,7 @@ public class JiangSuFragment extends BaseFragment {
     }
     int page =1 ;
     @Override
-    public String getUrl(boolean isPull, XuanMesBean holder) {
+    public String getUrl(boolean isPull, XuanJiangMesHolder holder) {
         if(isPull)
             page = 1 ;
         holder.setPager(page);
@@ -44,7 +44,7 @@ public class JiangSuFragment extends BaseFragment {
 
 
     @Override
-    public List<MessageItem> parseMes(String result,XuanMesBean holder) {
+    public List<MessageItem> parseMes(String result,XuanJiangMesHolder holder) {
         return XuanParseControl.getInStance().parse(result,holder);
     }
 

@@ -17,7 +17,7 @@ import juhe.jiangdajiuye.adapter.XJFragmentAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanJiangData;
-import juhe.jiangdajiuye.view.xuanJiang.fragment.JiangSuFragment;
+import juhe.jiangdajiuye.view.xuanJiang.fragment.BaseFragmentImpl;
 
 /**
  * Created by wangqiang on 2016/10/1.
@@ -54,7 +54,7 @@ public class XuanJiangTab extends BaseActivity {
         college = xuanJiangData.getTitle(provinceId);
         urls = xuanJiangData.getUrls(provinceId);
         for(int i =0;i<college.length;i++){
-            Fragment f = JiangSuFragment.newInstance(urls[i],college[i],i,provinceId);
+            Fragment f = BaseFragmentImpl.newInstance(urls[i],college[i],i,provinceId);
             list.add(f);
         }
         adapter  = new XJFragmentAdapter(getSupportFragmentManager(), list,college);

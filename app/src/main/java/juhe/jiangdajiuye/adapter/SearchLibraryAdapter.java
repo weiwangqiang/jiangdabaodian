@@ -11,7 +11,7 @@ import android.widget.TextView;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
-import juhe.jiangdajiuye.core.MyApplication;
+import juhe.jiangdajiuye.core.BaseApplication;
 import juhe.jiangdajiuye.util.SkinManager;
 
 import static juhe.jiangdajiuye.R.id.footerProgressBar;
@@ -67,7 +67,7 @@ public class SearchLibraryAdapter extends AbsAdapter<BookBean> {
     @Override
     public FooterViewHolder getFooterViewHolder(ViewGroup parent) {
         if(footerViewHolder == null)
-            footerViewHolder = new mFooterViewHolder(SkinManager.inflater(MyApplication.getContext(),
+            footerViewHolder = new mFooterViewHolder(SkinManager.inflater(BaseApplication.getContext(),
                     R.layout.footer,parent,false));
         return footerViewHolder ;
     }

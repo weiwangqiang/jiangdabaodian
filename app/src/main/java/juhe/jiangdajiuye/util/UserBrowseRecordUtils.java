@@ -1,5 +1,7 @@
 package juhe.jiangdajiuye.util;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.UserBrowseRecord;
 
 /**
@@ -48,12 +50,12 @@ public class UserBrowseRecordUtils {
      * 提交浏览记录
      */
     public static void save(){
-//        userBrowseRecord.save(new SaveListener<String>(){
-//
-//            @Override
-//            public void done(String s, BmobException e) {
-//
-//            }
-//        });
+        userBrowseRecord.save(new SaveListener<String>(){
+
+            @Override
+            public void done(String s, BmobException e) {
+
+            }
+        });
     }
 }

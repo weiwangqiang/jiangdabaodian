@@ -3,7 +3,7 @@ package juhe.jiangdajiuye.view.xuanJiang.control;
 import android.util.Log;
 
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanMesBean;
+import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 
 /**
  * class description here
@@ -22,7 +22,7 @@ public class XuanUrlControl {
             instance = new XuanUrlControl();
         return instance ;
     }
-    public String getUrl(XuanMesBean holder){
+    public String getUrl(XuanJiangMesHolder holder){
         Log.i(TAG, "getUrl: "+holder.getProvinceId());
         switch (holder.getProvinceId()){
             case XuanEntranceData.JIANGSU:
@@ -35,7 +35,7 @@ public class XuanUrlControl {
         return "";
     }
 //----------------------------------------------------------------------
-    private String getHangZhou(XuanMesBean holder) {
+    private String getHangZhou(XuanJiangMesHolder holder) {
         switch (holder.getCollege()){
             case "杭州电子科技大学":
                 return getHangZhouDianZi(holder);
@@ -45,7 +45,7 @@ public class XuanUrlControl {
         return "";
     }
 
-    private String getZheJiangDaXue(XuanMesBean holder) {
+    private String getZheJiangDaXue(XuanJiangMesHolder holder) {
         StringBuilder sb = new StringBuilder();
         sb.append(holder.baseUrl);
         sb.append("?pages.currentPage="+holder.pager);
@@ -57,14 +57,14 @@ public class XuanUrlControl {
      * @param holder holder
      * @return URL
      */
-    private String getHangZhouDianZi(XuanMesBean holder) {
+    private String getHangZhouDianZi(XuanJiangMesHolder holder) {
         StringBuilder sb = new StringBuilder(holder.baseUrl);
         sb.append("?start_page=1&keyword=&type=inner&day=&count=10&start="+holder.pager);
         return sb.toString();
     }
 //----------------------------------------------------------------------
 
-    private String getShanghai(XuanMesBean holder) {
+    private String getShanghai(XuanJiangMesHolder holder) {
         Log.i(TAG, "getShanghai: ");
         switch (holder.getCollege()){
             case "上海交通大学":
@@ -77,12 +77,12 @@ public class XuanUrlControl {
         return "";
     }
 
-    private String getFuDanUrl(XuanMesBean holder) {
+    private String getFuDanUrl(XuanJiangMesHolder holder) {
         return "http://www.career.fudan.edu.cn/jsp/career_talk_list.jsp?count=20&list=true&page="
                 +holder.getPager();
     }
 
-    private String getLiGongUrl(XuanMesBean holder) {
+    private String getLiGongUrl(XuanJiangMesHolder holder) {
         return "";
     }
 
@@ -98,7 +98,7 @@ public class XuanUrlControl {
      * @param holder
      * @return
      */
-    private String getJiaoDaUrl(XuanMesBean holder) {
+    private String getJiaoDaUrl(XuanJiangMesHolder holder) {
         StringBuilder url = new StringBuilder(holder.baseUrl);
         if(holder.isPull){
             url.append("?modcode=jygl_xjhxxck&subsyscode=zpfw&type=searchXjhxx&xjhType=all");
@@ -108,7 +108,7 @@ public class XuanUrlControl {
         return url.toString();
     }
 //----------------------------------------------------------------------
-    private String getJiangSu(XuanMesBean holder){
+    private String getJiangSu(XuanJiangMesHolder holder){
         String str = "";
         if(holder.getCollege().equals("南京大学")){
             return holder.getBaseUrl()+"?type=zph&pageNow="+holder.getPager();
