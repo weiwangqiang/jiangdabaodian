@@ -38,11 +38,14 @@
     <string name="title_xuanjiang_province">宣讲省份</string>
     <string name="title_xuangjiang_tab">宣讲大全</string>
     <string name="title_collect">收藏夹</string>
+    <string name="title_library">图书馆</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="title_fragment_logout">注销</string>
+    <string name="title_fragment_logout">个人中心</string>
+    <string name="title_fragment_login">登陆</string>
 
     <string name="toast_feedback_contact_information_warn">联系方式不能为空</string>
     <string name="toast_feedback_content_warn">内容不能为空</string>
+    <string name="toast_feedback_contact_information_error">联系方式错误</string>
     <string name="toast_user_password_error">密码错误</string>
     <string name="toast_register_failure">注册失败，请稍后再试</string>
     <string name="toast_register_success">注册成功</string>
@@ -53,10 +56,18 @@
     <string name="toast_syn_data_download_failure">下载数据失败</string>
     <string name="toast_syn_data_download_success">下载数据成功</string>
     <string name="toast_syn_data_not_data_to_push">没有数据可以提交了</string>
+    <string name="toast_library_input_warn">请输入搜索词</string>
+    <string name="toast_library_content_not_more">没有更多了</string>
+    <string name="toast_library_can_not_search_book">没有你要搜索的书</string>
+    <string name="toast_network_error">网络不在服务区哦~</string>
 
     <string name="menu_syn_data_push">上传</string>
     <string name="menu_syn_data_download">下载</string>
 
+    <string name="recycler_statues_pull_to_load_more">上拉加载更多</string>
+    <string name="recycler_statues_loading">正在加载</string>
+    <string name="recycler_statues_not_any_more">没有更多了</string>
+    <string name="recycler_statues_network_error">网络出错，请连接后再试</string>
     <!-- Strings related to login -->
     <string name="title_login">登陆</string>
     <string name="prompt_email">用户名</string>

@@ -3,6 +3,7 @@ package juhe.jiangdajiuye.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -41,11 +42,11 @@ public class FeedBack extends BaseActivity {
     public void initView() {
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-        findid();
+        findId();
         initToolbar();
     }
 
-    public void findid() {
+    public void findId() {
         toolbar = (Toolbar) findViewById(R.id.suggest_toolbar);
         ETEmail = (EditText) findViewById(R.id.suggest_email);
         ETContent = (EditText) findViewById(R.id.suggest_content);
@@ -82,6 +83,10 @@ public class FeedBack extends BaseActivity {
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_feedback_content_warn));
             return;
         }
+        if(!correctContactInfor(ETEmail.getText().toString())){
+            ToastUtils.showToast(ResourceUtils.getString(R.string.toast_feedback_contact_information_error));
+            return;
+        }
         LeaveMes mes = new LeaveMes();
         mes.setEmail(ETEmail.getText().toString().trim());
         mes.setContent(ETContent.getText().toString().trim());
@@ -94,7 +99,13 @@ public class FeedBack extends BaseActivity {
             e.printStackTrace();
         }
     }
-
+    //判断是否满足联系方式
+    public boolean correctContactInfor(String contactInfor){
+        if(TextUtils.isEmpty(contactInfor)){
+            return false ;
+        }
+        return contactInfor.contains("@") || contactInfor.length() >=11 ;
+    }
     private void onRequestYun(LeaveMes mes) throws Exception {
         dialog.show();
         mes.save(new SaveListener<String>() {

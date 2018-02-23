@@ -49,8 +49,10 @@ import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.dialog.ShareDialog;
 import juhe.jiangdajiuye.fragment.IndexFragment;
 import juhe.jiangdajiuye.imageUtil.ImageLocalLoad;
+import juhe.jiangdajiuye.user.UserManager;
 import juhe.jiangdajiuye.util.NetMesManager;
-import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
+import juhe.jiangdajiuye.util.NetStateUtils;
+import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.util.ToastUtils;
 import juhe.jiangdajiuye.util.UserActionRecordUtils;
 import juhe.jiangdajiuye.util.UserBrowseRecordUtils;
@@ -72,6 +74,7 @@ import static juhe.jiangdajiuye.core.BaseApplication.context;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener {
+
     private String TAG = "MainActivity";
     private Long exitTime = 0L;
     private List<Fragment> list = new ArrayList<>();
@@ -86,37 +89,35 @@ public class MainActivity extends BaseActivity
     private Tencent tencent;
     private baseUiLister baseuiLister;
     //微信
-    private static final String WEI_ID = "wxc306137ab1a20319";
+    private final String WEI_ID = "wxc306137ab1a20319";
+    private final String MESSAGE_RECEIVED_ACTION
+            = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
+    private final String content = "我正在使用江大宝典，你也来看看吧";
+
     private IWXAPI api;
     private WXWebpageObject webpager;
     private WXMediaMessage message;
     private SendMessageToWX.Req req;
-    //分享的信息
-    private String content = "我正在使用江大宝典，你也来看看吧";
+
+    private String pictureUri = null;
+    private String kind = null;
+    private Bitmap myBitmap = null;
+    private boolean getAdvert = false;
     private NavigationView navigationView;
+    private BmobQuery<BootPicture> query = new BmobQuery<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState != null) return;
+        if (savedInstanceState != null) {
+            return;
+        }
         bindNetState();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        //实现左右滑动
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
         initView();
         initPush();
         BmobCheckUpgrade.getUpgradeInfo(false);
     }
-
-    public static final String MESSAGE_RECEIVED_ACTION
-            = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
 
     private void initPush() {
         IntentFilter filter = new IntentFilter();
@@ -125,19 +126,38 @@ public class MainActivity extends BaseActivity
     }
 
     public void initView() {
-        sharedialog = new ShareDialog();
-        sharedialog.setItemlister(new myItemlist());
-        dialog = sharedialog.getDialog(this);
-        initShare();
         findId();
+        initShare();
+        initDrawerLayout();
         initViewPager();
         initTabLayout();
+        initNavigationView();
     }
+
+    private void initNavigationView() {
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getHeaderView(0).findViewById(R.id.main_my_icn).setOnClickListener(this);
+    }
+
+    private void initDrawerLayout() {
+        //实现左右滑动
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        Menu menu = navigationView.getMenu();
+
+    }
+
 
     /**
      * 初始化微信
      */
     private void initShare() {
+        sharedialog = new ShareDialog();
+        sharedialog.setItemlister(new myItemList());
+        dialog = sharedialog.getDialog(this);
         api = WXAPIFactory.createWXAPI(this, WEI_ID, true);
         api.registerApp(WEI_ID);
         baseuiLister = new baseUiLister();
@@ -155,7 +175,7 @@ public class MainActivity extends BaseActivity
         adapter = new FragmentAdapter(getSupportFragmentManager(), list);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
-        viewPager.addOnPageChangeListener(new pagerlist());
+        viewPager.addOnPageChangeListener(new pagerList());
         viewPager.setCurrentItem(0);
     }
 
@@ -171,19 +191,13 @@ public class MainActivity extends BaseActivity
             tabLayout.addTab(tab);
         }
         tabLayout.setupWithViewPager(viewPager);
-//        TabLayoutUtils.setIndicator(this, tabLayout, 15, 15);
-        //给left mian 的item 设置监听事件
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     public void findId() {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getHeaderView(0).findViewById(R.id.main_my_icn).setOnClickListener(this);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
     }
 
     @Override
@@ -240,13 +254,13 @@ public class MainActivity extends BaseActivity
                 startActivitySlideInRight(this, About.class);
                 break;
             case R.id.nav_login:
-                startActivitySlideInRight(this,LoginActivity.class);
+                startActivitySlideInRight(this, LoginActivity.class);
                 break;
             default:
                 break;
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -272,16 +286,17 @@ public class MainActivity extends BaseActivity
 
     private void showShare() {
         dialog.show();
-        sharedialog.setItemlister(new myItemlist());
+        sharedialog.setItemlister(new myItemList());
     }
 
-    private boolean getAdvert = false;
-
+    //--------获取起始屏------------- start
     public void getAdvert() {
-        if (getAdvert) return;
-        if (NetStateUtils.getNetWorkState() != NetStateUtils.TYPE_WIFI)
+        if (getAdvert) {
             return;
-        BmobQuery<BootPicture> query = new BmobQuery<>();
+        }
+        if (NetStateUtils.getNetWorkState() != NetStateUtils.TYPE_WIFI) {
+            return;
+        }
         query.findObjects(new FindListener<BootPicture>() {
             @Override
             public void done(List<BootPicture> object, BmobException e) {
@@ -298,9 +313,6 @@ public class MainActivity extends BaseActivity
         });
     }
 
-    String pictureUri = null;
-    String kind = null;
-    Bitmap myBitmap = null;
     private SimpleTarget target = new SimpleTarget<Bitmap>() {
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
@@ -318,11 +330,12 @@ public class MainActivity extends BaseActivity
 
         }
     };
+    //--------获取起始屏------------- end
 
     /**
      * popupwind的Item 监听
      */
-    private class myItemlist implements ShareDialog.Itemlister {
+    private class myItemList implements ShareDialog.Itemlister {
 
         @Override
         public void shareToQzone() {
@@ -410,16 +423,46 @@ public class MainActivity extends BaseActivity
     }
 
     //    //要想调用IUiListener 必须重写此函数
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         Tencent.onActivityResultData(requestCode, resultCode, data, baseuiLister);
         if (requestCode == Constants.REQUEST_QQ_SHARE || requestCode == Constants.REQUEST_QZONE_SHARE) {
             if (resultCode == Constants.ACTIVITY_OK) {
                 Tencent.handleResultData(data, new baseUiLister());
             }
         }
+        switch (requestCode) {
+            case REQUESTCODE_GETLOGIN_RESULT:
+                switch (resultCode) {
+                    case RESULT_OK:
+                        Log.i(TAG, "onActivityResult: ok");
+                        if (UserManager.getInStance().isLogin()) {
+                            navigationView.getMenu()
+                                    .findItem(R.id.nav_login)
+                                    .setTitle(ResourceUtils.getString(
+                                            R.string.title_fragment_logout));
+                        }
+                        break;
+                    case RESULT_CANCELED:
+                        Log.i(TAG, "onActivityResult: canceled ");
+                        if (!UserManager.getInStance().isLogin()) {
+                            navigationView.getMenu()
+                                    .findItem(R.id.nav_login)
+                                    .setTitle(ResourceUtils.getString(
+                                            R.string.title_fragment_login));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
-    class pagerlist implements ViewPager.OnPageChangeListener {
+    private class pagerList implements ViewPager.OnPageChangeListener {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -439,14 +482,6 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
-        Log.d(TAG, "onKeyUp: ");
-//        Intent intent = new Intent();
-//        intent.setAction("android.intent.action.MAIN");
-//        intent.addCategory("android.intent.category.HOME");
-//        intent.addCategory("android.intent.category.DEFAULT");
-//        intent.addCategory("android.intent.category.MONKEY");
-//        startActivity(intent);
-
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 if (drawer.isDrawerOpen(GravityCompat.START)) {

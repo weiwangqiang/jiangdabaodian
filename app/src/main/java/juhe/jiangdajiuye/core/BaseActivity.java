@@ -5,17 +5,21 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.util.ToastUtils;
+import juhe.jiangdajiuye.view.LoginActivity;
 
 /**
  * 基础activity
  */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
     public static String EXIT_APP_ACTION = "com.joshua.exit";
+
+    public static final int REQUESTCODE_GETLOGIN_RESULT = 0x10 ;
     public final int NET_SUCCESS = 0x1;
     public final int NET_ERROR = 0x2;
     private String TAG = "BaseActivity";
@@ -78,7 +82,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     //通用的启动activity动画
     protected void startActivitySlideInRight(Context mCtx , Class target) {
-        startActivity(new Intent(mCtx, target));
+        if(target.equals(LoginActivity.class)){
+            Log.i(TAG, "startActivitySlideInRight: ");
+            startActivityForResult(new Intent(mCtx, target),REQUESTCODE_GETLOGIN_RESULT);
+        }else{
+            startActivity(new Intent(mCtx, target));
+        }
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 }

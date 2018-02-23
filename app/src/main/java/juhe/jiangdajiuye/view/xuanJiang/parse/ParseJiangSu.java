@@ -26,7 +26,7 @@ public class ParseJiangSu {
     public List<MessageItem> parse(String response,XuanJiangMesHolder holder){
         switch(holder.getCollege()){
             case "南京大学":
-                return nanjingdaxue(response);
+                return nanJingDaXue(response);
             default:
                 return commonParse(response,holder.getBaseUrl().substring(0,holder.getBaseUrl().length()-14));
         }
@@ -60,7 +60,7 @@ public class ParseJiangSu {
      * 南京大学
      * http://job.nju.edu.cn:9081/login/nju/home.jsp?type=zph&pageNow=1
      */
-    public List<MessageItem> nanjingdaxue(String response){
+    public List<MessageItem> nanJingDaXue(String response){
         List<MessageItem> list = new ArrayList<>();
         Document doc = Jsoup.parse(response);
         Elements elements = doc.getElementsByClass("article-lists").select("li");

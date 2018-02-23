@@ -66,12 +66,6 @@ public class XuanJiangTab extends BaseActivity {
     private void initTabLayout(){
         toolbar.setTitle(ResourceUtils.getString(R.string.title_xuangjiang_tab));
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         for(int i = 0;i<list.size();i++){

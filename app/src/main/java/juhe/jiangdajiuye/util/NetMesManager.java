@@ -92,8 +92,8 @@ public class NetMesManager {
     }
 
     public static void setIP(Context mCtx) {
-        HttpConnection connection = new HttpConnection(mCtx);
-        connection.setNetListener(new HttpConnection.NetListener() {
+        HttpManager connection =  new HttpManager(mCtx);
+        connection.setNetListener(new HttpManager.NetListener() {
 
             @Override
             public void success(List<MessageItem> data, int code) {

@@ -23,8 +23,8 @@ import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.dialog.ProgressDialog;
 import juhe.jiangdajiuye.sql.repository.LibraryRepository;
+import juhe.jiangdajiuye.util.HttpManager;
 import juhe.jiangdajiuye.util.ParseUtils;
-import juhe.jiangdajiuye.util.HttpConnection;
 import juhe.jiangdajiuye.util.ResourceUtils;
 
 /** 搜索图书界面
@@ -35,20 +35,20 @@ public class SearchBook extends BaseActivity{
     private final int CANCEL = 0x20 ;
     private Button back;
     private TextView titleTextView,editerTextView,bookMesTextView;
-    private View v,footer;
+    private View headView,footerView;
     private RadioButton collect;
-    private Boolean ischeck = false;
-    private ExpandableListView listview;
+    private Boolean isCheck = false;
+    private ExpandableListView mListView;
     private MyExpandableListAdapter adapter;
     private ProgressDialog myprogress;
     private String TAG = "SearchBook";
-    private String title = "",editer = "",bookMessage = "";
+    private String title ,editer ,bookMessage ;
     private BookBean bookBean ;
     private BookMesBean bookMesBean ;
     public static List<List<String>> list = new ArrayList<>();
     private ParseUtils parseTools =  ParseUtils.getInstance() ;
     private LibraryRepository libraryRepository ;
-
+    private HttpManager connection ;
     private Handler handler = new Handler(){
         public void handleMessage(Message message){
             switch (message.what){
@@ -71,38 +71,14 @@ public class SearchBook extends BaseActivity{
         libraryRepository = LibraryRepository.getInstance() ;
         getParam();
         initView();
+
     }
     public void initView(){
         findId();
         changeView();
-        getSearch();
-    }
-    public void findId(){
-        back = (Button)findViewById(R.id.search_back);
-        listview = (ExpandableListView)findViewById(R.id.search_list);
-        collect = (RadioButton)findViewById(R.id.browse_collect);
-
-        back.setOnClickListener(this);
-        collect.setOnClickListener(this);
-
-        ischeck = libraryRepository.hasURL(bookBean.getUrl());
-        collect.setChecked(ischeck);
-    }
-    /**
-     * 获取参数信息
-     */
-    public void getParam(){
-        Intent intent = getIntent();
-        bookBean = new BookBean();
-        bookBean.setBook(intent.getStringExtra("book"));
-        bookBean.setUrl(intent.getStringExtra("url"));
-        bookBean.setEditor(intent.getStringExtra("editor"));
-        bookBean.setAvailable(intent.getStringExtra("available"));
-        bookBean.setNumber(intent.getStringExtra("number"));
-    }
-    public void getSearch(){
-        HttpConnection connection = new HttpConnection(this);
-        connection.setNetListener(new HttpConnection.NetListener(){
+        connection.get(bookBean.getUrl());
+        connection  =  new HttpManager(this);
+        connection.setNetListener(new HttpManager.NetListener(){
 
             @Override
             public void success(List<MessageItem> data, int code) {
@@ -122,7 +98,29 @@ public class SearchBook extends BaseActivity{
                 handler.sendEmptyMessage(CANCEL);
             }
         });
-        connection.get(bookBean.getUrl());
+    }
+    public void findId(){
+        back = (Button)findViewById(R.id.search_back);
+        mListView = (ExpandableListView)findViewById(R.id.search_list);
+        collect = (RadioButton)findViewById(R.id.browse_collect);
+
+        back.setOnClickListener(this);
+        collect.setOnClickListener(this);
+
+        isCheck = libraryRepository.hasURL(bookBean.getUrl());
+        collect.setChecked(isCheck);
+    }
+    /**
+     * 获取参数信息
+     */
+    public void getParam(){
+        Intent intent = getIntent();
+        bookBean = new BookBean();
+        bookBean.setBook(intent.getStringExtra("book"));
+        bookBean.setUrl(intent.getStringExtra("url"));
+        bookBean.setEditor(intent.getStringExtra("editor"));
+        bookBean.setAvailable(intent.getStringExtra("available"));
+        bookBean.setNumber(intent.getStringExtra("number"));
     }
     public void showDate(){
         findFooter();
@@ -132,17 +130,17 @@ public class SearchBook extends BaseActivity{
         editerTextView.setText(editer);
         bookMessage = bookMesBean.getBookMessage();
         bookMesTextView.setText(bookMessage);
-        listview.addHeaderView(v);
-        listview.addFooterView(footer);
+        mListView.addHeaderView(headView);
+        mListView.addFooterView(footerView);
         adapter = new MyExpandableListAdapter(SearchBook.this,title,list);
-        listview.setAdapter(adapter);
+        mListView.setAdapter(adapter);
     }
     public void findFooter(){
-        v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.library_search_list_header,null);
-        footer = LayoutInflater.from(getApplicationContext()).inflate(R.layout.search_book_footer,null);
-        titleTextView = (TextView)v.findViewById(R.id.library_search_book_message_book);
-        editerTextView = (TextView)v.findViewById(R.id.library_search_book_message_editer);
-        bookMesTextView = (TextView)v.findViewById(R.id.library_search_book_message_bookMessage);
+        headView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.library_search_list_header,null);
+        footerView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.search_book_footer,null);
+        titleTextView = (TextView)headView.findViewById(R.id.library_search_book_message_book);
+        editerTextView = (TextView)headView.findViewById(R.id.library_search_book_message_editer);
+        bookMesTextView = (TextView)headView.findViewById(R.id.library_search_book_message_bookMessage);
     }
 
     @Override
@@ -159,13 +157,13 @@ public class SearchBook extends BaseActivity{
     }
 
     private void showCollect(){
-        if(ischeck){
+        if(isCheck){
             collect.setChecked(false);
         }
-        else if(!ischeck){
+        else if(!isCheck){
             collect.setChecked(true);
         }
-        ischeck = !ischeck;
+        isCheck = !isCheck;
     }
     public void changeView(){
         myprogress = new ProgressDialog(this,R.drawable.waiting);

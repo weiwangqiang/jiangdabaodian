@@ -4,38 +4,38 @@
     <group>
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home_black"
             android:checked="true"
+            android:icon="@drawable/ic_home_black"
             android:title="首界面" />
     </group>
-        <item
-            android:id="@+id/nav_library"
-            android:icon="@drawable/ic_library_black"
-            android:title="图书馆" />
-        <item
-            android:id="@+id/nav_favorite"
-            android:icon="@drawable/ic_favorite_outline_black"
-            android:title="收藏夹" />
-        <item
-            android:id="@+id/nav_xuanjianghui"
-            android:icon="@drawable/ic_edu_black"
-            android:title="宣讲啦" />
-        <item
-            android:id="@+id/nav_game"
-            android:icon="@drawable/ic_game_black"
-            android:title="课间游戏" />
-
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_send_black"
-                android:title="反馈意见" />
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_about_black"
-                android:title="关于" />
     <item
-                android:id="@+id/nav_login"
-                android:icon="@drawable/ic_about_black"
-                android:title="登陆" />
+        android:id="@+id/nav_library"
+        android:icon="@drawable/ic_library_black"
+        android:title="图书馆" />
+    <item
+        android:id="@+id/nav_favorite"
+        android:icon="@drawable/ic_favorite_outline_black"
+        android:title="收藏夹" />
+    <item
+        android:id="@+id/nav_xuanjianghui"
+        android:icon="@drawable/ic_edu_black"
+        android:title="宣讲啦" />
+    <item
+        android:id="@+id/nav_game"
+        android:icon="@drawable/ic_game_black"
+        android:title="课间游戏" />
+
+    <item
+        android:id="@+id/nav_send"
+        android:icon="@drawable/ic_send_black"
+        android:title="反馈意见" />
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/ic_about_black"
+        android:title="关于" />
+    <item
+        android:id="@+id/nav_login"
+        android:icon="@drawable/ic_account_box_black_36dp"
+        android:title="登陆" />
 
 </menu>

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.util.NetWork;
+package juhe.jiangdajiuye.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

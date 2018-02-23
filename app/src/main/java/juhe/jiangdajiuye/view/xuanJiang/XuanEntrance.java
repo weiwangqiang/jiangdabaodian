@@ -34,12 +34,6 @@ public class XuanEntrance extends BaseActivity {
         findId();
         toolbar.setTitle(ResourceUtils.getString(R.string.title_xuanjiang_province));
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         data = new XuanEntranceData();

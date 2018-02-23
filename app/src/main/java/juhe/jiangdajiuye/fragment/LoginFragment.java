@@ -3,6 +3,7 @@ package juhe.jiangdajiuye.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -168,6 +169,7 @@ public class LoginFragment extends BaseTooBarFragment {
 
     private void loginSuccess(UserBean userBean) {
         SharePreferHelper.getInstance().setString(SharePreferHelper.KEY_USER_NAME,userBean.getName());
+        getActivity().setResult(Activity.RESULT_OK);
         finish();
     }
 

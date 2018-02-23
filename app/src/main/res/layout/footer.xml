@@ -13,13 +13,14 @@
             android:id="@+id/footerProgressBar"
             style="@style/CustomProgressStyle"
             android:layout_width="wrap_content"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/footerTitle"
             android:layout_marginRight="8.0dp" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="上拉加载"
+        android:text="@string/recycler_statues_pull_to_load_more"
         android:id="@+id/footerTitle"
         android:textColor="@color/grey_600"
         android:layout_marginLeft="10dp"

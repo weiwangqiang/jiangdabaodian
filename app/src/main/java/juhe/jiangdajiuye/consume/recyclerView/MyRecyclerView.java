@@ -17,26 +17,26 @@ import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
  */
 
 public class MyRecyclerView extends RecyclerView {
-    public static String TAG = "mRecyclerView";
+    public static String TAG = "MyRecyclerView";
 
-    public int getmStatus() {
+    public int getStatus() {
         return mStatus;
     }
 
-    public int mStatus = 0;
+    private int mStatus = 0;
+
     public static final int STATUS_DEFAULT = 0;//不在刷新或者end状态
-    public static final int STATUS_REFRESHING = 1 ;
-    public static final int STATUS_PULLTOREFRESH = 2;
-    public static final int STATUS_LOADMORE = 3;
-    public static final int STATUS_END = 4;
-    public static final int STATUS_ERROR = 5;
+    public static final int STATUS_REFRESHING = 0x10; //正在刷新状态
+    public static final int STATUS_PULL_TO_REFRESH = 0x11;//下拉刷新状态
+    public static final int STATUS_END = 0x12;//没有更多状态
+    public static final int STATUS_ERROR = 0x13;//出错状态
 
     @Override
     public void addOnAttachStateChangeListener(OnAttachStateChangeListener listener) {
 
     }
 
-    public void setmOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
+    public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
         this.mOnLoadMoreListener = mOnLoadMoreListener;
         addOnScrollListener( mOnLoadMoreScrollListener);
     }
@@ -57,7 +57,6 @@ public class MyRecyclerView extends RecyclerView {
     private OnLoadMoreScrollListener mOnLoadMoreScrollListener = new OnLoadMoreScrollListener() {
         @Override
         public void onLoadMore(RecyclerView recyclerView) {
-            Log.i(TAG, "onLoadMore: --------------");
             if (mOnLoadMoreListener != null && mStatus == STATUS_DEFAULT) {
                 mOnLoadMoreListener.onLoadMore();
             }
@@ -71,20 +70,8 @@ public class MyRecyclerView extends RecyclerView {
     public void setStatus(int status){
         mStatus = status ;
         if(getAdapter() instanceof AbsAdapter){
-            switch (status){
-                case STATUS_DEFAULT:
-                    ((AbsAdapter) getAdapter()).stateChange(AbsAdapter.STATUS_DEFAULT);
-                    break;
-                case STATUS_REFRESHING:
-                    ((AbsAdapter) getAdapter()).stateChange(AbsAdapter.STATUS_REFRESHING);
-                    break;
-                case STATUS_END:
-                    ((AbsAdapter) getAdapter()).stateChange(AbsAdapter.STATUS_END);
-                    break;
-                case STATUS_ERROR:
-                    ((AbsAdapter) getAdapter()).stateChange(AbsAdapter.STATUS_ERROR);
-
-            }
+            Log.i(TAG, "setStatus: set state ");
+            ((AbsAdapter) getAdapter()).stateChange(status);
         }
     }
 }

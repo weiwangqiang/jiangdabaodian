@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.bmobAppMes.AppVersionBean;
-import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
+import juhe.jiangdajiuye.util.NetStateUtils;
 import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.versionUpGrade.DownLoadService;
 

@@ -29,12 +29,12 @@ import juhe.jiangdajiuye.view.constant.FileConstant;
  */
 public class IndexView extends BaseActivity {
     private String TAG = "IndexView";
-    private Animation Loadmation;
+    private Animation LoadAnimation;
     private AlphaAnimation start;
     private ScaleAnimation animation;
     private ImageView welcome,loading;
     private Button button;
-    private Boolean isIn = false,isfirst;
+    private Boolean isIn = false,isFirst;
     private SharedPreferences sharedPreferences;
     private int[] image = new int[]{R.drawable.welcome,R.drawable.guide1,
             R.drawable.guide1,R.drawable.guide3};
@@ -46,7 +46,7 @@ public class IndexView extends BaseActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.welcome);
         sharedPreferences = getSharedPreferences("IndexView", Context.MODE_PRIVATE);
-        isfirst = sharedPreferences.getBoolean("first",true);
+        isFirst = sharedPreferences.getBoolean("first",true);
         init();
         UserActionRecordUtils.setComeTime(System.currentTimeMillis());
     }
@@ -55,13 +55,13 @@ public class IndexView extends BaseActivity {
         findId();
         setBootAdvert();
 
-        Loadmation = AnimationUtils.loadAnimation(this,R.anim.loading);//点击跳转后等待的动画
+        LoadAnimation = AnimationUtils.loadAnimation(this,R.anim.loading);//点击跳转后等待的动画
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 button.setVisibility(View.GONE);
                 loading.setVisibility(View.VISIBLE);
-                loading.startAnimation(Loadmation);
+                loading.startAnimation(LoadAnimation);
                 ToMainActivity();
             }
         });
@@ -128,7 +128,7 @@ public class IndexView extends BaseActivity {
         if(!isIn){
             isIn = true;//避免二次跳转
             Intent intent;
-            if(isfirst)
+            if(isFirst)
                 intent = new Intent(IndexView.this,Guide.class);
             else
                 intent = new Intent(IndexView.this,MainActivity.class);
@@ -140,7 +140,7 @@ public class IndexView extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Loadmation.cancel();
+        LoadAnimation.cancel();
         animation.cancel();
     }
 

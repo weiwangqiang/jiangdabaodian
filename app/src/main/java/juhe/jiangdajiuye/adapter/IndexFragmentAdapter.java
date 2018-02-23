@@ -4,13 +4,15 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
 import juhe.jiangdajiuye.bean.MessageItem;
+import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
+import juhe.jiangdajiuye.util.ResourceUtils;
 import juhe.jiangdajiuye.util.SkinManager;
 
 import static juhe.jiangdajiuye.R.id.footerProgressBar;
@@ -18,8 +20,8 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
 
 /**
  * class description here
- *
- *   首页的fragment 的adapter
+ * <p>
+ * 首页的fragment 的adapter
  *
  * @author wangqiang
  * @since 2017-08-08
@@ -27,21 +29,22 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
 
 public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
 
-    public mItemViewHodler itemViewHodler ;
-    public mFooterViewHolder footerViewHolder ;
-    private Context mCtx ;
+    private static final String TAG = "IndexFragmentAdapter";
+    private mFooterViewHolder footerViewHolder;
+    private Context mCtx;
+    private OnItemClickListener itemClickListener;
+
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
-    public OnItemClickListener itemClickListener ;
-    public interface  OnItemClickListener{
+    public interface OnItemClickListener {
         void OnItemClick(MessageItem item);
     }
 
-    public IndexFragmentAdapter(Context mCtx ,@LayoutRes int layout) {
+    public IndexFragmentAdapter(Context mCtx, @LayoutRes int layout) {
         super(layout);
-        this.mCtx = mCtx ;
+        this.mCtx = mCtx;
     }
 
     /**
@@ -53,7 +56,8 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
     @NonNull
     @Override
     public ItemViewHolder getItemViewHolder(ViewGroup parent) {
-        return new mItemViewHodler(SkinManager.inflater(mCtx,mLayout));
+        Log.i(TAG, "getItemViewHolder: ");
+        return new mItemViewHolder(SkinManager.inflater(mCtx, mLayout));
     }
 
     /**
@@ -65,10 +69,13 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
     @NonNull
     @Override
     public FooterViewHolder getFooterViewHolder(ViewGroup parent) {
-        if(footerViewHolder == null)
+        Log.i(TAG, "getFooterViewHolder: ");
+        if (footerViewHolder == null){
             footerViewHolder = new mFooterViewHolder(SkinManager.inflater(mCtx,
-                    R.layout.footer,parent,false));
-        return footerViewHolder ;
+                    R.layout.footer, parent, false));
+            stateChange(mStatus);
+        }
+        return footerViewHolder;
     }
 
     /**
@@ -80,35 +87,34 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
      */
     @Override
     public void bindItemViewHolder(RecyclerView.ViewHolder holder, int position, final MessageItem data) {
-        if(!(holder instanceof mItemViewHodler)) return;
-        try{
-            ((mItemViewHodler)holder).title.setText(data.getTitle());
-            ((mItemViewHodler)holder).time.setText(data.getTime());
-            if(null != data.getLocate()){
-                ((mItemViewHodler)holder).place.setVisibility(View.VISIBLE);
-                ((mItemViewHodler)holder).place.setText(data.getLocate());
+        if (!(holder instanceof mItemViewHolder)) return;
+        try {
+            ((mItemViewHolder) holder).title.setText(data.getTitle());
+            ((mItemViewHolder) holder).time.setText(data.getTime());
+            if (null != data.getLocate()) {
+                ((mItemViewHolder) holder).place.setVisibility(View.VISIBLE);
+                ((mItemViewHolder) holder).place.setText(data.getLocate());
             }
-            if(data.getTheme() != null){
-                ((mItemViewHodler)holder).company.setText(data.getTheme());
-                ((mItemViewHodler)holder).company.setVisibility(View.VISIBLE);
+            if (data.getTheme() != null) {
+                ((mItemViewHolder) holder).company.setText(data.getTheme());
+                ((mItemViewHolder) holder).company.setVisibility(View.VISIBLE);
+            } else if (data.getFrom() != null) {
+                ((mItemViewHolder) holder).company.setText(data.getFrom());
+                ((mItemViewHolder) holder).company.setVisibility(View.VISIBLE);
             }
-            else if(data.getFrom() != null){
-                ((mItemViewHodler)holder).company.setText(data.getFrom());
-                ((mItemViewHodler)holder).company.setVisibility(View.VISIBLE);
-            }
-            if(data.getIndustry()!= null){
-                ((mItemViewHodler)holder).work.setVisibility(View.VISIBLE);
-                ((mItemViewHodler)holder).work.setText(data.getIndustry());
+            if (data.getIndustry() != null) {
+                ((mItemViewHolder) holder).work.setVisibility(View.VISIBLE);
+                ((mItemViewHolder) holder).work.setText(data.getIndustry());
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        ((mItemViewHodler)holder).root.setOnClickListener(new View.OnClickListener() {
+        ((mItemViewHolder) holder).root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(null!= itemClickListener );
-                    itemClickListener.OnItemClick(data);
+                if (null != itemClickListener) ;
+                itemClickListener.OnItemClick(data);
             }
         });
     }
@@ -123,56 +129,67 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
     @Override
     public void bindFooterViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position != 0)
-            ((FooterViewHolder)holder).root.setVisibility(View.VISIBLE);
+            ((FooterViewHolder) holder).root.setVisibility(View.VISIBLE);
         else
-            ((FooterViewHolder)holder).root.setVisibility(View.INVISIBLE);
+            ((FooterViewHolder) holder).root.setVisibility(View.INVISIBLE);
 
     }
 
-    public class mItemViewHodler extends ItemViewHolder{
-        TextView title,time,place,company,work;
-        private mItemViewHodler(View itemView) {
+    public class mItemViewHolder extends ItemViewHolder {
+        TextView title, time, place, company, work;
+
+        private mItemViewHolder(View itemView) {
             super(itemView);
             root = getView(R.id.card_view);
             title = (TextView) getView(R.id.title);
             time = (TextView) getView(R.id.time);
-            place = (TextView)getView(R.id.place);
-            company = (TextView)getView(R.id.company);
-            work = (TextView)getView(R.id.work);
+            place = (TextView) getView(R.id.place);
+            company = (TextView) getView(R.id.company);
+            work = (TextView) getView(R.id.work);
             place.setVisibility(View.GONE);
             company.setVisibility(View.GONE);
             work.setVisibility(View.GONE);
         }
     }
-    public class mFooterViewHolder extends FooterViewHolder{
+
+    public class mFooterViewHolder extends FooterViewHolder {
         public TextView tv;
-        public View progressBar ;
+        public View progressBar;
+
         public mFooterViewHolder(View itemView) {
             super(itemView);
             tv = (TextView) getView(R.id.footerTitle);
             progressBar = getView(footerProgressBar);
         }
     }
+
     @Override
-    public void stateChange(int state) {
-        if(footerViewHolder == null) return;
-        switch (state){
+    public void stateChange(int status) {
+        Log.i(TAG, "stateChange: ");
+        mStatus = status ;
+        if (footerViewHolder == null) {
+            Log.i(TAG, "stateChange: footer holder is null ");
+            return;
+        }
+        switch (status) {
             case STATUS_DEFAULT:
-                footerViewHolder.tv.setText("上拉加载更多");
+                footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_pull_to_load_more));
                 footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case STATUS_REFRESHING:
-                footerViewHolder.tv.setText("正在加载");
+                footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_loading));
                 footerViewHolder.progressBar.setVisibility(View.VISIBLE);
-
                 break;
             case STATUS_END:
-                footerViewHolder.tv.setText("没有更多了");
+                Log.i(TAG, "stateChange: end and not any more ");
+                footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_not_any_more));
                 footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case STATUS_ERROR:
-                footerViewHolder.tv.setText("网络出错，请连接后再试");
+                footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_network_error));
                 footerViewHolder.progressBar.setVisibility(View.GONE);
+                break;
+            default:
                 break;
         }
     }

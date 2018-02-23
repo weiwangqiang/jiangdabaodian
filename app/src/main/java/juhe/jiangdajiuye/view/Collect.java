@@ -37,12 +37,12 @@ import juhe.jiangdajiuye.util.ToastUtils;
 public class Collect extends BaseActivity {
     private String TAG = "fragmentCollect";
     private Boolean first = true;
-    public SlipRecyclerView recyclerView;
+    private SlipRecyclerView recyclerView;
     private Toolbar toolbar;
     private View nothing;
     private LinearLayoutManager manager;
-    public CollectRecyclerViewAdapter adapter;
-    public List<MessageItem> data = new ArrayList<>();
+    private CollectRecyclerViewAdapter adapter;
+    private List<MessageItem> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,19 +147,19 @@ public class Collect extends BaseActivity {
         });
     }
 
-    public void initView() {
+    private void initView() {
         findId();
         initList();
         initToolbar();
     }
 
-    public void findId() {
+    private void findId() {
         recyclerView = (SlipRecyclerView) findViewById(R.id.Collect_listView);
         toolbar = (Toolbar) findViewById(R.id.Collect_toolbar);
         nothing = findViewById(R.id.nothing);
     }
 
-    public void initList() {
+    private void initList() {
         initDate();
         adapter = new CollectRecyclerViewAdapter(this, R.layout.main_list_item, data);
         manager = new LinearLayoutManager(this);
@@ -182,14 +182,14 @@ public class Collect extends BaseActivity {
         });
     }
 
-    public void initToolbar() {
+    private void initToolbar() {
         toolbar.setTitle(ResourceUtils.getString(R.string.title_collect));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-    public void initDate() {
+    private void initDate() {
         data.clear();
         data.addAll( CollectRepository.getInstance().selectAll());
         first = false;
@@ -251,27 +251,6 @@ public class Collect extends BaseActivity {
             return true;
         }
         return super.onCreateOptionsMenu(menu);
-    }
-
-    /**
-     * Prepare the Screen's standard options menu to be displayed.  This is
-     * called right before the menu is shown, every time it is shown.  You can
-     * use this method to efficiently enable/disable items or otherwise
-     * dynamically modify the contents.
-     * <p>
-     * <p>The default implementation updates the system menu items based on the
-     * activity's state.  Deriving classes should always call through to the
-     * base class implementation.
-     *
-     * @param menu The options menu as last shown or first initialized by
-     *             onCreateOptionsMenu().
-     * @return You must return true for the menu to be displayed;
-     * if you return false it will not be shown.
-     * @see #onCreateOptionsMenu
-     */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
     }
 
 }

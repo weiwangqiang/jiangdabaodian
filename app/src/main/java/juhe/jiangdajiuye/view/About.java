@@ -25,6 +25,8 @@ public class About extends BaseActivity {
     private static final String TAG = "About";
     private Toolbar toolbar;
     private TextView textViewUp;
+    private boolean isClick = false;
+    private TextView currentVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +49,6 @@ public class About extends BaseActivity {
         initToolbar();
     }
 
-    public boolean isClick = false;
-
     public void checkUpData(View view) {
         if (!isClick) {
             BmobCheckUpgrade.checkUpgrade();
@@ -70,19 +70,12 @@ public class About extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-    private TextView currentVersion;
-
     public void findId() {
         toolbar = (Toolbar) findViewById(R.id.aboute_toolbar);
         textViewUp = (TextView) findViewById(R.id.textViewUp);
         currentVersion = (TextView) findViewById(R.id.currentVersion);
-        String s = "";
-        try {
-            s = ResourceUtils.getString(R.string.current_version) + AppConfigUtils.getVersionName();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        currentVersion.setText(s);
+        currentVersion.setText(ResourceUtils.getString(R.string.current_version)
+                + AppConfigUtils.getVersionName());
     }
 
     @Override

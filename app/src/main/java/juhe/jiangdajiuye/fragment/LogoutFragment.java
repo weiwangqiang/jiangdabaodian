@@ -1,5 +1,6 @@
 package juhe.jiangdajiuye.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -91,6 +92,7 @@ public class LogoutFragment extends BaseTooBarFragment implements View.OnClickLi
         switch (v.getId()){
             case R.id.fragment_logout_button:
                 UserManager.getInStance().setLogout();
+                getActivity().setResult(Activity.RESULT_CANCELED);
                 finish();
                 break;
         }

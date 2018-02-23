@@ -13,7 +13,7 @@ import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.InstallationListener;
 import cn.bmob.v3.exception.BmobException;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.util.NetWork.NetStateUtils;
+import juhe.jiangdajiuye.util.NetStateUtils;
 
 /**
  * class description here

@@ -43,6 +43,7 @@
                     android:ems="10"
                     android:background="@drawable/white_shape"
                     android:layout_weight="1"
+                    android:imeOptions="actionGo|actionSearch|actionDone"
                     android:drawablePadding="10dp"
                     android:drawableLeft="@drawable/search_icn"
                     android:drawableRight="@drawable/delete_button"

@@ -49,7 +49,7 @@ public class Browse extends BaseActivity {
     private String TAG = "WebBrowse";
     private Boolean isCollect = false;//记录是否处于收藏状态
     private WebView webView;
-    private ProgressDialog myprogress;
+    private ProgressDialog myProgress;
     private Dialog dialog;
     private ShareDialog sharedialog;
     private String APP_ID = "1105550872";
@@ -85,8 +85,8 @@ public class Browse extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.browse);
         collectRepository = CollectRepository.getInstance();
-        myprogress = new ProgressDialog(this, R.drawable.waiting);
-        myprogress.show();
+        myProgress = new ProgressDialog(this, R.drawable.waiting);
+        myProgress.show();
         init();
         findId();
         initToolbar();
@@ -163,7 +163,7 @@ public class Browse extends BaseActivity {
                 // MainActivity.this.setProgress(newProgress * 100);
                 if (newProgress == 100) {
                     webView.setVisibility(View.VISIBLE);
-                    myprogress.cancel();
+                    myProgress.cancel();
                 }
             }
         });
@@ -206,6 +206,12 @@ public class Browse extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 
     public int SendCalendarCode = 0x12;

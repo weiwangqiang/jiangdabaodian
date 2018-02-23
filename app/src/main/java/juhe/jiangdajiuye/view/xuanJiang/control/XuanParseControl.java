@@ -1,8 +1,6 @@
 package juhe.jiangdajiuye.view.xuanJiang.control;
 
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +8,8 @@ import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
 import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 import juhe.jiangdajiuye.view.xuanJiang.parse.ParseHangZou;
-import juhe.jiangdajiuye.view.xuanJiang.parse.ParseShangHai;
 import juhe.jiangdajiuye.view.xuanJiang.parse.ParseJiangSu;
+import juhe.jiangdajiuye.view.xuanJiang.parse.ParseShangHai;
 
 /**
  * class description here
@@ -29,7 +27,6 @@ public class XuanParseControl {
         return instance ;
     }
     public List<MessageItem> parse(String result , XuanJiangMesHolder holder){
-        Log.i(TAG, "parse: ---------------------");
         switch (holder.getProvinceId()){
             case XuanEntranceData.JIANGSU:
                 return ParseJiangSu.getInstance().parse(result,holder);
