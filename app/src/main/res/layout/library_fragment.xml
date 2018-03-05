@@ -34,7 +34,7 @@
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal"
                 >
-                <juhe.jiangdajiuye.tool.MyEdit
+                <juhe.jiangdajiuye.consume.MyEdit
                     android:id="@+id/library_edit"
                     android:layout_width="match_parent"
                     android:layout_margin="8dp"
@@ -43,8 +43,9 @@
                     android:ems="10"
                     android:background="@drawable/white_shape"
                     android:layout_weight="1"
-                    android:imeOptions="actionGo|actionSearch|actionDone"
+                    android:imeOptions="actionGo|actionSearch|actionDone|actionNext"
                     android:drawablePadding="10dp"
+                    android:lines="1"
                     android:drawableLeft="@drawable/search_icn"
                     android:drawableRight="@drawable/delete_button"
                     android:hint="输入检索词"

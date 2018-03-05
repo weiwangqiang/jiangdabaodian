@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import juhe.jiangdajiuye.bean.MessageItem;
 
 /**
  * Created by wangqiang on 2016/10/12.
+ *
+ * 使用数据库要开启事务
  */
 public class CollectSqlHelper extends SQLiteOpenHelper {
     private String TAG = "CollectSqlHelper";
@@ -59,8 +62,9 @@ public class CollectSqlHelper extends SQLiteOpenHelper {
         cv.put(MessageItem.keyVal.locate, messageItem.getLocate());
         cv.put(MessageItem.keyVal.time, messageItem.getTime());
         cv.put(MessageItem.keyVal.url, messageItem.getUrl());
-        long result = getWritableDatabase().insert(MessageItem.keyVal.tableName, MessageItem.keyVal.title, cv);
-
+        SQLiteDatabase db = startTransaction(true) ;
+        long result = db.insert(MessageItem.keyVal.tableName, MessageItem.keyVal.title, cv);
+        endTransaction(db);
         return result > 0 ? true : false  ;
     }
 
@@ -72,7 +76,8 @@ public class CollectSqlHelper extends SQLiteOpenHelper {
     }
     public List<MessageItem> selectAll() {
         ArrayList<MessageItem> list = new ArrayList<>();
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + MessageItem.keyVal.tableName, null);
+        SQLiteDatabase db = startTransaction(false);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + MessageItem.keyVal.tableName, null);
         while (cursor.moveToNext()) {
             MessageItem messageItem = new MessageItem() ;
             messageItem.setTitle(cursor.getString(0));
@@ -89,14 +94,17 @@ public class CollectSqlHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        endTransaction(db);
         return list;
     }
 
     public boolean contain(MessageItem messageItem) {
         if(null == messageItem) return false ;
+        SQLiteDatabase db = startTransaction(false);
         String url = messageItem.getUrl() ;
+
         if (url == null || url.length() == 0) return false;
-        Cursor cursor = getReadableDatabase().rawQuery("select * from " +
+        Cursor cursor = db.rawQuery("select * from " +
                         MessageItem.keyVal.tableName + " where "
                         + MessageItem.keyVal.url + " =?",
                 new String[]{url});
@@ -106,6 +114,7 @@ public class CollectSqlHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        endTransaction(db);
         return has;
     }
 
@@ -113,6 +122,23 @@ public class CollectSqlHelper extends SQLiteOpenHelper {
         if(null == messageItem) return;
         String where = MessageItem.keyVal.url + "=?";
         String[] value = {messageItem.getUrl()};
-        getWritableDatabase().delete(MessageItem.keyVal.tableName, where, value);
+        SQLiteDatabase db = startTransaction(false);
+        db.delete(MessageItem.keyVal.tableName, where, value);
+        endTransaction(db);
+    }
+    @NonNull
+    private SQLiteDatabase startTransaction(boolean writable) {
+        SQLiteDatabase db ;
+        if(writable){
+            db = getWritableDatabase() ;
+        }else{
+            db = getReadableDatabase();
+        }
+        db.beginTransaction(); //使用事务
+        return db;
+    }
+    private void endTransaction(SQLiteDatabase db) {
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 }

@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.GameAdapter;
+import juhe.jiangdajiuye.view.adapter.GameAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.dialog.ShareDialog;
+import juhe.jiangdajiuye.view.dialog.ShareDialog;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 
 

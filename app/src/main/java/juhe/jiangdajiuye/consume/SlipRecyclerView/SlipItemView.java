@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.util.ScreenSizeUtils;
+import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.ScreenSizeUtils;
 
 /**
  * class description here

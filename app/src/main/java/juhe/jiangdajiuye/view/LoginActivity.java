@@ -5,8 +5,8 @@ import android.view.View;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.fragment.LoginFragment;
-import juhe.jiangdajiuye.fragment.LogoutFragment;
+import juhe.jiangdajiuye.view.fragment.LoginFragment;
+import juhe.jiangdajiuye.view.fragment.LogoutFragment;
 import juhe.jiangdajiuye.user.UserManager;
 
 

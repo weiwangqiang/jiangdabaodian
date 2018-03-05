@@ -17,54 +17,62 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.SearchLibraryAdapter;
+import juhe.jiangdajiuye.view.adapter.SearchLibraryAdapter;
 import juhe.jiangdajiuye.bean.BookBean;
-import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.dialog.ProgressDialog;
-import juhe.jiangdajiuye.util.HttpManager;
-import juhe.jiangdajiuye.util.ParseUtils;
-import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.util.ToastUtils;
+import juhe.jiangdajiuye.view.dialog.ProgressDialog;
+import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
+import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
+import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
+import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
 
 /**
  * Created by wangqiang on 2016/10/6.
  */
 public class Library extends BaseActivity implements
         Toolbar.OnMenuItemClickListener, OnLoadMoreListener {
-    public EditText edit;
+    private EditText edit;
     private String TAG = "fragmentLibrary";
-    public ExecutorService service;
-
-    private int mPage = 1;
-    private String mTitle = "";
-    private int totalPage = 0;//搜索返回的结果数
-    public TextView search;
+    private int currentPage = 1;
+    private int totalNum = 0;//搜索返回的结果数
+    private String mTitle;
+    private TextView search;
     private ProgressDialog mProgress;
-    public MyRecyclerView recyclerView;
-    private LinearLayoutManager manager;
+    private MyRecyclerView recyclerView;
     private Toolbar toolbar;
     private InputMethodManager imm;
     private SearchLibraryAdapter adapter;
-    private HttpManager connection;
-    private ParseUtils parseTools = ParseUtils.getInstance();
-    public static String url = "http://huiwen.ujs.edu.cn:8080/opac/openlink.php?" +
+    private HttpHelper httpHelper ;
+    private static String url = "http://huiwen.ujs.edu.cn:8080/opac/openlink.php?" +
             "location=ALL&doctype=ALL&lang_code=ALL&match_flag=forward" +
             "&displaypg=10&showmode=list&orderby=DESC&sort=CATA_DATE&onlylendable=no";
+    private IDataListener iDataListener = new IDataListener<List<BookBean>>() {
 
+        @Override
+        public void onSuccess(List<BookBean> bookBeans) {
+            upData(bookBeans);
+            currentPage++;
+            mProgress.cancel();
+        }
+
+        @Override
+        public void onFail(Exception exception, int responseCode) {
+            recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+            ToastUtils.showToast(ResourceUtils.getString(R.string.toast_network_error));
+            mProgress.cancel();
+        }
+    } ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.library_fragment);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         initView();
     }
 
@@ -86,14 +94,13 @@ public class Library extends BaseActivity implements
 
     public void initList() {
         adapter = new SearchLibraryAdapter(this, R.layout.library_listitem);
-        manager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         recyclerView.setOnLoadMoreListener(this);
         adapter.setOnItemClickListener(new SearchLibraryAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(BookBean data) {
-                Intent intent = new Intent(Library.this, SearchBook.class);
+                Intent intent = new Intent(Library.this, LibraryDetails.class);
                 intent.putExtra("url", data.getUrl());
                 intent.putExtra("book", data.getBook());
                 intent.putExtra("editor", data.getEditor());
@@ -107,12 +114,26 @@ public class Library extends BaseActivity implements
         edit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                switch (actionId){
+                switch (actionId) {
                     case EditorInfo.IME_ACTION_SEND:
+                    case EditorInfo.IME_ACTION_NEXT:
                     case EditorInfo.IME_ACTION_SEARCH:
                     case EditorInfo.IME_ACTION_GO:
+                        Log.i(TAG, "onEditorAction: action id ");
                         prepareSearch(v);
+                        return true ;
+                    default:
                         break;
+                }
+                if (event == null) {
+                    return false;
+                }
+                switch (event.getKeyCode()) {
+                    case KeyEvent.KEYCODE_ENTER:
+                    case KeyEvent.ACTION_DOWN:
+                        prepareSearch(v);
+                        Log.i(TAG, "onEditorAction: key code ");
+                        return true  ;
                 }
                 return false;
             }
@@ -142,34 +163,7 @@ public class Library extends BaseActivity implements
 
     public void setLister() {
         search.setOnClickListener(this);
-        connection = new HttpManager(this);
-        connection.setNetListener(new HttpManager.NetListener() {
-            @Override
-            public void success(List<MessageItem> data, int code) {
-
-            }
-
-            @Override
-            public void success(final String response, int code) {
-                if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
-                    service.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            totalPage = parseTools.parseSearchNumber(response);
-                        }
-                    });
-                }
-                upData(parseTools.parseSearch(response));
-            }
-
-            @Override
-            public void failure(Exception e, String Error, int code) {
-                e.printStackTrace();
-                recyclerView.setStatus(MyRecyclerView.STATUS_ERROR);
-                ToastUtils.showToast(ResourceUtils.getString(R.string.toast_network_error));
-                mProgress.cancel();
-            }
-        });
+        httpHelper = HttpHelper.getInstance() ;
     }
 
     public void initToolbar() {
@@ -194,7 +188,12 @@ public class Library extends BaseActivity implements
     private void prepareSearch(View view) {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
         if (edit.getText().length() == 0) {
+            //数据为null
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_input_warn));
+            return;
+        }
+        if(recyclerView.getStatus() != MyRecyclerView.STATUS_DEFAULT){
+            //处于获取数据状态
             return;
         }
         mTitle = edit.getText().toString();
@@ -205,7 +204,7 @@ public class Library extends BaseActivity implements
 
     public void searchBook() {
         if (recyclerView.getStatus() != MyRecyclerView.STATUS_PULL_TO_REFRESH) {
-            if ((mPage * 10) >= totalPage && adapter.getDataSize() != 0) {
+            if ((currentPage * 10) >= totalNum && adapter.getDataSize() != 0) {
                 recyclerView.setStatus(MyRecyclerView.STATUS_END);
                 ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_content_not_more));
                 return;
@@ -213,35 +212,37 @@ public class Library extends BaseActivity implements
         }
         //解决中文乱码问题
 //        HttpUrl parsed = HttpUrl.parse(getUrl());
-
-        connection.get(getUrl());
+        httpHelper.get(getUrl(),null,iDataListener, HttpTask.Type.book);
     }
-
+    //显示进度条
     public void showProgress() {
-        mProgress = new ProgressDialog(this, R.drawable.waiting);
+        if(null == mProgress){
+            mProgress = new ProgressDialog(this, R.drawable.waiting);
+        }
         mProgress.show();
     }
-
-    public void upData(List<BookBean> d) {
-        if (d.size() == 0) {
+    //更新当前数据
+    public void upData(List<BookBean> data) {
+        if (data.size() == 0) {
             if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
                 ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_can_not_search_book));
                 mProgress.cancel();
                 recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
-            } else
+            } else{
                 recyclerView.setStatus(MyRecyclerView.STATUS_END);
+            }
             return;
         }
+        totalNum = data.get(0).getTotalNum() ; //获取搜索结果的数量
+        Log.i(TAG, "upData: "+totalNum);
         if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
-            adapter.upDate(d);
+            adapter.upDate(data);
             recyclerView.scrollToPosition(0);
         } else {
-            adapter.appendDate(d);
+            adapter.appendDate(data);
         }
-        mPage++;
-        mProgress.cancel();
-        if (totalPage != 0 && (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH)
-                && adapter.getDataSize() >= totalPage) {
+        if (totalNum != 0 && (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH)
+                && adapter.getDataSize() >= totalNum) {
             recyclerView.setStatus(MyRecyclerView.STATUS_END);
             return;
         }
@@ -250,9 +251,9 @@ public class Library extends BaseActivity implements
 
     public String getUrl() {
         if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
-            mPage = 1;
+            currentPage = 1;
         }
-        return url + "&page=" + mPage + "&title=" + mTitle;
+        return url + "&page=" + currentPage + "&title=" + mTitle;
     }
 
     @Override

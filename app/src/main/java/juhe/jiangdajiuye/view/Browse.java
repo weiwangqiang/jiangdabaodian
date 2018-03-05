@@ -34,11 +34,11 @@ import java.util.Calendar;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.dialog.ProgressDialog;
-import juhe.jiangdajiuye.dialog.ShareDialog;
+import juhe.jiangdajiuye.view.dialog.ProgressDialog;
+import juhe.jiangdajiuye.view.dialog.ShareDialog;
 import juhe.jiangdajiuye.sql.repository.CollectRepository;
-import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.util.ToastUtils;
+import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 
 /**
@@ -46,17 +46,21 @@ import juhe.jiangdajiuye.view.constant.AppConstant;
  * 浏览器界面
  */
 public class Browse extends BaseActivity {
+    private static final String WEI_ID = "wxc306137ab1a20319";
+    private static int VISIT_MESSAGE_ITEM = 0x1;
+    private static int VISIT_CALENDER = 0x2;
+    private static int visitKind = VISIT_MESSAGE_ITEM;
+    private int SendCalendarCode = 0x12;
     private String TAG = "WebBrowse";
+    private String APP_ID = "1105550872";
     private Boolean isCollect = false;//记录是否处于收藏状态
     private WebView webView;
     private ProgressDialog myProgress;
     private Dialog dialog;
     private ShareDialog sharedialog;
-    private String APP_ID = "1105550872";
     private Tencent tencent;
     private baseUiLister baseuiLister;
     //微信
-    private static final String WEI_ID = "wxc306137ab1a20319";
     private IWXAPI api;
     private WXWebpageObject webpager;
     private WXMediaMessage message;
@@ -69,12 +73,27 @@ public class Browse extends BaseActivity {
      * @param item    消息列表
      */
     public static void StartActivity(Context context, MessageItem item) {
+        visitKind = VISIT_MESSAGE_ITEM ;
         Intent intent = new Intent(context, Browse.class);
         intent.putExtra(MessageItem.keyVal.url, item.getUrl());
         intent.putExtra(MessageItem.keyVal.title, item.getTitle());
         intent.putExtra(MessageItem.keyVal.time, item.getTime());
         intent.putExtra(MessageItem.keyVal.from, item.getFrom());
         intent.putExtra(MessageItem.keyVal.locate, item.getLocate());
+        context.startActivity(intent);
+        if (context instanceof Activity)
+           ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
+
+    /**
+     * 只是打开一个链接
+     * @param context
+     * @param url
+     */
+    public static void StartActivity(Context context ,String url){
+        visitKind = VISIT_CALENDER ;
+        Intent intent = new Intent(context,Browse.class);
+        intent.putExtra("url",url);
         context.startActivity(intent);
         if (context instanceof Activity)
             ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
@@ -97,10 +116,15 @@ public class Browse extends BaseActivity {
     private Toolbar toolbar;
 
     public void initToolbar() {
-        toolbar.setTitle("");
+        if(visitKind == VISIT_MESSAGE_ITEM){
+            toolbar.setTitle(ResourceUtils.getString(R.string.title_browse_message));
+        }else if(visitKind == VISIT_CALENDER){
+            toolbar.setTitle(ResourceUtils.getString(R.string.title_browse_calender));
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ;
     }
 
     private void init() {
@@ -130,12 +154,16 @@ public class Browse extends BaseActivity {
     public void initParams() {
         Intent intent = getIntent();
         messageItem = new MessageItem();
-        messageItem.setUrl(intent.getStringExtra(MessageItem.keyVal.url));
-        messageItem.setTitle(intent.getStringExtra(MessageItem.keyVal.title));
-        messageItem.setTime(intent.getStringExtra(MessageItem.keyVal.time));
-        messageItem.setFrom(intent.getStringExtra(MessageItem.keyVal.from));
-        messageItem.setLocate(intent.getStringExtra(MessageItem.keyVal.locate));
-        isCollect = collectRepository.contain(messageItem);
+        if(visitKind == VISIT_MESSAGE_ITEM){
+            messageItem.setUrl(intent.getStringExtra(MessageItem.keyVal.url));
+            messageItem.setTitle(intent.getStringExtra(MessageItem.keyVal.title));
+            messageItem.setTime(intent.getStringExtra(MessageItem.keyVal.time));
+            messageItem.setFrom(intent.getStringExtra(MessageItem.keyVal.from));
+            messageItem.setLocate(intent.getStringExtra(MessageItem.keyVal.locate));
+            isCollect = collectRepository.contain(messageItem);
+        }else if(visitKind == VISIT_CALENDER){
+            messageItem.setUrl(intent.getStringExtra("url"));
+        }
     }
 
     public void initWeb(String url) {
@@ -148,6 +176,7 @@ public class Browse extends BaseActivity {
         wSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);//适应屏幕，内容将自动缩放
         wSet.setLoadWithOverviewMode(true);
         wSet.setUseWideViewPort(true);
+        wSet.setAllowFileAccess(false);
         webView.loadUrl(url);
 //        webView.setInitialScale(100);   //100代表不缩放
         webView.setWebViewClient(new WebViewClient() {
@@ -171,7 +200,9 @@ public class Browse extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.browseitem, menu);
+        if(visitKind == VISIT_MESSAGE_ITEM){
+            getMenuInflater().inflate(R.menu.browseitem, menu);
+        }
         return true;
     }
 
@@ -180,11 +211,13 @@ public class Browse extends BaseActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        collectTitle.setLength(0);
-        collectTitle.append(isCollect ?
-                ResourceUtils.getString(R.string.cancel_collect) :
-                ResourceUtils.getString(R.string.collect));
-        menu.findItem(R.id.browse_collect).setTitle(collectTitle.toString());
+        if(visitKind == VISIT_MESSAGE_ITEM){
+            collectTitle.setLength(0);
+            collectTitle.append(isCollect ?
+                    ResourceUtils.getString(R.string.cancel_collect) :
+                    ResourceUtils.getString(R.string.collect));
+            menu.findItem(R.id.browse_collect).setTitle(collectTitle.toString());
+        }
         return true;
     }
 
@@ -207,15 +240,6 @@ public class Browse extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
-
-    public int SendCalendarCode = 0x12;
-
     /**
      * 添加到日历中
      */
@@ -249,11 +273,11 @@ public class Browse extends BaseActivity {
             int hourE = 0;
             int minuteE = 0;
             if (times.length == 3) {//没有 hh:mm:ss
-            } else if (times.length == 5) {
+            } else if (times.length <=6) {
                 //只有开始时间 的hh:mm:ss
                 hourS = Integer.parseInt(times[3]);
                 minuteS = Integer.parseInt(times[4]);
-            } else {
+            } else if(times.length >=7) {
                 //有具体时间段 hh:mm:ss - hh:mm:ss
                 hourS = Integer.parseInt(times[3]);
                 minuteS = Integer.parseInt(times[4]);
@@ -402,10 +426,4 @@ public class Browse extends BaseActivity {
         }
         Tencent.onActivityResultData(requestCode, resultCode, data, baseuiLister);
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
 }

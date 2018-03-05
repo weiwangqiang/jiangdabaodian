@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.ViewPagerAdapter;
+import juhe.jiangdajiuye.view.adapter.ViewPagerAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
 
 /**

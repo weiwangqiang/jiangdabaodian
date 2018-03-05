@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import juhe.jiangdajiuye.tool.MyExceptionHolder;
+import juhe.jiangdajiuye.consume.MyExceptionHolder;
 
 /**
  * Created by wangqiang on 2017/4/23.

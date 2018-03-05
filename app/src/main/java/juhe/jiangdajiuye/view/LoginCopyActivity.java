@@ -36,8 +36,8 @@ import juhe.jiangdajiuye.bean.bmobUser.UserBean;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.sql.SharePreferHelper;
 import juhe.jiangdajiuye.user.UserManager;
-import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.util.ToastUtils;
+import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
 
 
 /**

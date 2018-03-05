@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.util.ToastUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.view.LoginActivity;
 
 /**
@@ -83,7 +82,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     //通用的启动activity动画
     protected void startActivitySlideInRight(Context mCtx , Class target) {
         if(target.equals(LoginActivity.class)){
-            Log.i(TAG, "startActivitySlideInRight: ");
             startActivityForResult(new Intent(mCtx, target),REQUESTCODE_GETLOGIN_RESULT);
         }else{
             startActivity(new Intent(mCtx, target));

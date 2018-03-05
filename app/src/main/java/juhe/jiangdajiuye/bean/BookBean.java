@@ -26,6 +26,15 @@ public class BookBean extends BmobObject {
     private  String available;
     private  String number ;
 
+    public int getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(int totalNum) {
+        this.totalNum = totalNum;
+    }
+
+    private int totalNum;//返回的搜索结果数量
     public String getBook() {
         return book;
     }

@@ -18,7 +18,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListListener;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.CollectRecyclerViewAdapter;
+import juhe.jiangdajiuye.view.adapter.CollectRecyclerViewAdapter;
 import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.bean.bmobUser.UserBean;
 import juhe.jiangdajiuye.consume.SlipRecyclerView.SlipItemClickListener;
@@ -27,8 +27,8 @@ import juhe.jiangdajiuye.consume.recyclerView.LibraryCollectDecoration;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.sql.repository.CollectRepository;
 import juhe.jiangdajiuye.user.UserManager;
-import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.util.ToastUtils;
+import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
 
 /**
  * Created by wangqiang on 2016/10/6.

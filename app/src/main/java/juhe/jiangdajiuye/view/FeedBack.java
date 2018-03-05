@@ -14,10 +14,10 @@ import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.LeaveMes;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.dialog.ProgressDialog;
-import juhe.jiangdajiuye.util.AppConfigUtils;
-import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.util.ToastUtils;
+import juhe.jiangdajiuye.view.dialog.ProgressDialog;
+import juhe.jiangdajiuye.utils.AppConfigUtils;
+import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
 
 /**
  * Created by wangqiang on 2016/10/6.

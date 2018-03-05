@@ -14,16 +14,15 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
+import juhe.jiangdajiuye.view.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
-import juhe.jiangdajiuye.util.HttpManager;
-import juhe.jiangdajiuye.util.HttpWorker.HttpHelper;
-import juhe.jiangdajiuye.util.HttpWorker.HttpTask;
-import juhe.jiangdajiuye.util.HttpWorker.Inter.IDataListener;
-import juhe.jiangdajiuye.util.ToastUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
+import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
+import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
+import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
 import juhe.jiangdajiuye.view.Browse;
 import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 
@@ -44,7 +43,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
     //是否没有初始化数据
     private Boolean isFirst = true;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private HttpManager connection;
+    private HttpHelper httpHelper;
     private XuanJiangMesHolder holder;
 
     @Override
@@ -52,7 +51,6 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         if (view != null)
             return view;
         view = inflater.inflate(R.layout.fragment, container, false);
-        connection = new HttpManager(getActivity());
         init();
         return view;
     }
@@ -74,6 +72,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         initRefresh();
         initList();
         bindNetState();
+        httpHelper = HttpHelper.getInstance();
     }
 
     /**
@@ -123,7 +122,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if ( recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
+                if (recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
                     recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
                     getMessage();
                 } else {
@@ -154,6 +153,23 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         });
     }
 
+    private IDataListener iDataListener = new IDataListener<List<MessageItem>>() {
+        @Override
+        public void onSuccess(List<MessageItem> messageItems) {
+            upDate(messageItems);
+            swipeRefreshLayout.setRefreshing(false);
+            messageItems.clear();
+        }
+
+        @Override
+        public void onFail(Exception exception, int responseCode) {
+            recyclerView.setStatus(MyRecyclerView.STATUS_ERROR);
+            swipeRefreshLayout.setRefreshing(false);
+            ToastUtils.showToast("网络不太顺畅哦！");
+            showError();
+        }
+    };
+
     /**
      * http://career.hdu.edu.cn/module/getcareers?start_page=1&keyword=&type=inner&day=&count=10&start=1
      */
@@ -161,23 +177,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         String url = getUrl(recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH
                 , holder);
         Log.i(TAG, "getMessage: " + url);
-        HttpHelper httpManager = HttpHelper.getInstance()  ;
-        httpManager.get(url,holder , new IDataListener<List<MessageItem>>(){
-            @Override
-            public void onSuccess(List<MessageItem> messageItems) {
-                upDate(messageItems);
-                swipeRefreshLayout.setRefreshing(false);
-                messageItems.clear();
-            }
-
-            @Override
-            public void onFail(Exception exception, int responseCode) {
-                recyclerView.setStatus(MyRecyclerView.STATUS_ERROR);
-                swipeRefreshLayout.setRefreshing(false);
-                ToastUtils.showToast("网络不太顺畅哦！");
-                showError();
-            }
-        }, HttpTask.Type.MessageItem);
+        httpHelper.get(url, holder, iDataListener, HttpTask.Type.MessageItem);
     }
 
     /**
@@ -205,8 +205,8 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
             adapter.appendDate(list);
         }
         //如果adapter的数据不够，说明没有更多的数据，直接提示没有更多数据
-        if( adapter.getDataSize() <6){
-            Log.i(TAG, "upDate: end ------- size is  "+list.size());
+        if (adapter.getDataSize() < 6) {
+            Log.i(TAG, "upDate: end ------- size is  " + list.size());
             recyclerView.setStatus(MyRecyclerView.STATUS_END);
             return;
         }

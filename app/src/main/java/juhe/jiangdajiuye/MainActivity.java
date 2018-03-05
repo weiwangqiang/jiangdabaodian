@@ -42,30 +42,31 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import juhe.jiangdajiuye.adapter.FragmentAdapter;
 import juhe.jiangdajiuye.bean.bmobAppMes.BootPicture;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.dialog.ShareDialog;
-import juhe.jiangdajiuye.fragment.IndexFragment;
-import juhe.jiangdajiuye.imageUtil.ImageLocalLoad;
 import juhe.jiangdajiuye.user.UserManager;
-import juhe.jiangdajiuye.util.NetMesManager;
-import juhe.jiangdajiuye.util.NetStateUtils;
-import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.util.ToastUtils;
-import juhe.jiangdajiuye.util.UserActionRecordUtils;
-import juhe.jiangdajiuye.util.UserBrowseRecordUtils;
-import juhe.jiangdajiuye.util.UserShareUtils;
-import juhe.jiangdajiuye.versionUpGrade.BmobCheckUpgrade;
+import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
+import juhe.jiangdajiuye.utils.imageUtils.ImageLocalLoad;
+import juhe.jiangdajiuye.utils.netUtils.NetMesManager;
+import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
+import juhe.jiangdajiuye.utils.userInforUtils.UserActionRecordUtils;
+import juhe.jiangdajiuye.utils.userInforUtils.UserBrowseRecordUtils;
+import juhe.jiangdajiuye.utils.userInforUtils.UserShareUtils;
+import juhe.jiangdajiuye.utils.versionUpGrade.CheckUpgrade;
 import juhe.jiangdajiuye.view.About;
+import juhe.jiangdajiuye.view.Browse;
 import juhe.jiangdajiuye.view.Collect;
 import juhe.jiangdajiuye.view.FeedBack;
 import juhe.jiangdajiuye.view.Game;
 import juhe.jiangdajiuye.view.Library;
 import juhe.jiangdajiuye.view.LoginActivity;
+import juhe.jiangdajiuye.view.adapter.FragmentAdapter;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 import juhe.jiangdajiuye.view.constant.FileConstant;
+import juhe.jiangdajiuye.view.dialog.ShareDialog;
+import juhe.jiangdajiuye.view.fragment.IndexFragment;
 import juhe.jiangdajiuye.view.xuanJiang.XuanEntrance;
 
 import static juhe.jiangdajiuye.core.BaseApplication.context;
@@ -116,7 +117,7 @@ public class MainActivity extends BaseActivity
         bindNetState();
         initView();
         initPush();
-        BmobCheckUpgrade.getUpgradeInfo(false);
+        CheckUpgrade.getUpgradeInfo(false);
     }
 
     private void initPush() {
@@ -167,8 +168,13 @@ public class MainActivity extends BaseActivity
     private void initViewPager() {
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/teachin/index?",
                 "xuanJiang", IndexFragment.XUANJIANG));
+        list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/campus/index?",
+                "zhaoPinGongGao",IndexFragment.ZHAOPINGONGGAO));
+        list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/jobfair/index?",
+                "zhaoPinHui",IndexFragment.ZHAOPINHUI));
+
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/job/search?",
-                "zhaoPin", IndexFragment.ZHAOPIN));
+                "zhaoPinZhiWei", IndexFragment.ZHAOPINZHIWEI));
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/news/index?tag=tzgg&",
                 "xinXi", IndexFragment.XINXI));
         //刚开始只会加载前两个fragment
@@ -255,6 +261,9 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.nav_login:
                 startActivitySlideInRight(this, LoginActivity.class);
+                break;
+            case R.id.nav_calender:
+                Browse.StartActivity(this,"http://ehall.ujs.edu.cn/calendar/index#panel0");
                 break;
             default:
                 break;
@@ -512,7 +521,7 @@ public class MainActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
         if (UserActionRecordUtils.getIpBean() == null)
-            NetMesManager.setIP(this);
+            NetMesManager.setIP();
         getAdvert();
     }
 

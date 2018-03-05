@@ -12,6 +12,15 @@ package juhe.jiangdajiuye.view.xuanJiang.entity;
 public class XuanJiangMesHolder {
     public int provinceId;
 
+    public int getTab() {
+        return tab;
+    }
+
+    public void setTab(int tab) {
+        this.tab = tab;
+    }
+
+    private int tab =  -1 ; //只有江大的界面才需要设置，默认为 -1 ，即其他学校
     public boolean isPull() {
         return isPull;
     }

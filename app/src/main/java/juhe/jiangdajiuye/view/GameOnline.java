@@ -29,9 +29,9 @@ import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.dialog.ProgressDialog;
-import juhe.jiangdajiuye.dialog.ShareDialog;
-import juhe.jiangdajiuye.util.ResourceUtils;
+import juhe.jiangdajiuye.view.dialog.ProgressDialog;
+import juhe.jiangdajiuye.view.dialog.ShareDialog;
+import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 
 /**

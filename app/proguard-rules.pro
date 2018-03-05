@@ -22,13 +22,14 @@
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
--dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
 -keeppackagenames org.jsoup.nodes
 
 -dontwarn rx.internal.util.unsafe.*
-
+# --------------------bugly混淆——-------------------------------
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+# --------------------bugly混淆——-------------------------------
 # ---------------------bmob 混淆----------------------------------
 
 -ignorewarnings

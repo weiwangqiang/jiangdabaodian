@@ -16,7 +16,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal|center_vertical"
         >
-        <juhe.jiangdajiuye.tool.CircleImageView
+        <juhe.jiangdajiuye.consume.CircleImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="20dp"

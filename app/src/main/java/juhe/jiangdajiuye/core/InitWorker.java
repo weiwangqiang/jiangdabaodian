@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
@@ -13,7 +14,8 @@ import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.InstallationListener;
 import cn.bmob.v3.exception.BmobException;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.util.NetStateUtils;
+import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
+import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
 
 /**
  * class description here
@@ -28,7 +30,7 @@ public class InitWorker {
 
     public static void initSDK(Context mCtx) {
 
-        final String Bugly_APPId = "a40ad72c38 "; // TODO 替换成bugly上注册的appid
+        final String Bugly_APPId = "a0cce289b0 "; // TODO 替换成bugly上注册的appid
         String Bmob_AppId = "f1a3949757fdc914a823e15eef961ce6";//bmob
         // 初始化BmobSDK
         Bmob.initialize(mCtx, Bmob_AppId);
@@ -90,6 +92,8 @@ public class InitWorker {
         Beta.upgradeDialogLayoutId = R.layout.dialog_upgrade;
 //        Bugly.init(mCtx, Bugly_APPId, true, strategy);
         Bugly.init(mCtx,Bugly_APPId, true);
+        CrashReport.initCrashReport(mCtx, Bugly_APPId, false);
         Log.i(TAG, "onStartCommand: 初始化完成 ！ ");
+        HttpHelper.getInstance().init();
     }
 }

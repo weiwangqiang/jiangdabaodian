@@ -16,7 +16,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tencent.connect.common.Constants;
@@ -34,10 +33,11 @@ import com.tencent.tauth.UiError;
 import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.bean.push.XuanJiangPush;
-import juhe.jiangdajiuye.dialog.ProgressDialog;
-import juhe.jiangdajiuye.dialog.ShareDialog;
+import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.view.dialog.ProgressDialog;
+import juhe.jiangdajiuye.view.dialog.ShareDialog;
 
 /**
  * Created by wangqiang on 2016/10/1.
@@ -78,18 +78,17 @@ public class WebBrowse extends BaseActivity {
     }
     private Toolbar toolbar;
     public void initToolbar(){
-        toolbar.setTitle("");
+        toolbar.setTitle(ResourceUtils.getString(R.string.title_browse_push));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
     private void init(){
         initWEi();
-        findid();
+        findId();
         getParam();
         initToolbar();
         initWeb(targetUrl);
-        WebTitle.setText("推送详情");
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
         tencent = Tencent.createInstance(APP_ID, WebBrowse.this);
@@ -101,11 +100,9 @@ public class WebBrowse extends BaseActivity {
         api = WXAPIFactory.createWXAPI(this,WEI_ID,true);
         api.registerApp(WEI_ID);
     }
-    private TextView WebTitle ;
-    public void findid(){
+    public void findId(){
         webView = (WebView)findViewById(R.id.webView);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-        WebTitle = (TextView)findViewById(R.id.WebTitle);
     }
     /**
      * 获取参数信息

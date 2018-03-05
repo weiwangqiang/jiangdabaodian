@@ -10,7 +10,7 @@ import android.widget.SimpleAdapter;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.util.ResourceUtils;
+import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
 
 /**

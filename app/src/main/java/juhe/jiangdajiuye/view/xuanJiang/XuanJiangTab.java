@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.adapter.XJFragmentAdapter;
+import juhe.jiangdajiuye.view.adapter.XJFragmentAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.util.ResourceUtils;
+import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanJiangData;
 import juhe.jiangdajiuye.view.xuanJiang.fragment.BaseFragmentImpl;
 

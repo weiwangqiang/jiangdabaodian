@@ -20,7 +20,7 @@ import java.io.File;
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.util.UserActionRecordUtils;
+import juhe.jiangdajiuye.utils.userInforUtils.UserActionRecordUtils;
 import juhe.jiangdajiuye.view.constant.FileConstant;
 
 /**

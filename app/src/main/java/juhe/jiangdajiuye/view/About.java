@@ -7,9 +7,9 @@ import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.util.AppConfigUtils;
-import juhe.jiangdajiuye.util.ResourceUtils;
-import juhe.jiangdajiuye.versionUpGrade.BmobCheckUpgrade;
+import juhe.jiangdajiuye.utils.AppConfigUtils;
+import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.versionUpGrade.CheckUpgrade;
 
 /**
  * class description here
@@ -33,8 +33,7 @@ public class About extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
         init();
-        BmobCheckUpgrade.init(this);
-        BmobCheckUpgrade.getUpgradeInfo(false);
+        CheckUpgrade.init(this);
     }
 
 
@@ -51,16 +50,16 @@ public class About extends BaseActivity {
 
     public void checkUpData(View view) {
         if (!isClick) {
-            BmobCheckUpgrade.checkUpgrade();
+            CheckUpgrade.checkUpgrade();
         }
     }
 
     private void loadUpgradeInfo() {
-        if (BmobCheckUpgrade.targetBean == null) {
+        if (CheckUpgrade.targetBean == null) {
             textViewUp.setText(ResourceUtils.getString(R.string.has_not_upgrade_information));
             return;
         }
-        textViewUp.setText(BmobCheckUpgrade.targetBean.getUpgradeMessage());
+        textViewUp.setText(CheckUpgrade.targetBean.getUpgradeMessage());
     }
 
     public void initToolbar() {

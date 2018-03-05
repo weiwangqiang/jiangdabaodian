@@ -3,7 +3,6 @@ package juhe.jiangdajiuye.consume.SlipRecyclerView;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +17,16 @@ import java.util.Map;
 public abstract class SlipRecyclerAdapter<T> extends RecyclerView.Adapter<SlipRecyclerAdapter.SlipViewHolder> {
     private String TAG = "SlipRecyclerAdapter";
     private int openPosition = -1;//记录打开的位置
-    private int view;
     public boolean hasChildOpen = false;//记录是否有 item 打开
+
+    private final int ID_ITEM = 0x10;
+    private final int ID_DELETE = 0x20;
+    private final int ID_COLLECT = 0x30;
+    private int view;
     protected List<T> data;
     private SlipItemClickListener<T> lister;
     private Context context;
     //item id常量
-    private final int ID_ITEM = 0x10;
-    private final int ID_DELETE = 0x20;
-    private final int ID_COLLECT = 0x30;
 
     //获取处于打开状态的item位置
     public int getOpenPosition() {
@@ -62,10 +62,9 @@ public abstract class SlipRecyclerAdapter<T> extends RecyclerView.Adapter<SlipRe
 
     @Override
     public void onBindViewHolder(final SlipRecyclerAdapter.SlipViewHolder holder, final int position) {
-        Log.i(TAG, "onBindViewHolder: ---------------------");
         if (!holder.getSlipItemView().isClose())
             holder.getSlipItemView().close();
-        onBindSlipViewHolder(holder, data.get(position));
+        onBindSlipViewHolder(holder, position , data.get(position));
         holder.getSlipItemView().setOnSlipItemViewClickListener(new SlipItemView.OnSlipItemViewClickListener() {
 
             /**
@@ -121,7 +120,6 @@ public abstract class SlipRecyclerAdapter<T> extends RecyclerView.Adapter<SlipRe
 
     //    @Override
     public void onBindViewHolder(SlipViewHolder holder, int position, List<Object> payloads) {
-        Log.i(TAG, "onBindViewHolder: ===========================");
         if (!payloads.isEmpty())
             holder.getSlipItemView().close();
         else
@@ -180,7 +178,7 @@ public abstract class SlipRecyclerAdapter<T> extends RecyclerView.Adapter<SlipRe
 
     protected abstract SlipViewHolder onCreateSlipViewHolder(SlipItemView slipItemView, int viewType);
 
-    protected abstract void onBindSlipViewHolder(SlipViewHolder holder, final T t);
+    protected abstract void onBindSlipViewHolder(SlipViewHolder holder,final int position, final T t);
     //删除数据源，如数据库对应的对象
     protected abstract void deleteData(T t);
 }
