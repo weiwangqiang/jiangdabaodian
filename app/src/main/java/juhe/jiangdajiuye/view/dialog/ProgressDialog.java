@@ -1,5 +1,6 @@
 package juhe.jiangdajiuye.view.dialog;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -11,7 +12,7 @@ import juhe.jiangdajiuye.R;
 /**
  * Created by wangqiang on 2016/10/2.
  */
-public class ProgressDialog extends android.app.ProgressDialog {
+public class ProgressDialog extends Dialog {
     private AnimationDrawable mAnimation;
     private Context mContext;
     private ImageView mImageView;
@@ -32,7 +33,7 @@ public class ProgressDialog extends android.app.ProgressDialog {
         super.onCreate(savedInstanceState);
         setCanceledOnTouchOutside(false);
         initView();
-        initData();
+//        initData();
     }
 
     private void initData() {
@@ -54,6 +55,6 @@ public class ProgressDialog extends android.app.ProgressDialog {
 //        setProgressStyle(R.style.LodingDialog);
         //解决android 5以上dialog无法通过style 来设置透明背景的问题
         getWindow().setBackgroundDrawable(new ColorDrawable());
-        mImageView = (ImageView) findViewById(R.id.progress_image);
+//        mImageView = (ImageView) findViewById(R.id.progress_image);
     }
 }

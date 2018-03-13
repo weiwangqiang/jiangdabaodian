@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="8dp"
                     android:visibility="gone"
-                    android:text="@string/strUpgradeDialogFeatureLabel"
+                    android:text="strUpgradeDialogFeatureLabel"
                     android:textColor="#273238"
                     android:textSize="14sp" />
                 <!-- 【必设】更新属性控件tag：beta_upgrade_feature-->

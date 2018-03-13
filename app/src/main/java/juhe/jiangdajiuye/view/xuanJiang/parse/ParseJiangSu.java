@@ -27,9 +27,33 @@ public class ParseJiangSu {
         switch(holder.getCollege()){
             case "南京大学":
                 return nanJingDaXue(response);
+            case "江苏科技大学":
+                return JiangKeDa("http://just.91job.gov.cn",response);
             default:
                 return commonParse(response,holder.getBaseUrl().substring(0,holder.getBaseUrl().length()-14));
         }
+    }
+    //江苏科技大学
+    private List<MessageItem> JiangKeDa(String baseUrl , String response) {
+        List<MessageItem> list = new ArrayList<>();
+        Document doc = Jsoup.parse(response);
+        Elements elements = doc.getElementsByClass("teachinList");
+        for (int i = 1; i < elements.size(); i++) {
+            MessageItem item = new MessageItem();
+            Elements elements1 = elements.get(i).getElementsByTag("li");
+            if(elements1.get(0).children().size() >1){
+                // 【置顶】那一行，与宣讲会无关，直接跳过
+                continue;
+            }
+            item.setUrl(baseUrl+elements1.get(0).select("a").attr("href"));
+            item.setTitle(elements1.get(0).select("a").attr("title"));
+            item.setCity(elements1.get(1).text());
+            item.setFrom(elements1.get(2).text());
+            item.setLocate(elements1.get(3).text());
+            item.setTime(elements1.get(4).text());
+            list.add(item);
+        }
+        return list;
     }
 
     /**
@@ -47,8 +71,8 @@ public class ParseJiangSu {
             Elements elements1 = elements.get(i).getElementsByTag("li");
             item.setUrl(baseUrl+e.select("a").attr("href"));
             item.setTitle(e.select("b").text() + e.select("a").attr("title"));
-            item.setFrom(elements1.get(1).text());
-            item.setCity(elements1.get(2).text());
+            item.setCity(elements1.get(1).text());
+            item.setFrom(elements1.get(2).text());
             item.setLocate(elements1.get(3).text());
             item.setTime(elements1.get(4).text());
             list.add(item);
@@ -73,8 +97,9 @@ public class ParseJiangSu {
             item.setTitle(elements1.get(0).select("a").text());
             String string[] = elements1.get(1).text().replaceAll("\u00A0", ":").split("::");
             item.setLocate(string[0]);
-            item.setTime(string[1]+"\n"+string[2]);
+            item.setTime(string[1]+" "+string[2]);
             item.setFrom("南京大学");
+            item.setCity("南京");
             list.add(item);
         }
         return list;

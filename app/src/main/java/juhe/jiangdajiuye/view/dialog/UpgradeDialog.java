@@ -78,7 +78,7 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    DownLoadService.startDownLoadService(mCtx, bean);
+                                    DownLoadService.startDownLoadService(mCtx, bean.getDownLoadUrl());
                                     dialog.cancel();
                                 }
                             })
@@ -93,7 +93,7 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
                     .create()
                     .show();
         }else {
-            DownLoadService.startDownLoadService(mCtx, bean);
+            DownLoadService.startDownLoadService(mCtx, bean.getDownLoadUrl());
         }
         cancel();
     }

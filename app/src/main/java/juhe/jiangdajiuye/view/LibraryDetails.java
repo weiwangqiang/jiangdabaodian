@@ -27,28 +27,28 @@ import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 
 /**
- *  图书详情界面
- *
+ * 图书详情界面
+ * <p>
  * Created by wangqiang on 2016/10/2.
  */
-public class LibraryDetails extends BaseActivity{
+public class LibraryDetails extends BaseActivity {
 
     private String TAG = "LibraryDetails";
-    private String title ,editer ,bookMessage ;
+    private String title, editer, bookMessage;
     private Button back;
-    private TextView titleTextView,editorTextView,bookMesTextView;
-    private View headView,footerView;
+    private TextView titleTextView, editorTextView, bookMesTextView;
+    private View headView, footerView;
     private RadioButton collect;
     private Boolean isCheck = false;
     private ExpandableListView mListView;
     private MyExpandableListAdapter adapter;
     private ProgressDialog myProgress;
-    private BookBean bookBean ;
-    private BookMesBean bookMesBean ;
+    private BookBean bookBean;
+    private BookMesBean bookMesBean;
     public static List<List<String>> list = new ArrayList<>();
-    private ParseUtils parseTools =  ParseUtils.getInstance() ;
-    private LibraryRepository libraryRepository ;
-    private HttpHelper httpHelper ;
+    private ParseUtils parseTools = ParseUtils.getInstance();
+    private LibraryRepository libraryRepository;
+    private HttpHelper httpHelper;
 
     private IDataListener<String> dataListener = new IDataListener<String>() {
         @Override
@@ -65,26 +65,29 @@ public class LibraryDetails extends BaseActivity{
             myProgress.cancel();
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_book);
-        libraryRepository = LibraryRepository.getInstance() ;
+        libraryRepository = LibraryRepository.getInstance();
         getParam();
         initView();
 
     }
-    public void initView(){
+
+    public void initView() {
         findId();
         changeView();
         httpHelper = HttpHelper.getInstance();
-        httpHelper.get(bookBean.getUrl(),null , dataListener, HttpTask.Type.string);
+        httpHelper.get(bookBean.getUrl(), null, dataListener, HttpTask.Type.string);
 
     }
-    public void findId(){
-        back = (Button)findViewById(R.id.search_back);
-        mListView = (ExpandableListView)findViewById(R.id.search_list);
-        collect = (RadioButton)findViewById(R.id.browse_collect);
+
+    public void findId() {
+        back = (Button) findViewById(R.id.search_back);
+        mListView = (ExpandableListView) findViewById(R.id.search_list);
+        collect = (RadioButton) findViewById(R.id.browse_collect);
 
         back.setOnClickListener(this);
         collect.setOnClickListener(this);
@@ -92,10 +95,11 @@ public class LibraryDetails extends BaseActivity{
         isCheck = libraryRepository.hasURL(bookBean.getUrl());
         collect.setChecked(isCheck);
     }
+
     /**
      * 获取参数信息
      */
-    public void getParam(){
+    public void getParam() {
         Intent intent = getIntent();
         bookBean = new BookBean();
         bookBean.setBook(intent.getStringExtra("book"));
@@ -104,7 +108,8 @@ public class LibraryDetails extends BaseActivity{
         bookBean.setAvailable(intent.getStringExtra("available"));
         bookBean.setNumber(intent.getStringExtra("number"));
     }
-    public void showDate(){
+
+    public void showDate() {
         findFooter();
         title = bookMesBean.getBook();
         titleTextView.setText(title);
@@ -114,20 +119,21 @@ public class LibraryDetails extends BaseActivity{
         bookMesTextView.setText(bookMessage);
         mListView.addHeaderView(headView);
         mListView.addFooterView(footerView);
-        adapter = new MyExpandableListAdapter(LibraryDetails.this,title,list);
+        adapter = new MyExpandableListAdapter(LibraryDetails.this, title, list);
         mListView.setAdapter(adapter);
     }
-    public void findFooter(){
-        headView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.library_search_list_header,null);
-        footerView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.search_book_footer,null);
-        titleTextView = (TextView)headView.findViewById(R.id.library_search_book_message_book);
-        editorTextView = (TextView)headView.findViewById(R.id.library_search_book_message_editer);
-        bookMesTextView = (TextView)headView.findViewById(R.id.library_search_book_message_bookMessage);
+
+    public void findFooter() {
+        headView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.library_search_list_header, null);
+        footerView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.search_book_footer, null);
+        titleTextView = headView.findViewById(R.id.library_search_book_message_book);
+        editorTextView = headView.findViewById(R.id.library_search_book_message_editer);
+        bookMesTextView =  headView.findViewById(R.id.library_search_book_message_bookMessage);
     }
 
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.search_back:
                 finish();
                 overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
@@ -138,26 +144,23 @@ public class LibraryDetails extends BaseActivity{
         }
     }
 
-    private void showCollect(){
-        if(isCheck){
-            collect.setChecked(false);
-        }
-        else if(!isCheck){
-            collect.setChecked(true);
-        }
+    private void showCollect() {
+        collect.setChecked(!isCheck);
         isCheck = !isCheck;
     }
-    public void changeView(){
-        myProgress = new ProgressDialog(this,R.drawable.waiting);
+
+    public void changeView() {
+        myProgress = new ProgressDialog(this, R.drawable.waiting);
         myProgress.show();
     }
+
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
-        boolean containUrl = libraryRepository.hasURL(bookBean.getUrl()) ;
-        if(!containUrl&&collect.isChecked()){
+        boolean containUrl = libraryRepository.hasURL(bookBean.getUrl());
+        if (!containUrl && collect.isChecked()) {
             libraryRepository.add(bookBean);
-        }else if (containUrl&&!collect.isChecked()){
+        } else if (containUrl && !collect.isChecked()) {
             //取消收藏
             libraryRepository.delete(bookBean);
         }

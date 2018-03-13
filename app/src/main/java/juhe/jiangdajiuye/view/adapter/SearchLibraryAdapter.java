@@ -28,6 +28,7 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
 
 public class SearchLibraryAdapter extends AbsAdapter<BookBean> {
 
+    private static final String TAG = "SearchLibraryAdapter";
     public mItemViewHolder itemViewHodler ;
     public mFooterViewHolder footerViewHolder ;
     private Context mCtx ;
@@ -137,7 +138,9 @@ public class SearchLibraryAdapter extends AbsAdapter<BookBean> {
     }
     @Override
     public void stateChange(int state) {
-        if(footerViewHolder == null) return;
+        if(footerViewHolder == null){
+            return;
+        }
         switch (state){
             case STATUS_DEFAULT:
                 footerViewHolder.tv.setText("上拉加载更多");

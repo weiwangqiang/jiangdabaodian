@@ -59,7 +59,7 @@ public class XuanJiangTab extends BaseActivity {
         }
         adapter  = new XJFragmentAdapter(getSupportFragmentManager(), list,college);
         viewPager.setAdapter(adapter);
-        viewPager.setOnPageChangeListener(new pagerlist());
+        viewPager.addOnPageChangeListener(new pagerlist());
         viewPager.setCurrentItem(0);
     }
 

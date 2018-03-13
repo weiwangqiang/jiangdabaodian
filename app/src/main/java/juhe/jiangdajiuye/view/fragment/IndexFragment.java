@@ -140,8 +140,8 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
         swipeRefreshLayout.setOverScrollMode(View.OVER_SCROLL_NEVER);
         swipeRefreshLayout.setProgressBackgroundColorSchemeColor(
                 ContextCompat.getColor(getActivity(), R.color.white));
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.baseColor),
-                ContextCompat.getColor(getActivity(), R.color.baseColor));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.themeColor),
+                ContextCompat.getColor(getActivity(), R.color.themeColor));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

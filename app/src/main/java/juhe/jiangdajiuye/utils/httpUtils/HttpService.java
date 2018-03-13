@@ -1,6 +1,5 @@
 package juhe.jiangdajiuye.utils.httpUtils;
 
-import android.os.Looper;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -47,11 +46,10 @@ public class HttpService implements IHttpService {
     @Override
     public void execute() {
 
-        boolean main = (Looper.getMainLooper() == Looper.myLooper()) ;
-        Log.i(TAG, "run: "+ main);
         if (null == mIHttpListener) {
             throw new NullPointerException("IHttpListener can not be null !");
         }
+        Log.i(TAG, "execute: "+mUrl);
         try {
             URL url = new URL(mUrl);
             mHttpURLConnection = (HttpURLConnection) url.openConnection();
@@ -85,6 +83,9 @@ public class HttpService implements IHttpService {
             mIHttpListener.onFail(e, mResponseCode);
             e.printStackTrace();
         } catch (IOException e) {
+            mIHttpListener.onFail(e, mResponseCode);
+            e.printStackTrace();
+        }catch (Exception e){
             mIHttpListener.onFail(e, mResponseCode);
             e.printStackTrace();
         }

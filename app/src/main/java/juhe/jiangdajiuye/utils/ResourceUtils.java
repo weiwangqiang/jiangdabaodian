@@ -1,5 +1,6 @@
 package juhe.jiangdajiuye.utils;
 
+import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 
@@ -20,6 +21,9 @@ public class ResourceUtils {
     }
 
     public static int getColor(@ColorRes int colorId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return BaseApplication.getContext().getResources().getColor(colorId,null);
+        }
         return BaseApplication.getContext().getResources().getColor(colorId);
     }
 }

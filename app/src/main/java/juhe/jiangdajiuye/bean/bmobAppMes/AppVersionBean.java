@@ -4,13 +4,13 @@ import cn.bmob.v3.BmobObject;
 
 /**
  * class description here
- *
+ *  app 文件
  * @author wangqiang
  * @since 2017-12-30
  */
 
 public class AppVersionBean extends BmobObject{
-    public String downLoadUrl ;
+    public String downLoadUrl ;//下载路径
     public String appName;
     public String version;
 

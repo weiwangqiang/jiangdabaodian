@@ -41,8 +41,10 @@ public class ShareDialog {
     private View view;
     private Tencent tencet;
     private String APP_ID = "1105550774";
-    private Itemlister itemlister;
-    public interface Itemlister{
+    private ItemLister itemlister;
+    private Button shareTitle;
+
+    public interface ItemLister{
         //分享到QQ空间
         void shareToQzone();
         //分享到QQ好友
@@ -52,10 +54,10 @@ public class ShareDialog {
         //分享到微信朋友圈
         void shareTopyq();
     }
-    public void setItemlister(Itemlister itemlister){
+    public void setItemLister(ItemLister itemlister){
         this.itemlister = itemlister;
     }
-    public Dialog getDialog(Context context) {
+    public Dialog getDialog(Context context,String title) {
         this.context = context;
         // 使用不带theme的构造器，获得的dialog边框距离屏幕仍有几毫米的缝隙。
         // Dialog dialog = new Dialog(getActivity());
@@ -63,12 +65,13 @@ public class ShareDialog {
         LayoutInflater inflater = (LayoutInflater)
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view  = inflater.inflate(R.layout.share, null);
-        findid();
+        findId();
         initGridView();
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // must be called before set content
         dialog.setContentView(view);
         dialog.setCanceledOnTouchOutside(true);
+        shareTitle.setText(title);
         // 设置宽度为屏宽、靠近屏幕底部。
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(R.color.transparent);
@@ -93,9 +96,10 @@ public class ShareDialog {
         window.setWindowAnimations(R.style.popWindow_animation);
         return dialog;
     }
-    private void findid(){
+    private void findId(){
         cancel = (Button)view.findViewById(R.id.jianzhi_share_cancel);
         shareGride = (GridView)view.findViewById(R.id.share_popGrid);
+        shareTitle = view.findViewById(R.id.share_title);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,9 +120,9 @@ public class ShareDialog {
                 new String[]{"icn","text"},
                 new int[]{R.id.share_item_image, R.id.share_item_text});
         shareGride.setAdapter(gridAdapter);
-        shareGride.setOnItemClickListener(new myItemlister());
+        shareGride.setOnItemClickListener(new myItemLister());
     }
-    private class myItemlister implements AdapterView.OnItemClickListener{
+    private class myItemLister implements AdapterView.OnItemClickListener{
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

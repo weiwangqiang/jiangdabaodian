@@ -1,64 +1,78 @@
 package juhe.jiangdajiuye.view;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import java.util.ArrayList;
 
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.view.adapter.ViewPagerAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.utils.SharePreUtils;
+import juhe.jiangdajiuye.view.adapter.ViewPagerAdapter;
 
 /**
  * Created by wangqiang on 2016/11/8.
- * 引导界面
+ *
+ *  引导界面
+ *
+ *  暂时不用
  */
 
 public class Guide extends BaseActivity {
     private ViewPager viewpager;
     private Button begin;
-    private View view1,view2,view3;
-    private ImageView image1,image2,image3;
+    private ImageView view1,view2,view3;
     private Animation in,out;
-    private int oldPosition = 0;
     private ArrayList<View> list = new ArrayList<>();
     private ViewPagerAdapter adapter;
-    private SharedPreferences sharedPreferences;
-
+    private RadioGroup radioGroup ;
     @Override
     public void onCreate(Bundle SaveInstanceState){
+        //取消状态栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(SaveInstanceState);
         setContentView(R.layout.guide);
-        sharedPreferences = getSharedPreferences("IndexView", Context.MODE_PRIVATE);
         getView();
         findId();
         initViewpager();
+        initRadioGroup();
     }
+
+    private void initRadioGroup() {
+        radioGroup = findViewById(R.id.guide_radioGroup);
+        for(int i = 0 ;i< list.size();i++){
+            RadioButton radioButton = new RadioButton(this);
+            radioButton.setId(i+10);
+            radioButton.setClickable(false);
+            radioGroup.addView(radioButton);
+        }
+        ((RadioButton)radioGroup.getChildAt(0)).setChecked(true);
+    }
+
     public void getView(){
         in = AnimationUtils.loadAnimation(Guide.this,R.anim.in_from_bottom_to_top);
         out = AnimationUtils.loadAnimation(Guide.this,R.anim.out_from_top_to_bottom);
-        view1 = getLayoutInflater().inflate(R.layout.guideimage,null);
-        view2 = getLayoutInflater().inflate(R.layout.guideimage,null);
-        view3 = getLayoutInflater().inflate(R.layout.guideimage,null);
+        view1 = (ImageView) getLayoutInflater().inflate(R.layout.guideimage,null);
+        view2 = (ImageView) getLayoutInflater().inflate(R.layout.guideimage,null);
+        view3 = (ImageView) getLayoutInflater().inflate(R.layout.guideimage,null);
+//        view1.setImageResource(R.drawable.guide11);
+//        view2.setImageResource(R.drawable.guide22);
+//        view3.setImageResource(R.drawable.guide33);
     }
     public void findId(){
         viewpager = (ViewPager)findViewById(R.id.guideViewpager);
         begin = (Button)findViewById(R.id.guideButton);
-        image1 = (ImageView)view1.findViewById(R.id.guideImage);
-        image2 = (ImageView)view2.findViewById(R.id.guideImage);
-        image3 = (ImageView)view3.findViewById(R.id.guideImage);
-        image1.setImageResource(R.drawable.guide11);
-        image2.setImageResource(R.drawable.guide22);
-        image3.setImageResource(R.drawable.guide33);
     }
     public void initViewpager(){
         begin.setOnClickListener(this);
@@ -77,6 +91,7 @@ public class Guide extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if(position==2&&(begin.getVisibility()==View.GONE)){
+                    radioGroup.setVisibility(View.GONE);
                     begin.startAnimation(in);
                     begin.setVisibility(View.VISIBLE);
                     begin.setClickable(true);
@@ -86,8 +101,9 @@ public class Guide extends BaseActivity {
                     begin.startAnimation(out);
                     begin.setVisibility(View.GONE);
                     begin.setClickable(false);
+                    radioGroup.setVisibility(View.VISIBLE);
                 }
-                oldPosition = position;
+                ((RadioButton)radioGroup.getChildAt(position)).setChecked(true);
             }
             @Override
             public void onPageScrollStateChanged(int state) {
@@ -101,9 +117,7 @@ public class Guide extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.guideButton:
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("first",false);
-                editor.commit();
+                SharePreUtils.setBoolean(SharePreUtils.isFirst,false);
                 Intent intent = new Intent(Guide.this, MainActivity.class);
                 startActivity(intent);
                 finish();

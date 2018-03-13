@@ -2,6 +2,7 @@ package juhe.jiangdajiuye.utils.versionUpGrade;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.util.List;
@@ -25,16 +26,17 @@ import juhe.jiangdajiuye.utils.ToastUtils;
  */
 
 public class CheckUpgrade {
-    private  final String TAG = "CheckUpgrade";
+    private static final String TAG = "CheckUpgrade";
     public static String downLoadFilePath;//apk下载 存放的包路径
-    public  static File ApkFile;//apk 完整的file
+    public static File ApkFile;//apk 完整的file
     private static Context mCtx;
     public static AppVersionBean targetBean;
     private static BmobQuery<AppVersionBean> bmobQuery = new BmobQuery<>();
-    private static UpgradeDialog dialog ;
+    private static UpgradeDialog dialog;
+
     //检查更新
     public static void init(Context mCtx) {
-        String defaultPath = Environment.getExternalStorageDirectory().toString()
+        String defaultPath = Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator + "DownLoad";
         init(mCtx, defaultPath);
     }
@@ -42,14 +44,21 @@ public class CheckUpgrade {
     public static void init(Context context, String FilePath) {
         mCtx = context;
         downLoadFilePath = FilePath;
-        File file = new File(downLoadFilePath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
+        checkFile();
         getUpgradeInfo(false);
     }
 
+    private static void checkFile() {
+        File file = new File(downLoadFilePath);
+        if (!file.exists()) {
+            Log.i(TAG, "checkFile: 创建成功 ？ "+file.mkdirs());
+        } else {
+            Log.i(TAG, "checkFile: file  exit ");
+        }
+    }
+
     public static void checkUpgrade() {
+        checkFile();
         if (null == targetBean) {
             getUpgradeInfo(true);
         } else {
@@ -58,9 +67,10 @@ public class CheckUpgrade {
     }
 
     public static void getUpgradeInfo(final boolean showToast) {
-        if (null != targetBean)
+        if (null != targetBean) {
             return;
-        if (showToast){
+        }
+        if (showToast) {
             ToastUtils.showToast(ResourceUtils.getString(R.string.check_upgrade_ing));
         }
         bmobQuery.findObjects(new FindListener<AppVersionBean>() {
@@ -70,14 +80,16 @@ public class CheckUpgrade {
                     return;
                 }
                 for (AppVersionBean appVersionBean : object) {
-                    if (AppConfigUtils.getVersionName().compareTo(appVersionBean.getVersion()) < 0) {
-                        targetBean = appVersionBean;
-                        if (showToast)
-                            showDialog(mCtx, targetBean);
-                        return;
+                    if (AppConfigUtils.getVersionName().compareTo(appVersionBean.getVersion()) >= 0) {
+                        continue;
                     }
+                    targetBean = appVersionBean;
+                    if (showToast) {
+                        showDialog(mCtx, targetBean);
+                    }
+                    return;
                 }
-                if (showToast){
+                if (showToast) {
                     ToastUtils.showToast(ResourceUtils.getString(R.string.be_last_version));
                 }
             }
@@ -85,9 +97,7 @@ public class CheckUpgrade {
     }
 
     private static void showDialog(Context mCtx, AppVersionBean bean) {
-        if(null == dialog){
-            dialog = new UpgradeDialog(mCtx);
-        }
+        dialog = new UpgradeDialog(mCtx);
         dialog.setBean(bean);
         dialog.show();
     }

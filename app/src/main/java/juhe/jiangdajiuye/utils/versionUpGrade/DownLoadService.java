@@ -1,13 +1,17 @@
 package juhe.jiangdajiuye.utils.versionUpGrade;
 
 import android.app.IntentService;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
 
 import java.io.File;
 
@@ -15,12 +19,13 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.DownloadFileListener;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.bean.bmobAppMes.AppVersionBean;
 import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
 
 /**
  * class description here
  * 执行任务的service
+ *
  * @author wangqiang
  * @since 2017-12-30
  */
@@ -28,10 +33,12 @@ import juhe.jiangdajiuye.utils.ResourceUtils;
 public class DownLoadService extends IntentService {
     private static final String TAG = "DownLoadService ";
     private final String FILE_NAME = "jiangdabaodian.apk";
-    private int NOTIFICATION = 1;
-    public static AppVersionBean bean = null;
+    private int NOTIFICATION = 9;
+    private String channelId = "my_channel_01";
+    public static String url;
     private NotificationManager mNM = null;
-    private NotificationCompat.Builder builder = null  ;
+    private NotificationCompat.Builder builder = null;
+
     public DownLoadService() {
         super("DownLoadService");
     }
@@ -40,16 +47,26 @@ public class DownLoadService extends IntentService {
     public void onCreate() {
         super.onCreate();
         mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.mipmap.logo);
-        builder.setContentTitle(ResourceUtils.getString(R.string.download_ing));
-        builder.setContentText(ResourceUtils.getString(R.string.download));
-        builder.setProgress(100, 0, false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //需要这样设置，不然无法弹出进度条
+            mNM.createNotificationChannel(
+                    new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH));
+        }
+        builder = new NotificationCompat.Builder(getApplicationContext(), channelId)
+                .setSmallIcon(R.mipmap.index)
+                .setContentTitle(ResourceUtils.getString(R.string.download_ing))
+                .setContentText(ResourceUtils.getString(R.string.download))
+                .setProgress(100, 0, false)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setSound(Uri.parse("android.resource://"
+                        + getPackageName() + "/"
+                        + R.raw.silence));
     }
 
-    public static void startDownLoadService(Context mCtx, AppVersionBean appVersionBean) {
+    public static void startDownLoadService(Context mCtx, String downLoadUrl) {
         Intent intent = new Intent(mCtx, DownLoadService.class);
-        bean = appVersionBean;
+        url = downLoadUrl;
         mCtx.startService(intent);
     }
 
@@ -62,37 +79,64 @@ public class DownLoadService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         mNM.notify(NOTIFICATION, builder.build());
-        downLoad(bean.getDownLoadUrl());
+        downLoad(url);
     }
 
     public void downLoad(String urlPath) {
-        final BmobFile bmobFile = new BmobFile(FILE_NAME,"",urlPath);
+        final BmobFile bmobFile = new BmobFile(FILE_NAME, "", urlPath);
         if (bmobFile != null) {
-            CheckUpgrade.ApkFile = new File(CheckUpgrade.downLoadFilePath,bmobFile.getFilename()) ;
+            CheckUpgrade.ApkFile = new File(CheckUpgrade.downLoadFilePath, bmobFile.getFilename());
+            Log.i(TAG, "downLoad: " + CheckUpgrade.downLoadFilePath + "exit ? "
+                    + (new File(CheckUpgrade.downLoadFilePath).exists()));
             bmobFile.download(CheckUpgrade.ApkFile, new DownloadFileListener() {
 
                 @Override
                 public void onProgress(Integer integer, long l) {
                     builder.setProgress(100, integer, false);
-                    builder.setContentText(ResourceUtils.getString(R.string.has_downloaded)+integer+"%");
+                    builder.setContentText(ResourceUtils.getString(R.string.has_downloaded) + integer + "%");
                     mNM.notify(NOTIFICATION, builder.build());
+
                 }
 
                 @Override
-                    public void done(String s, BmobException e) {
-                    builder.setProgress(100, 100, false);
-                    builder.setContentText(ResourceUtils.getString(R.string.downloaded));
-                    mNM.notify(NOTIFICATION, builder.build());
-                    install(CheckUpgrade.ApkFile);
+                public void done(String s, BmobException e) {
+                    if (null == e) {
+                        builder.setProgress(100, 100, false);
+                        builder.setContentText(ResourceUtils.getString(R.string.downloaded));
+                        mNM.notify(NOTIFICATION, builder.build());
+                        install(CheckUpgrade.ApkFile);
+                    } else {
+                        ToastUtils.showToast("下载出错");
+                        e.printStackTrace();
                     }
+                    mNM.cancel(NOTIFICATION);
+                }
             });
+        } else {
+            ToastUtils.showToast("下载出错");
         }
     }
+
     //安装
-    public void install(File file){
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file),
-                "application/vnd.android.package-archive");
-        startActivity(intent);
+    public void install(File file) {
+        if (!file.exists()) {
+            ToastUtils.showToast("下载失败，请到应用商店下载");
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Uri fileUri = FileProvider.getUriForFile(getBaseContext(),
+                    "juhe.jiangdajiuye.provider", file);
+            Intent install = new Intent(Intent.ACTION_VIEW);
+            install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//添加这一句表示对目标应用临时授权该Uri所代表的文件
+            install.setDataAndType(fileUri, "application/vnd.android.package-archive");
+            startActivity(install);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
+
 }

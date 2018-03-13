@@ -4,7 +4,9 @@ import cn.bmob.v3.BmobObject;
 
 /**
  * class description here
- * 用户对象
+ *
+ *  用户对象
+ *
  * @author wangqiang
  * @since 2018-01-13
  */

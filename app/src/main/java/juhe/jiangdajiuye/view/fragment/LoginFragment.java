@@ -2,7 +2,6 @@ package juhe.jiangdajiuye.view.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
@@ -205,7 +204,6 @@ public class LoginFragment extends BaseTooBarFragment {
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
 
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow

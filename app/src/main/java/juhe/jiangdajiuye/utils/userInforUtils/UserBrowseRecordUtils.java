@@ -12,11 +12,11 @@ import juhe.jiangdajiuye.bean.bmobRecordEntity.UserBrowseRecord;
  */
 
 public class UserBrowseRecordUtils {
-    public static UserBrowseRecord userBrowseRecord = new UserBrowseRecord();
+    private static UserBrowseRecord userBrowseRecord = new UserBrowseRecord();
     private static int mLibrary;
     private static int mXuanJiangCollect;
     private static int mOffLineGame;
-    private static int mAboute ;
+    private static int mAboute;
 
     public static void setmLibrary(int Library) {
         mLibrary += Library;
@@ -41,16 +41,21 @@ public class UserBrowseRecordUtils {
     }
 
 
-    private UserBrowseRecordUtils(){}
-    public UserBrowseRecord getUserBrowseRecord(){
-        return userBrowseRecord ;
+    private UserBrowseRecordUtils() {
+    }
+
+    public UserBrowseRecord getUserBrowseRecord() {
+        return userBrowseRecord;
     }
 
     /**
      * 提交浏览记录
      */
-    public static void save(){
-        userBrowseRecord.save(new SaveListener<String>(){
+    public static void save() {
+        if( (mLibrary + mXuanJiangCollect + mOffLineGame + mAboute )== 0) {
+            return;
+        }
+        userBrowseRecord.save(new SaveListener<String>() {
 
             @Override
             public void done(String s, BmobException e) {

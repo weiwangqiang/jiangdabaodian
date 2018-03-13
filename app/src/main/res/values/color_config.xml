@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="baseColor">@color/green_800</color>
-
+    <!--<color name="baseColor">@color/green_800</color>-->
+    <color name="baseColor">#055EAA</color>
+    <color name="themeColor">#055EAA</color>
 </resources>

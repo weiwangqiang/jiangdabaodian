@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -33,13 +36,15 @@ import java.util.Calendar;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.MessageItem;
+import juhe.jiangdajiuye.bean.bmobRecordEntity.LeaveMes;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.view.dialog.ProgressDialog;
-import juhe.jiangdajiuye.view.dialog.ShareDialog;
 import juhe.jiangdajiuye.sql.repository.CollectRepository;
+import juhe.jiangdajiuye.utils.AppConfigUtils;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.view.constant.AppConstant;
+import juhe.jiangdajiuye.view.dialog.ProgressDialog;
+import juhe.jiangdajiuye.view.dialog.ShareDialog;
 
 /**
  * Created by wangqiang on 2016/10/1.
@@ -73,7 +78,7 @@ public class Browse extends BaseActivity {
      * @param item    消息列表
      */
     public static void StartActivity(Context context, MessageItem item) {
-        visitKind = VISIT_MESSAGE_ITEM ;
+        visitKind = VISIT_MESSAGE_ITEM;
         Intent intent = new Intent(context, Browse.class);
         intent.putExtra(MessageItem.keyVal.url, item.getUrl());
         intent.putExtra(MessageItem.keyVal.title, item.getTitle());
@@ -82,18 +87,19 @@ public class Browse extends BaseActivity {
         intent.putExtra(MessageItem.keyVal.locate, item.getLocate());
         context.startActivity(intent);
         if (context instanceof Activity)
-           ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
     /**
      * 只是打开一个链接
+     *
      * @param context
      * @param url
      */
-    public static void StartActivity(Context context ,String url){
-        visitKind = VISIT_CALENDER ;
-        Intent intent = new Intent(context,Browse.class);
-        intent.putExtra("url",url);
+    public static void StartActivity(Context context, String url) {
+        visitKind = VISIT_CALENDER;
+        Intent intent = new Intent(context, Browse.class);
+        intent.putExtra("url", url);
         context.startActivity(intent);
         if (context instanceof Activity)
             ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
@@ -116,9 +122,9 @@ public class Browse extends BaseActivity {
     private Toolbar toolbar;
 
     public void initToolbar() {
-        if(visitKind == VISIT_MESSAGE_ITEM){
+        if (visitKind == VISIT_MESSAGE_ITEM) {
             toolbar.setTitle(ResourceUtils.getString(R.string.title_browse_message));
-        }else if(visitKind == VISIT_CALENDER){
+        } else if (visitKind == VISIT_CALENDER) {
             toolbar.setTitle(ResourceUtils.getString(R.string.title_browse_calender));
         }
         setSupportActionBar(toolbar);
@@ -132,7 +138,7 @@ public class Browse extends BaseActivity {
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
         tencent = Tencent.createInstance(APP_ID, Browse.this);
-        dialog = sharedialog.getDialog(Browse.this);
+        dialog = sharedialog.getDialog(Browse.this,ResourceUtils.getString(R.string.title_share_message));
     }
 
     /**
@@ -154,14 +160,14 @@ public class Browse extends BaseActivity {
     public void initParams() {
         Intent intent = getIntent();
         messageItem = new MessageItem();
-        if(visitKind == VISIT_MESSAGE_ITEM){
+        if (visitKind == VISIT_MESSAGE_ITEM) {
             messageItem.setUrl(intent.getStringExtra(MessageItem.keyVal.url));
             messageItem.setTitle(intent.getStringExtra(MessageItem.keyVal.title));
             messageItem.setTime(intent.getStringExtra(MessageItem.keyVal.time));
             messageItem.setFrom(intent.getStringExtra(MessageItem.keyVal.from));
             messageItem.setLocate(intent.getStringExtra(MessageItem.keyVal.locate));
             isCollect = collectRepository.contain(messageItem);
-        }else if(visitKind == VISIT_CALENDER){
+        } else if (visitKind == VISIT_CALENDER) {
             messageItem.setUrl(intent.getStringExtra("url"));
         }
     }
@@ -180,6 +186,15 @@ public class Browse extends BaseActivity {
         webView.loadUrl(url);
 //        webView.setInitialScale(100);   //100代表不缩放
         webView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) { //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    view.loadUrl(request.getUrl().toString());
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
             public boolean shouldOverrideUrlLoading(WebView view, String url) { //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
                 view.loadUrl(url);
                 return true;
@@ -200,7 +215,7 @@ public class Browse extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(visitKind == VISIT_MESSAGE_ITEM){
+        if (visitKind == VISIT_MESSAGE_ITEM) {
             getMenuInflater().inflate(R.menu.browseitem, menu);
         }
         return true;
@@ -211,7 +226,7 @@ public class Browse extends BaseActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if(visitKind == VISIT_MESSAGE_ITEM){
+        if (visitKind == VISIT_MESSAGE_ITEM) {
             collectTitle.setLength(0);
             collectTitle.append(isCollect ?
                     ResourceUtils.getString(R.string.cancel_collect) :
@@ -234,12 +249,29 @@ public class Browse extends BaseActivity {
                 openInBrowse();
                 return true;
             case R.id.browse_calendar:
-                calendar();
+                try {
+                    calendar();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.showToast("添加失败");
+                    postBug(e);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void postBug(Exception e) {
+        LeaveMes mes = new LeaveMes();
+        mes.setEmail("report");
+        mes.setContent("添加日历失败 mes：\n "+e.toString());
+        mes.setAppLevel(AppConfigUtils.getVersionName());
+        mes.setDevice(AppConfigUtils.getDevice());
+        mes.setDeviceLevel(AppConfigUtils.getDeviceLevel());
+        mes.save();
+    }
+
     /**
      * 添加到日历中
      */
@@ -273,11 +305,11 @@ public class Browse extends BaseActivity {
             int hourE = 0;
             int minuteE = 0;
             if (times.length == 3) {//没有 hh:mm:ss
-            } else if (times.length <=6) {
+            } else if (times.length <= 6) {
                 //只有开始时间 的hh:mm:ss
                 hourS = Integer.parseInt(times[3]);
                 minuteS = Integer.parseInt(times[4]);
-            } else if(times.length >=7) {
+            } else if (times.length >= 7) {
                 //有具体时间段 hh:mm:ss - hh:mm:ss
                 hourS = Integer.parseInt(times[3]);
                 minuteS = Integer.parseInt(times[4]);
@@ -292,9 +324,16 @@ public class Browse extends BaseActivity {
         calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
         calendarIntent.putExtra(CalendarContract.Events.TITLE, messageItem.getTitle());
         calendarIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, LOCATION.toString());
-        startActivityForResult(calendarIntent, SendCalendarCode);
+        if(isIntentAvailable(calendarIntent)){
+            startActivityForResult(calendarIntent, SendCalendarCode);
+        }else{
+            ToastUtils.showToast("添加日历出错");
+        }
     }
 
+    public boolean isIntentAvailable(Intent intent) {
+        return !getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isEmpty();
+    }
     /**
      * 用浏览器打开
      */
@@ -303,7 +342,12 @@ public class Browse extends BaseActivity {
         intent.setAction("android.intent.action.VIEW");
         Uri content_url = Uri.parse(messageItem.getUrl());
         intent.setData(content_url);
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastUtils.showToast("打开失败");
+        }
     }
 
     @Override
@@ -313,7 +357,7 @@ public class Browse extends BaseActivity {
 
     private void showShare() {
         dialog.show();
-        sharedialog.setItemlister(new myItemListener());
+        sharedialog.setItemLister(new myItemListener());
     }
 
     private void changeCollectState() {
@@ -332,7 +376,7 @@ public class Browse extends BaseActivity {
     /**
      * popupwind的Item 监听
      */
-    private class myItemListener implements ShareDialog.Itemlister {
+    private class myItemListener implements ShareDialog.ItemLister {
 
         @Override
         public void shareToQzone() {

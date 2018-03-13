@@ -54,9 +54,10 @@ public class ParseUtils {
             Elements elements1 = elements.get(i).getElementsByTag("li");
             messageItem.setTitle(elements1.get(0).select("a").text());
             messageItem.setUrl("http://ujs.91job.gov.cn" + elements1.get((0)).select("a").attr("href"));
-            messageItem.setCity(elements1.get(1).text());
+            messageItem.setCity("镇江市");
             messageItem.setLocate(elements1.get(2).text());
-            messageItem.setIndustry(elements1.get(3).text());
+            messageItem.setFrom("江苏大学");
+            messageItem.setTheme(elements1.get(3).text());
             messageItem.setTime(elements1.get(4).text());
             data.add(messageItem);
         }
@@ -73,7 +74,7 @@ public class ParseUtils {
             Elements elements1 = element.getElementsByTag("li");
             messageItem.setTitle(elements1.get(0).select("a").text());
             messageItem.setUrl("http://ujs.91job.gov.cn" + elements1.get((0)).select("a").attr("href"));
-            messageItem.setLocate(elements1.get(1).text());
+            messageItem.setCity(elements1.get(1).text());
             messageItem.setTime(elements1.get(2).text());
             data.add(messageItem);
         }
@@ -92,8 +93,8 @@ public class ParseUtils {
             Elements elements1 = elements.get(i).getElementsByTag("li");
             mes.setUrl("http://ujs.91job.gov.cn" + e.select("a").attr("href"));
             mes.setTitle(e.select("a").attr("title"));
-            mes.setFrom(elements1.get(1).text());
-            mes.setCity(elements1.get(2).text());
+            mes.setCity(elements1.get(1).text());
+            mes.setFrom(elements1.get(2).text());
             mes.setLocate(elements1.get(3).text());
             mes.setTime(elements1.get(4).text());
             list.add(mes);
@@ -101,7 +102,7 @@ public class ParseUtils {
         return list;
     }
 
-    //招聘
+    //招聘职位
     private List<MessageItem> parseZhaoPinZhiWei(String response) {
         List<MessageItem> list = new ArrayList<>();
         if (response.length() <= 0) return null;
@@ -113,7 +114,7 @@ public class ParseUtils {
             mes.setUrl("http://ujs.91job.gov.cn" + e.select("a").attr("href"));
             mes.setTitle(e.select("a").attr("title"));
             mes.setFrom(elements.get(i).getElementsByClass("span2").select("a").text());
-            mes.setLocate(elements.get(i).getElementsByClass("span3").get(0).text());
+            mes.setCity(elements.get(i).getElementsByClass("span3").get(0).text());
             mes.setIndustry(elements.get(i).getElementsByClass("span3").get(1).text());
             mes.setTime(elements.get(i).getElementsByClass("span4").text());
             list.add(mes);
@@ -228,6 +229,9 @@ public class ParseUtils {
         Elements elements = doc.getElementsByClass("whitetext");
         for (int i = 0; i < elements.size(); i++) {
             Elements e = elements.get(i).select("td");
+            if(e.size()<5){
+                continue;
+            }
             searchNumber = e.get(0).text();
             number = e.get(1).text();
             time = e.get(2).text();

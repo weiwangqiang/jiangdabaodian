@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.consume;
+package juhe.jiangdajiuye.utils;
 
 import android.content.Context;
 

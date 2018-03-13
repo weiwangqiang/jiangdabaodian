@@ -13,13 +13,14 @@
         android:icon="@drawable/ic_library_black"
         android:title="图书馆" />
     <item
-        android:id="@+id/nav_favorite"
-        android:icon="@drawable/ic_favorite_outline_black"
-        android:title="收藏夹" />
-    <item
         android:id="@+id/nav_xuanjianghui"
         android:icon="@drawable/ic_edu_black"
         android:title="宣讲啦" />
+    <item
+        android:id="@+id/nav_favorite"
+        android:icon="@drawable/ic_favorite_outline_black"
+        android:title="收藏夹" />
+
     <item
         android:id="@+id/nav_game"
         android:icon="@drawable/ic_game_black"

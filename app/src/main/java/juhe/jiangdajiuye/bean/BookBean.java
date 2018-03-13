@@ -6,7 +6,7 @@ import cn.bmob.v3.BmobObject;
 
 /**
  * class description here
- *
+ *  用户收藏的书
  * @author wangqiang
  * @since 2017-12-31
  */

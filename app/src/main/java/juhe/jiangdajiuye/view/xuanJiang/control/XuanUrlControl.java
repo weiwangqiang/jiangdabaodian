@@ -1,7 +1,5 @@
 package juhe.jiangdajiuye.view.xuanJiang.control;
 
-import android.util.Log;
-
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
 import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 
@@ -23,32 +21,43 @@ public class XuanUrlControl {
         return instance ;
     }
     public String getUrl(XuanJiangMesHolder holder){
-        Log.i(TAG, "getUrl: "+holder.getProvinceId());
         switch (holder.getProvinceId()){
             case XuanEntranceData.JIANGSU:
-                return getJiangSu(holder);
+                return getJiangSuUrl(holder);
             case XuanEntranceData.SHANGHAI:
-                return getShanghai(holder);
+                return getShanghaiUrl(holder);
             case XuanEntranceData.ZHEJIANG:
-                return getHangZhou(holder);
+                return getZheJiangUrl(holder);
         }
         return "";
     }
 //----------------------------------------------------------------------
-    private String getHangZhou(XuanJiangMesHolder holder) {
+    private String getZheJiangUrl(XuanJiangMesHolder holder) {
         switch (holder.getCollege()){
             case "杭州电子科技大学":
                 return getHangZhouDianZi(holder);
             case "浙江大学":
                 return getZheJiangDaXue(holder);
+            case "杭州师范大学":
+                return getHangZhouShiFan(holder);
+           default:
+                return getZheJiangCommentUrl(holder);
         }
-        return "";
+    }
+    //获取杭州师范大学
+    private String getHangZhouShiFan(XuanJiangMesHolder holder) {
+        return holder.getBaseUrl()+"?pageNo="+holder.getPager();
     }
 
+    //浙江工业大学等通用的
+    private String getZheJiangCommentUrl(XuanJiangMesHolder holder) {
+        return holder.baseUrl+"?page="+holder.getPager();
+    }
+    //浙江大学
     private String getZheJiangDaXue(XuanJiangMesHolder holder) {
         StringBuilder sb = new StringBuilder();
         sb.append(holder.baseUrl);
-        sb.append("?pages.currentPage="+holder.pager);
+        sb.append("?pages.currentPage="+holder.getPager());
         return sb.toString();
     }
 
@@ -59,13 +68,12 @@ public class XuanUrlControl {
      */
     private String getHangZhouDianZi(XuanJiangMesHolder holder) {
         StringBuilder sb = new StringBuilder(holder.baseUrl);
-        sb.append("?start_page=1&keyword=&type=inner&day=&count=10&start="+holder.pager);
+        sb.append("?start_page=1&keyword=&type=inner&day=&count=10&start="+holder.getPager());
         return sb.toString();
     }
 //----------------------------------------------------------------------
 
-    private String getShanghai(XuanJiangMesHolder holder) {
-        Log.i(TAG, "getShanghai: ");
+    private String getShanghaiUrl(XuanJiangMesHolder holder) {
         switch (holder.getCollege()){
             case "上海交通大学":
                 return getJiaoDaUrl(holder);
@@ -73,8 +81,14 @@ public class XuanUrlControl {
                 return getLiGongUrl(holder);
             case "复旦大学":
                 return getFuDanUrl(holder) ;
+            case "上海财经大学":
+                return getShangCaiUrl(holder);
         }
         return "";
+    }
+    //上海财经大学
+    private String getShangCaiUrl(XuanJiangMesHolder holder) {
+        return holder.getBaseUrl()+"?eachPageRows=10&currentPageno="+holder.getPager();
     }
 
     private String getFuDanUrl(XuanJiangMesHolder holder) {
@@ -103,12 +117,13 @@ public class XuanUrlControl {
         if(holder.isPull){
             url.append("?modcode=jygl_xjhxxck&subsyscode=zpfw&type=searchXjhxx&xjhType=all");
         }else{
+
             url.append("?ype=goPager&requestPager=pager&pageMethod=next&currentPage="+(holder.getPager()-1));
         }
         return url.toString();
     }
 //----------------------------------------------------------------------
-    private String getJiangSu(XuanJiangMesHolder holder){
+    private String getJiangSuUrl(XuanJiangMesHolder holder){
         String str = "";
         if(holder.getCollege().equals("南京大学")){
             return holder.getBaseUrl()+"?type=zph&pageNow="+holder.getPager();

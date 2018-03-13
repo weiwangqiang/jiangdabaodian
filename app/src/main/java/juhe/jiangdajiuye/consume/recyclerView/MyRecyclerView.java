@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import juhe.jiangdajiuye.consume.recyclerView.adapter.AbsAdapter;
 
@@ -22,7 +21,10 @@ public class MyRecyclerView extends RecyclerView {
     public int getStatus() {
         return mStatus;
     }
-
+    //是否处于刷新状态
+    public boolean isRefresh(){
+        return mStatus == STATUS_REFRESHING || mStatus ==STATUS_PULL_TO_REFRESH ;
+    }
     private int mStatus = 0;
 
     public static final int STATUS_DEFAULT = 0;//不在刷新或者end状态
@@ -70,7 +72,6 @@ public class MyRecyclerView extends RecyclerView {
     public void setStatus(int status){
         mStatus = status ;
         if(getAdapter() instanceof AbsAdapter){
-            Log.i(TAG, "setStatus: set state ");
             ((AbsAdapter) getAdapter()).stateChange(status);
         }
     }

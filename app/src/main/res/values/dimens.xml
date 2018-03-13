@@ -6,6 +6,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-
+    <dimen name="recycler_message_title">18sp</dimen>
+    <dimen name="recycler_message_child">13sp</dimen>
+    <dimen name="recycler_message_drawable_padding">4dp</dimen>
+    <dimen name="recycler_message_child_margin">5dp</dimen>
+    <dimen name="recycler_message_child_margin_left">4dp</dimen>
 
 </resources>

@@ -2,7 +2,6 @@ package juhe.jiangdajiuye.view.adapter;
 
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,12 +34,11 @@ public class ViewPagerAdapter extends PagerAdapter {
      * 创建一个view
      */
     @Override
-    public Object instantiateItem(View arg0, int position) {
+    public Object instantiateItem(ViewGroup arg0, int position) {
 //        View view = mListViews.get(position % 5);
 //        ((ViewPager)arg0).addView(view, 0);
 //        return view;
-
-        ((ViewPager) arg0).addView(mListViews.get(position), 0);
+        arg0.addView(mListViews.get(position), 0);
         return mListViews.get(position);
     }
     /**

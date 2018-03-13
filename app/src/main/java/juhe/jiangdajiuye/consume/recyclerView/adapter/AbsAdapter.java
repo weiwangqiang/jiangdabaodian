@@ -28,10 +28,10 @@ public abstract class AbsAdapter<T extends Object> extends RecyclerView.Adapter<
     protected int mStatus = 0;
 
     public static final int STATUS_DEFAULT = 0;//不在刷新或者end状态
-    public static final int STATUS_REFRESHING = 0x10;
-    public static final int STATUS_PULLTOREFRESH = 0x11;
-    public static final int STATUS_END = 0x12;
-    public static final int STATUS_ERROR = 0x13;
+    public static final int STATUS_REFRESHING = 0x10; //正在刷新状态
+    public static final int STATUS_PULL_TO_REFRESH = 0x11;//下拉刷新状态
+    public static final int STATUS_END = 0x12;//没有更多状态
+    public static final int STATUS_ERROR = 0x13;//出错状态
     private List<T> data = new ArrayList<>();
 
     public int getDataSize() {

@@ -8,6 +8,12 @@ package juhe.jiangdajiuye.bean.bmobAppMes;
  */
 
 public class IpBean {
+
+    /**
+     * ip : 211.103.109.166
+     * address : 江苏省镇江市 移动
+     */
+
     private String ip;
     private String address;
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/baseColor</color>
-    <color name="colorPrimaryDark">@color/baseColor</color>
-    <color name="colorAccent">@color/baseColor</color>
+    <color name="colorPrimary">@color/themeColor</color>
+    <color name="colorPrimaryDark">@color/themeColor</color>
+    <color name="colorAccent">@color/themeColor</color>
     <color name="red">#FF0000</color>
     <color name="baseColorLittle">#99228B22</color>
     <color name="white">#F9F9FA</color>
@@ -25,6 +25,7 @@
     <color name="green_300">#73d892</color>
     <color name="green_400">#55cf7a</color>
     <color name="green_500">#37c763</color>
+    <color name="green_550">#37c763</color>
     <color name="green_600">#31b359</color>
     <color name="green_700">#2c9f4f</color>
     <color name="green_800">#268b45</color>

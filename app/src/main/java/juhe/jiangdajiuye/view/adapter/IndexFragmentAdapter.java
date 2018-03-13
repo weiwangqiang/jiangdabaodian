@@ -1,9 +1,13 @@
 package juhe.jiangdajiuye.view.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +32,10 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
  */
 
 public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
-
     private static final String TAG = "IndexFragmentAdapter";
     private mFooterViewHolder footerViewHolder;
     private Context mCtx;
     private OnItemClickListener itemClickListener;
-
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
@@ -69,7 +71,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
     @Override
     public FooterViewHolder getFooterViewHolder(ViewGroup parent) {
         Log.i(TAG, "getFooterViewHolder: ");
-        if (footerViewHolder == null){
+        if (footerViewHolder == null) {
             footerViewHolder = new mFooterViewHolder(SkinManager.inflater(mCtx,
                     R.layout.footer, parent, false));
             stateChange(mStatus);
@@ -82,38 +84,58 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
      *
      * @param holder
      * @param position
-     * @param data
+     * @param messageItem
      */
     @Override
-    public void bindItemViewHolder(RecyclerView.ViewHolder holder, int position, final MessageItem data) {
-        if (!(holder instanceof mItemViewHolder)) return;
+    public void bindItemViewHolder(RecyclerView.ViewHolder holder, int position, final MessageItem messageItem) {
+        if (!(holder instanceof mItemViewHolder)) {
+            return;
+        }
+        mItemViewHolder viewHolder = (mItemViewHolder) holder;
+        viewHolder.theme.setVisibility(View.GONE);
+        viewHolder.city.setVisibility(View.GONE);
+        viewHolder.position.setVisibility(View.GONE);
+        viewHolder.company.setVisibility(View.GONE);
         try {
-            ((mItemViewHolder) holder).title.setText(data.getTitle());
-            ((mItemViewHolder) holder).time.setText(data.getTime());
-            if (null != data.getLocate()) {
-                ((mItemViewHolder) holder).place.setVisibility(View.VISIBLE);
-                ((mItemViewHolder) holder).place.setText(data.getLocate());
+            viewHolder.title.setText(messageItem.getTitle());
+            viewHolder.time.setText(messageItem.getTime());
+            if(!TextUtils.isEmpty(messageItem.getCompany())){
+                viewHolder.company.setVisibility(View.VISIBLE);
+                if(!TextUtils.isEmpty(messageItem.getIndustry())){
+                    viewHolder.company.setText(messageItem.getCompany()+"【"+messageItem.getIndustry()+"】");
+                }else{
+                    viewHolder.company.setText(messageItem.getCompany());
+                }
             }
-            if (data.getTheme() != null) {
-                ((mItemViewHolder) holder).company.setText(data.getTheme());
-                ((mItemViewHolder) holder).company.setVisibility(View.VISIBLE);
-            } else if (data.getFrom() != null) {
-                ((mItemViewHolder) holder).company.setText(data.getFrom());
-                ((mItemViewHolder) holder).company.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(messageItem.getFrom()) || !TextUtils.isEmpty(messageItem.getLocate())) {
+                viewHolder.position.setVisibility(View.VISIBLE);
+                StringBuilder sb = new StringBuilder();
+                if(!TextUtils.isEmpty(messageItem.getFrom())){
+                    sb.append(messageItem.getFrom());
+                    sb.append("  ") ;
+                }
+                if(!TextUtils.isEmpty(messageItem.getLocate())){
+                    sb.append(messageItem.getLocate());
+                }
+                viewHolder.position.setText(sb.toString());
             }
-            if (data.getIndustry() != null) {
-                ((mItemViewHolder) holder).work.setVisibility(View.VISIBLE);
-                ((mItemViewHolder) holder).work.setText(data.getIndustry());
+            if(!TextUtils.isEmpty(messageItem.getCity())){
+                viewHolder.city.setVisibility(View.VISIBLE);
+                viewHolder.city.setText(messageItem.getCity());
             }
-
+            if(!TextUtils.isEmpty(messageItem.getTheme())){
+                viewHolder.theme.setVisibility(View.VISIBLE);
+                viewHolder.theme.setText(messageItem.getTheme());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         ((mItemViewHolder) holder).root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != itemClickListener) ;
-                itemClickListener.OnItemClick(data);
+                if (null != itemClickListener) {
+                    itemClickListener.OnItemClick(messageItem);
+                }
             }
         });
     }
@@ -135,22 +157,33 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
     }
 
     public class mItemViewHolder extends ItemViewHolder {
-        TextView title, time, place, company, work;
+        TextView title, time, position, city,theme,company;
 
         private mItemViewHolder(View itemView) {
             super(itemView);
             root = getView(R.id.card_view);
-            title = (TextView) getView(R.id.title);
-            time = (TextView) getView(R.id.time);
-            place = (TextView) getView(R.id.place);
-            company = (TextView) getView(R.id.company);
-            work = (TextView) getView(R.id.work);
-            place.setVisibility(View.GONE);
-            company.setVisibility(View.GONE);
-            work.setVisibility(View.GONE);
+            title = (TextView) getView(R.id.recycler_message_title);
+            time = (TextView) getView(R.id.recycler_message_time);
+            position = (TextView) getView(R.id.recycler_message_position);
+            city = (TextView) getView(R.id.recycler_message_city);
+            theme = (TextView) getView(R.id.recycler_message_theme);
+            company = (TextView) getView(R.id.recycler_message_company);
+            setTextViewColor(time,R.color.grey_600);
+            setTextViewColor(position,R.color.grey_600);
+            setTextViewColor(city,R.color.grey_600);
+            setTextViewColor(company,R.color.grey_600);
+            setTextViewColor(theme,R.color.grey_600);
         }
     }
-
+    // 修改textView left drawable的颜色
+    public static void setTextViewColor(TextView view, int colorResId) {
+        //mutate()
+        Drawable modeDrawable = view.getCompoundDrawables()[0].mutate();
+        Drawable temp = DrawableCompat.wrap(modeDrawable);
+        ColorStateList colorStateList =     ColorStateList.valueOf(view.getResources().getColor(colorResId));
+        DrawableCompat.setTintList(temp, colorStateList);
+        view.setCompoundDrawables(temp,null,null,null);
+    }
     public class mFooterViewHolder extends FooterViewHolder {
         public TextView tv;
         public View progressBar;
@@ -164,7 +197,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
 
     @Override
     public void stateChange(int status) {
-        mStatus = status ;
+        mStatus = status;
         if (footerViewHolder == null) {
             return;
         }

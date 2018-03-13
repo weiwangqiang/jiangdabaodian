@@ -15,6 +15,7 @@ public class UserShareUtils {
     public static int QQZone = 0;
     public static int QQ = 0;
     public static int WeiXin = 0;
+    public static int WXPenYou = 0;
     public static ShareRecord shareRecord;
     public static ShareRecord getShareRecord(){
         if(shareRecord == null)
@@ -43,16 +44,20 @@ public class UserShareUtils {
     }
 
     public static void setWXPenYou(int WXPenYou) {
-        if(shareRecord == null)
+        if(shareRecord == null){
             shareRecord = new ShareRecord();
+        }
         UserShareUtils.WXPenYou += WXPenYou;
         shareRecord.setWXPenYou(UserShareUtils.WXPenYou);
     }
 
-    public static int WXPenYou = 0;
     public static void save(){
-        if(shareRecord == null)
+        if(shareRecord == null){
             return;
+        }
+        if((QQZone+QQ + WeiXin + WXPenYou) == 0){
+            return;
+        }
         shareRecord.save(new SaveListener<String>(){
 
             @Override

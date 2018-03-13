@@ -56,7 +56,6 @@ public class FeedBack extends BaseActivity {
 
     public void initToolbar() {
         toolbar.setTitle(ResourceUtils.getString(R.string.title_feed_back));
-//        toolbar.setNavigationIcon(R.drawable.menue);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -104,9 +103,15 @@ public class FeedBack extends BaseActivity {
         if(TextUtils.isEmpty(contactInfor)){
             return false ;
         }
+        for(char c : contactInfor.toCharArray()){
+            if(c>='0' && c <='9'){
+                continue;
+            }
+            return false;
+        }
         return contactInfor.contains("@") || contactInfor.length() >=11 ;
     }
-    private void onRequestYun(LeaveMes mes) throws Exception {
+    private void onRequestYun(LeaveMes mes) {
         dialog.show();
         mes.save(new SaveListener<String>() {
             @Override

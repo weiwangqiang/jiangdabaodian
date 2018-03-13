@@ -76,7 +76,7 @@ public class GameOnline extends BaseActivity {
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
         tencent = Tencent.createInstance(APP_ID, GameOnline.this);
-        dialog = sharedialog.getDialog(GameOnline.this);
+        dialog = sharedialog.getDialog(GameOnline.this,ResourceUtils.getString(R.string.title_share_game));
     }
     private Toolbar toolbar;
     public void initToolbar(){
@@ -99,8 +99,8 @@ public class GameOnline extends BaseActivity {
     public void initWeb(String url){
         webView.loadUrl(url);
         WebSettings webSettings = webView.getSettings();
-        webSettings.setSavePassword(false);
-        webSettings.setSaveFormData(false);
+//        webSettings.setSavePassword(false);
+//        webSettings.setSaveFormData(false);
         webSettings.setJavaScriptEnabled(true);
         webSettings.setSupportZoom(false);
         webView.setWebChromeClient(new WebChromeClient(){
@@ -140,12 +140,12 @@ public class GameOnline extends BaseActivity {
     }
     private void showShare(){
         dialog.show();
-        sharedialog.setItemlister(new myItemListener());
+        sharedialog.setItemLister(new myItemListener());
     }
     /**
      * popupwind的Item 监听
      */
-    private class myItemListener implements ShareDialog.Itemlister{
+    private class myItemListener implements ShareDialog.ItemLister{
 
         @Override
         public void shareToQzone() {

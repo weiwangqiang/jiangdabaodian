@@ -9,16 +9,19 @@ android {
             keyAlias 'wei'
         }
     }
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '26.0.2'
     //**bmob兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'**
     useLibrary 'org.apache.http.legacy'
+
     defaultConfig {
         applicationId "juhe.jiangdajiuye"
         minSdkVersion 14
-        targetSdkVersion 22
-        versionCode 4
-        versionName "1.4"
+        targetSdkVersion 26
+        versionCode 6
+        versionName "1.6"
+        flavorDimensions "versionCode"
+        multiDexKeepProguard file("multidexKeep.pro")//腾讯bugly的类放在主dex
         ndk {
             //设置支持的SO库架构
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86','x86_64','mips','mips64'
@@ -42,17 +45,27 @@ android {
         }
 
     }
+    productFlavors {
+        //渠道包
+        jiangdabaodian {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "jiangdabaodian"]
+        }
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${variant.flavorName}-${variant.versionName}.apk"
+        }
+    }
 }
-
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:26.0.1'
+    compile 'com.android.support:design:26.0.1'
     compile files('libs/jsoup-1.7.2.jar')
     compile files('libs/open_sdk_r5793_lite.jar')
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.android.support:cardview-v7:25.0.0'
-    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.android.support:cardview-v7:26.0.1'
+    compile 'com.android.support:recyclerview-v7:26.0.0'
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     compile 'cn.bmob.android:bmob-sdk:3.5.7'
@@ -60,7 +73,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
-    compile 'com.android.support:multidex:1.0.1'
+//    compile 'com.android.support:multidex:1.0.1'
     // 多dex配置
     testCompile 'junit:junit:4.12'
 }
@@ -70,7 +83,7 @@ configurations.all {
         def requested = details.requested
         if (requested.group == 'com.android.support') {
             if (!requested.name.startsWith("multidex")) {
-                details.useVersion '25.0.0'
+                details.useVersion '26.0.0'
             }
         }
     }

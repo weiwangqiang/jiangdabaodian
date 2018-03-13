@@ -3,13 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/browse_open"
-        android:icon="@drawable/ic_share_white"
         android:title="在浏览器打开"
         android:background="@color/white"
         app:showAsAction="never" />
     <item
         android:id="@+id/browse_share"
-        android:icon="@drawable/ic_share_white"
         android:title="分享"
         android:background="@color/white"
         app:showAsAction="never" />

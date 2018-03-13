@@ -11,42 +11,6 @@
         android:background="@color/baseColor"
         >
     </android.support.v7.widget.Toolbar>
-
-    <!--<RelativeLayout-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="43.0dp"-->
-        <!--android:id="@+id/news_body_topRelative"-->
-        <!--&gt;-->
-        <!--<Button-->
-            <!--android:layout_width="35dp"-->
-            <!--android:layout_height="35dp"-->
-            <!--android:paddingLeft="5.0dp"-->
-            <!--android:id="@+id/browse_back"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:background="@drawable/browse_back"-->
-            <!--/>-->
-
-        <!--<RadioButton-->
-            <!--android:layout_width="35dp"-->
-            <!--android:layout_height="35dp"-->
-            <!--android:layout_marginRight="10dp"-->
-            <!--android:background="@drawable/collectbg"-->
-            <!--android:button="@null"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:id="@+id/browse_collect"-->
-            <!--android:layout_toLeftOf="@+id/browse_share"-->
-            <!--/>-->
-        <!--<RadioButton-->
-            <!--android:layout_width="28dp"-->
-            <!--android:layout_height="28dp"-->
-            <!--android:layout_marginRight="10dp"-->
-            <!--android:id="@+id/browse_share"-->
-            <!--android:button="@null"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:background="@drawable/ic_share_black"-->
-            <!--/>-->
-    <!--</RelativeLayout>-->
     <WebView
         android:id="@+id/webView"
         android:visibility="gone"

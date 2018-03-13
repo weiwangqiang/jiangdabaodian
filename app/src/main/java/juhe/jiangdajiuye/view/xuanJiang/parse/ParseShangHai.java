@@ -1,5 +1,7 @@
 package juhe.jiangdajiuye.view.xuanJiang.parse;
 
+import com.google.gson.Gson;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageItem;
+import juhe.jiangdajiuye.view.xuanJiang.entity.ShangHaiCaiJinBean;
 import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 
 /**
@@ -37,8 +40,29 @@ public class ParseShangHai {
                 return parseLiGong(response);
             case "复旦大学":
                 return parseFuDan(response) ;
+            case "上海财经大学":
+                return parseShangCai(response);
         }
         return new ArrayList<>() ;
+    }
+    //上海财经大学
+    private List<MessageItem> parseShangCai(String response) {
+        Gson gson = new Gson();
+        //需要获取null(".....")中的"...."值
+        ShangHaiCaiJinBean bean = gson.fromJson(response.substring(5,response.length()-1) ,ShangHaiCaiJinBean.class);
+        List<MessageItem> list = new ArrayList<>();
+        for(ShangHaiCaiJinBean.ListDataBean listDataBean : bean.getListData()){
+            MessageItem messageItem = new MessageItem();
+            messageItem.setUrl("http://career.sufe.edu.cn/preaching.html?wid="+listDataBean.getWid());
+            messageItem.setTitle(listDataBean.getZt());
+            messageItem.setFrom("上海财经大学");
+            messageItem.setLocate(listDataBean.getJbdd());
+            messageItem.setCity("上海市");
+            messageItem.setTime(listDataBean.getApkssj());
+            messageItem.setTheme(listDataBean.getUsertype());
+            list.add(messageItem);
+        }
+        return list;
     }
 
     /**
@@ -59,8 +83,9 @@ public class ParseShangHai {
             item.setTitle(elements1.get(0).select("a").text());
             item.setTheme(elements1.get(1).text());
             item.setFrom("上海交通大学");
+            item.setCity("上海市");
             item.setLocate(elements1.get(2).text());
-            item.setTime(elements1.get(3).text() + "\n"+elements1.get(4).text());
+            item.setTime(elements1.get(3).text() + " "+elements1.get(4).text());
             list.add(item);
         }
         return list;
@@ -93,10 +118,12 @@ public class ParseShangHai {
             item.setUrl("http://www.career.fudan.edu.cn/html/xjh/1.html?view=true&key="
                     +elements.get(i).attr("key"));
             item.setTitle(elements.get(i).getElementsByClass("tab1_bottom1").text());
-            item.setFrom(elements.get(i).getElementsByClass("tab1_bottom2").text());
+            item.setTheme(elements.get(i).getElementsByClass("tab1_bottom2").text());
+            item.setFrom("复旦大学");
+            item.setCity("上海市");
             item.setLocate(elements.get(i).getElementsByClass("tab1_bottom5").text());
             item.setTime(elements.get(i).getElementsByClass("tab1_bottom3").text()
-                    + "\n"+elements.get(i).getElementsByClass("tab1_bottom4").text());
+                    + " "+elements.get(i).getElementsByClass("tab1_bottom4").text());
             list.add(item);
         }
         return list;

@@ -3,9 +3,11 @@ package juhe.jiangdajiuye.consume;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -16,9 +18,11 @@ import juhe.jiangdajiuye.R;
 
 public  class MyEdit extends EditText implements OnFocusChangeListener, TextWatcher {
 
-    private Drawable mClearDrawable,search;
+	private static final String TAG = "MyEdit ";
+	private Drawable mClearDrawable,search;
     private boolean hasFoucs;
 	private Context context;
+	private int width ;
 
 	public MyEdit(Context context) {
 		this(context, null);
@@ -31,27 +35,42 @@ public  class MyEdit extends EditText implements OnFocusChangeListener, TextWatc
      
      public MyEdit(Context context, AttributeSet attrs, int defStyle) {
          super(context, attrs, defStyle);
-         init();
      }
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+		init(w, h);
 
-     private void init() { 
+	}
+
+     private void init(int width,int height) {
+		 width =  getHeight() ;
      	mClearDrawable = getCompoundDrawables()[2];//获取右边的图片
 		 search = getCompoundDrawables()[0];//获取左边的图片
          if (mClearDrawable == null) { 
-         	mClearDrawable = getResources().getDrawable(R.drawable.delete_button);
+         	mClearDrawable = getDrawable(R.drawable.delete_button);
          }
 		 if (search == null) {
-			 search = getResources().getDrawable(R.drawable.search_icn);
+			 search =  getDrawable(R.drawable.search_icn);
 		 }
-		 mClearDrawable.setBounds(-10, 0, mClearDrawable.getMinimumWidth()-35, mClearDrawable.getMinimumHeight()-25);
-		 search.setBounds(20, 0, search.getMinimumWidth()-20, search.getMinimumHeight()-40);
+		 search.setBounds(width / 4,0, width,width * 3 /4 );
+		 mClearDrawable.setBounds(-width /5,0, width *3/7,width * 3 / 5  );
 		 setCompoundDrawables(search,null,null,null);
 
 		 setClearIconVisible(false);
          setOnFocusChangeListener(this);
          addTextChangedListener(this);
      }
-     @Override
+
+	private Drawable getDrawable(int id) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			return getResources().getDrawable(id,null);
+		}else{
+			return getResources().getDrawable(id);
+		}
+	}
+
+	@Override
  	public boolean onTouchEvent(MotionEvent event) {
  		if (event.getAction() == MotionEvent.ACTION_UP) {
  			if (getCompoundDrawables()[2] != null) {

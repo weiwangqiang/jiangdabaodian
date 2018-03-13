@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.view.adapter.GameAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.view.dialog.ShareDialog;
@@ -141,7 +142,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
         tencent = Tencent.createInstance(APP_ID, Game.this);
-        dialog = sharedialog.getDialog(Game.this);
+        dialog = sharedialog.getDialog(Game.this, ResourceUtils.getString(R.string.title_share_game));
     }
     private Toolbar toolbar;
     public void initToolbar(){
@@ -194,7 +195,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
     }
     private void showShare(){
         dialog.show();
-        sharedialog.setItemlister(new myItemListener());
+        sharedialog.setItemLister(new myItemListener());
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -219,7 +220,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
     /**
      * popupwind的Item 监听
      */
-    private class myItemListener implements ShareDialog.Itemlister{
+    private class myItemListener implements ShareDialog.ItemLister{
 
         @Override
         public void shareToQzone() {

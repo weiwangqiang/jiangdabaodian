@@ -19,18 +19,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.view.adapter.SearchLibraryAdapter;
 import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.view.dialog.ProgressDialog;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
-import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
+import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
+import juhe.jiangdajiuye.view.adapter.SearchLibraryAdapter;
+import juhe.jiangdajiuye.view.dialog.ProgressDialog;
 
 /**
  * Created by wangqiang on 2016/10/6.
@@ -86,8 +86,8 @@ public class Library extends BaseActivity implements
     }
 
     public void findId() {
-        edit = (EditText) findViewById(R.id.library_edit);
-        search = (TextView) findViewById(R.id.library_search);
+        edit =  findViewById(R.id.library_edit);
+        search = findViewById(R.id.library_search);
         recyclerView = (MyRecyclerView) findViewById(R.id.library_listView);
         toolbar = (Toolbar) findViewById(R.id.Library_toolbar);
     }
@@ -192,7 +192,7 @@ public class Library extends BaseActivity implements
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_input_warn));
             return;
         }
-        if(recyclerView.getStatus() != MyRecyclerView.STATUS_DEFAULT){
+        if(recyclerView.isRefresh()){
             //处于获取数据状态
             return;
         }
@@ -212,6 +212,7 @@ public class Library extends BaseActivity implements
         }
         //解决中文乱码问题
 //        HttpUrl parsed = HttpUrl.parse(getUrl());
+        Log.i(TAG, "searchBook: "+getUrl());
         httpHelper.get(getUrl(),null,iDataListener, HttpTask.Type.book);
     }
     //显示进度条
@@ -223,10 +224,10 @@ public class Library extends BaseActivity implements
     }
     //更新当前数据
     public void upData(List<BookBean> data) {
+        Log.i(TAG, "upData: "+data);
         if (data.size() == 0) {
             if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
                 ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_can_not_search_book));
-                mProgress.cancel();
                 recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
             } else{
                 recyclerView.setStatus(MyRecyclerView.STATUS_END);
@@ -244,8 +245,10 @@ public class Library extends BaseActivity implements
         if (totalNum != 0 && (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH)
                 && adapter.getDataSize() >= totalNum) {
             recyclerView.setStatus(MyRecyclerView.STATUS_END);
+            Log.i(TAG, "upData: set end ");
             return;
         }
+        Log.i(TAG, "upData: set STATUS_DEFAULT");
         recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
     }
 
@@ -292,7 +295,6 @@ public class Library extends BaseActivity implements
         if (recyclerView.getStatus() == MyRecyclerView.STATUS_DEFAULT) {
             recyclerView.setStatus(MyRecyclerView.STATUS_REFRESHING);
             searchBook();
-
         }
     }
 }

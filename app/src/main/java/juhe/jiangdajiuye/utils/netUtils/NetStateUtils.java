@@ -12,13 +12,17 @@ import android.net.NetworkInfo;
  */
 
 public class NetStateUtils {
-    private String TAG = "NetStateUtils";
+    private static String TAG = "NetStateUtils";
     public static final int TYPE_WIFI = 0x1;
     public static final int TYPE_MOBILE = 0x2;
     public static final int TYPE_ERROR = 0x3;
 
     public static int getNetWorkState() {
         return mState;
+    }
+    //获取当前网路是否可用
+    public static boolean getNetWorkAvailable(){
+        return mState != TYPE_ERROR ;
     }
     //判断是否处于WiFi状态
     public static boolean isWifiState(){

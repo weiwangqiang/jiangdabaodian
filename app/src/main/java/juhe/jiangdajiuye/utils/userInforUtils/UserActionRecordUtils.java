@@ -1,7 +1,8 @@
 package juhe.jiangdajiuye.utils.userInforUtils;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,8 +10,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.bean.bmobAppMes.IpBean;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.VisitCount;
-import juhe.jiangdajiuye.core.BaseApplication;
-import juhe.jiangdajiuye.utils.netUtils.NetMesManager;
+import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
+import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
+import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
 
 /**
  * class description here
@@ -24,6 +26,8 @@ public class UserActionRecordUtils {
     public static long outTime;
     public static Map<String, Integer> mRecordMap = new HashMap<>();
     public static String TAG = "UserActionRecordUtils";
+    private static final String ipUrl = "http://ip.chinaz.com/getip.aspx";
+    private static boolean hasPushMes = false ;//是否将用户位置上传
 
     public static void setIpBean(IpBean ipbean) {
         UserActionRecordUtils.ipbean = ipbean;
@@ -42,28 +46,55 @@ public class UserActionRecordUtils {
     /**
      * 记录用户离开时间
      *   并提交数据到bmob
-     * @param outTime
      */
-    public static void setOutTime(long outTime) {
-        UserActionRecordUtils.outTime = outTime;
-        long time = outTime - comeTime;
+    public static void pushMes() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置显示
-        String stayTime = df.format(new Date(time));
         VisitCount count = new VisitCount();
-        if (ipbean == null) {
-            count.setIp(NetMesManager.getIp(BaseApplication.getApplication()));
-            count.setAddress("unKnow");
-        } else {
-            count.setIp(ipbean.getIp());
-            count.setAddress(ipbean.getAddress());
+        if (ipbean == null || hasPushMes) {
+            return;
         }
-        Date dt = new Date();
-        count.setVisitTime(df.format(dt));
-        count.setStayTime(stayTime);
+        count.setIp(ipbean.getIp());
+        count.setAddress(ipbean.getAddress());
+        count.setVisitTime(df.format(comeTime));
+        count.setStayTime(df.format(System.currentTimeMillis() - comeTime));
         count.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
+                hasPushMes = true ;
             }
         });
+    }
+
+    /**
+     * 获取用户位置
+     */
+    public static void setIP() {
+        if (getIpBean() != null) {
+            Log.i(TAG, "setIP:  has get use ip =================== ");
+            return;
+        }
+        Log.i(TAG, "setIP: start to get use ip ----------------");
+        HttpHelper httpHelper = HttpHelper.getInstance() ;
+        httpHelper.get(ipUrl, null, new IDataListener<String>() {
+            @Override
+            public void onSuccess(String response) {
+                try {
+                    String[] params = response.split("\'");
+                    IpBean ipbean = new IpBean();
+                    if(params.length >= 4){
+                        ipbean.setAddress(params[3]);
+                        ipbean.setIp(params[1]);
+                    }
+                    setIpBean(ipbean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(Exception exception, int responseCode) {
+
+            }
+        }, HttpTask.Type.string);
     }
 }

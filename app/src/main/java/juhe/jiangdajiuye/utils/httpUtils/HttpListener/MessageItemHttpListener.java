@@ -25,6 +25,7 @@ import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
  */
 
 public class MessageItemHttpListener implements IHttpListener {
+    private static final String TAG = "MessageItemHttpListener";
     private IDataListener mIDataListener;
     private XuanJiangMesHolder mHolder  ;
     private StringBuilder result = new StringBuilder();

@@ -49,7 +49,7 @@ public class XuanJiangMesHolder {
         this.pager = pager;
     }
 
-    public int pager;
+    private int pager;
     public int getProvinceId() {
         return provinceId;
     }

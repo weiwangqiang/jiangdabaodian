@@ -1,9 +1,12 @@
 package juhe.jiangdajiuye;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -19,7 +22,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -45,11 +47,12 @@ import cn.bmob.v3.listener.FindListener;
 import juhe.jiangdajiuye.bean.bmobAppMes.BootPicture;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.core.BaseApplication;
 import juhe.jiangdajiuye.user.UserManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.SharePreUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.imageUtils.ImageLocalLoad;
-import juhe.jiangdajiuye.utils.netUtils.NetMesManager;
 import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
 import juhe.jiangdajiuye.utils.userInforUtils.UserActionRecordUtils;
 import juhe.jiangdajiuye.utils.userInforUtils.UserBrowseRecordUtils;
@@ -68,9 +71,6 @@ import juhe.jiangdajiuye.view.constant.FileConstant;
 import juhe.jiangdajiuye.view.dialog.ShareDialog;
 import juhe.jiangdajiuye.view.fragment.IndexFragment;
 import juhe.jiangdajiuye.view.xuanJiang.XuanEntrance;
-
-import static juhe.jiangdajiuye.core.BaseApplication.context;
-
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity
     private final String WEI_ID = "wxc306137ab1a20319";
     private final String MESSAGE_RECEIVED_ACTION
             = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
-    private final String content = "我正在使用江大宝典，你也来看看吧";
+    private final String content = "这里有很多宣讲信息，你也来看看吧";
 
     private IWXAPI api;
     private WXWebpageObject webpager;
@@ -105,6 +105,8 @@ public class MainActivity extends BaseActivity
     private Bitmap myBitmap = null;
     private boolean getAdvert = false;
     private NavigationView navigationView;
+    private NetStateReceiver receiver;
+
     private BmobQuery<BootPicture> query = new BmobQuery<>();
 
     @Override
@@ -114,10 +116,18 @@ public class MainActivity extends BaseActivity
         if (savedInstanceState != null) {
             return;
         }
+        registerNetStateReceiver();
         bindNetState();
         initView();
         initPush();
         CheckUpgrade.getUpgradeInfo(false);
+    }
+
+    private void registerNetStateReceiver() {
+        receiver = new NetStateReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(receiver, filter);
     }
 
     private void initPush() {
@@ -129,7 +139,7 @@ public class MainActivity extends BaseActivity
     public void initView() {
         findId();
         initShare();
-        initDrawerLayout();
+//        initDrawerLayout();
         initViewPager();
         initTabLayout();
         initNavigationView();
@@ -140,16 +150,7 @@ public class MainActivity extends BaseActivity
         navigationView.getHeaderView(0).findViewById(R.id.main_my_icn).setOnClickListener(this);
     }
 
-    private void initDrawerLayout() {
-        //实现左右滑动
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        Menu menu = navigationView.getMenu();
 
-    }
 
 
     /**
@@ -157,8 +158,8 @@ public class MainActivity extends BaseActivity
      */
     private void initShare() {
         sharedialog = new ShareDialog();
-        sharedialog.setItemlister(new myItemList());
-        dialog = sharedialog.getDialog(this);
+        sharedialog.setItemLister(new myItemList());
+        dialog = sharedialog.getDialog(this,ResourceUtils.getString(R.string.title_share_soft));
         api = WXAPIFactory.createWXAPI(this, WEI_ID, true);
         api.registerApp(WEI_ID);
         baseuiLister = new baseUiLister();
@@ -169,9 +170,9 @@ public class MainActivity extends BaseActivity
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/teachin/index?",
                 "xuanJiang", IndexFragment.XUANJIANG));
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/campus/index?",
-                "zhaoPinGongGao",IndexFragment.ZHAOPINGONGGAO));
+                "zhaoPinGongGao", IndexFragment.ZHAOPINGONGGAO));
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/jobfair/index?",
-                "zhaoPinHui",IndexFragment.ZHAOPINHUI));
+                "zhaoPinHui", IndexFragment.ZHAOPINHUI));
 
         list.add(IndexFragment.newInstance("http://ujs.91job.gov.cn/job/search?",
                 "zhaoPinZhiWei", IndexFragment.ZHAOPINZHIWEI));
@@ -184,14 +185,21 @@ public class MainActivity extends BaseActivity
         viewPager.addOnPageChangeListener(new pagerList());
         viewPager.setCurrentItem(0);
     }
-
+    private void initDrawerLayout() {
+        //实现左右滑动
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+    }
     private void initTabLayout() {
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+//        DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = findViewById(R.id.tab_layout);
         for (int i = 0; i < 3; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
             tabLayout.addTab(tab);
@@ -200,10 +208,10 @@ public class MainActivity extends BaseActivity
     }
 
     public void findId() {
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        viewPager = findViewById(R.id.viewpager);
+        toolbar = findViewById(R.id.toolbar);
+        drawer = findViewById(R.id.main_drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
     }
 
     @Override
@@ -253,7 +261,6 @@ public class MainActivity extends BaseActivity
             case R.id.nav_game:
                 UserBrowseRecordUtils.setmOffLineGame(1);
                 startActivitySlideInRight(this, Game.class);
-
                 break;
             case R.id.nav_about:
                 UserBrowseRecordUtils.setmAboute(1);
@@ -263,13 +270,11 @@ public class MainActivity extends BaseActivity
                 startActivitySlideInRight(this, LoginActivity.class);
                 break;
             case R.id.nav_calender:
-                Browse.StartActivity(this,"http://ehall.ujs.edu.cn/calendar/index#panel0");
+                Browse.StartActivity(this, "http://ehall.ujs.edu.cn/calendar/index#panel0");
                 break;
             default:
                 break;
         }
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -295,7 +300,7 @@ public class MainActivity extends BaseActivity
 
     private void showShare() {
         dialog.show();
-        sharedialog.setItemlister(new myItemList());
+        sharedialog.setItemLister(new myItemList());
     }
 
     //--------获取起始屏------------- start
@@ -313,7 +318,7 @@ public class MainActivity extends BaseActivity
                     BootPicture picture = object.get(object.size() - 1);
                     getAdvert = true;
                     pictureUri = picture.getUrl();
-                    Glide.with(context) // could be an issue!
+                    Glide.with(BaseApplication.getContext()) // could be an issue!
                             .load(pictureUri)
                             .asBitmap()   //强制转换Bitmap
                             .into(target);
@@ -344,20 +349,23 @@ public class MainActivity extends BaseActivity
     /**
      * popupwind的Item 监听
      */
-    private class myItemList implements ShareDialog.Itemlister {
+    private class myItemList implements ShareDialog.ItemLister {
 
         @Override
         public void shareToQzone() {
+            UserShareUtils.setQQZone(1);
             ToQzone();
         }
 
         @Override
         public void shareToQQ() {
+            UserShareUtils.setQQ(1);
             ToQQ();
         }
 
         @Override
         public void shareTowei() {
+            UserShareUtils.setWeiXin(1);
             req = new SendMessageToWX.Req();
             req.scene = SendMessageToWX.Req.WXSceneSession;
             shareToWX();
@@ -365,6 +373,7 @@ public class MainActivity extends BaseActivity
 
         @Override
         public void shareTopyq() {
+            UserShareUtils.setWXPenYou(1);
             req = new SendMessageToWX.Req();
             req.scene = SendMessageToWX.Req.WXSceneTimeline;
             shareToWX();
@@ -417,8 +426,6 @@ public class MainActivity extends BaseActivity
 
         @Override
         public void onComplete(Object o) {
-//            mytoast.makeText(MainActivity.this,"分享成功！");
-            UserShareUtils.setQQ(1);
         }
 
         @Override
@@ -427,7 +434,6 @@ public class MainActivity extends BaseActivity
 
         @Override
         public void onCancel() {
-//            mytoast.makeText(MainActivity.this,"取消分享");
         }
     }
 
@@ -498,7 +504,6 @@ public class MainActivity extends BaseActivity
                     break;
                 }
                 long secondTime = System.currentTimeMillis();
-                Log.e(TAG, " toast time is " + Toast.LENGTH_SHORT);
                 if (secondTime - exitTime > 2500) {
                     //如果两次按键时间间隔大于2秒，则不退出
                     ToastUtils.showToast("再按一次退出");
@@ -514,15 +519,37 @@ public class MainActivity extends BaseActivity
         return super.onKeyUp(keyCode, event);
     }
 
+    private void showSharePrompt() {
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle("亲~~")
+                .setMessage("若觉得软件不错，就分享给好友吧~")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showShare();
+                    }
+                })
+                .setNegativeButton("再看看吧", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
+    }
+
     /**
      * 方法必须重写
      */
     @Override
     protected void onResume() {
         super.onResume();
-        if (UserActionRecordUtils.getIpBean() == null)
-            NetMesManager.setIP();
         getAdvert();
+        if (SharePreUtils.getInt(SharePreUtils.visitFrequency, 0) > 3) {
+            if (!SharePreUtils.getBoolean(SharePreUtils.hasShowSharePrompt, false)) {
+                showSharePrompt();
+                SharePreUtils.setBoolean(SharePreUtils.hasShowSharePrompt, true);
+            }
+        }
     }
 
     /**
@@ -541,6 +568,7 @@ public class MainActivity extends BaseActivity
                 if (type == NetStateReceiver.TYPE_WIFI) {
                     getAdvert();
                 }
+                UserActionRecordUtils.setIP();
             }
         });
     }
@@ -551,7 +579,10 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        UserActionRecordUtils.setOutTime(System.currentTimeMillis());
+        if (null != receiver) {
+            unregisterReceiver(receiver);
+        }
+        UserActionRecordUtils.pushMes();
         UserBrowseRecordUtils.save();
         UserShareUtils.save();
     }

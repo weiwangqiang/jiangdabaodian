@@ -1,7 +1,6 @@
 package juhe.jiangdajiuye.view.xuanJiang.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,16 +13,16 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.view.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
 import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
-import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
+import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
 import juhe.jiangdajiuye.view.Browse;
+import juhe.jiangdajiuye.view.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 
 /**
@@ -103,12 +102,12 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
 
     public void findId() {
         error = view.findViewById(R.id.error);
-        recyclerView = (MyRecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView =  view.findViewById(R.id.recyclerView);
         manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setOnLoadMoreListener(this);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
     }
 
     public void initRefresh() {
@@ -176,7 +175,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
     public void getMessage() {
         String url = getUrl(recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH
                 , holder);
-        Log.i(TAG, "getMessage: " + url);
+        Log.i(TAG, "connect url : " + url);
         httpHelper.get(url, holder, iDataListener, HttpTask.Type.MessageItem);
     }
 
@@ -243,12 +242,6 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
                 });
             }
         }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: ");
     }
 
 }

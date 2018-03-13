@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/item_bg"
                 android:layout_gravity="center_vertical"
@@ -37,17 +37,16 @@
                 <juhe.jiangdajiuye.consume.MyEdit
                     android:id="@+id/library_edit"
                     android:layout_width="match_parent"
-                    android:layout_margin="8dp"
-                    android:layout_height="fill_parent"
+                    android:layout_margin="5dp"
+                    android:layout_height="match_parent"
                     android:layout_toLeftOf="@+id/library_search"
                     android:ems="10"
                     android:background="@drawable/white_shape"
                     android:layout_weight="1"
-                    android:imeOptions="actionGo|actionSearch|actionDone|actionNext"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
                     android:drawablePadding="10dp"
                     android:lines="1"
-                    android:drawableLeft="@drawable/search_icn"
-                    android:drawableRight="@drawable/delete_button"
                     android:hint="输入检索词"
                     />
                 <TextView

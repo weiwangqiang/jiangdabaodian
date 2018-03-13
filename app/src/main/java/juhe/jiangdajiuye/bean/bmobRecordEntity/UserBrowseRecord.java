@@ -4,7 +4,9 @@ import cn.bmob.v3.BmobObject;
 
 /**
  * class description here
- *  记录用户浏览历史
+ *
+ *   记录用户浏览历史
+ *
  * @author wangqiang
  * @since 2017-08-06
  */

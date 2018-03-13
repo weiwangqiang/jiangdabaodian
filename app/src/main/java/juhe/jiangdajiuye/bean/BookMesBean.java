@@ -2,7 +2,7 @@ package juhe.jiangdajiuye.bean;
 
 /**
  * class description here
- *
+ * 书详情
  * @author wangqiang
  * @since 2017-12-31
  */

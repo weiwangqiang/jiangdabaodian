@@ -16,34 +16,41 @@ import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
  * Created by wangqiang on 2016/7/14.
  */
 public class NetStateReceiver extends BroadcastReceiver {
-    private String TAG = "NetStateReceiver" ;
+    private String TAG = "NetStateReceiver";
     public static final int TYPE_WIFI = 0x1;
     public static final int TYPE_MOBILE = 0x2;
     public static final int TYPE_ERROR = 0x3;
     public static int mState = TYPE_ERROR;
 
     public static List<NetLister> listers = new ArrayList<>();
-    public interface NetLister{
+
+    public interface NetLister {
         void OutInternet();
+
         void GetInternet(int type);
     }
-    public static void addNetLister(NetLister myNetLister){
-        if(!listers.contains(myNetLister))
-          listers.add(myNetLister);
+
+    public static void addNetLister(NetLister myNetLister) {
+        if (!listers.contains(myNetLister)) {
+            listers.add(myNetLister);
+        }
     }
-    public static void removeLister(NetLister lister){
-        if(listers.contains(lister))
+
+    public static void removeLister(NetLister lister) {
+        if (listers.contains(lister)) {
             listers.remove(lister);
+        }
     }
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        ConnectivityManager manager = (ConnectivityManager)context.
+        ConnectivityManager manager = (ConnectivityManager) context.
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
         if (activeNetwork != null) { // connected to the internet
             if (activeNetwork.isConnected() || activeNetwork.isAvailable()) {
-                switch (activeNetwork.getType()){
-                    case ConnectivityManager.TYPE_WIFI :
+                switch (activeNetwork.getType()) {
+                    case ConnectivityManager.TYPE_WIFI:
                         setmState(TYPE_WIFI);
                         break;
                     case ConnectivityManager.TYPE_MOBILE:
@@ -53,30 +60,32 @@ public class NetStateReceiver extends BroadcastReceiver {
             } else {
                 setmState(TYPE_ERROR);
             }
-        }else{
+        } else {
             setmState(TYPE_ERROR);
         }
     }
 
     private void setmState(int type) {
-        if(mState == type) return;
-        mState = type ;
-        switch (type){
+        if (mState == type) {
+            return;
+        }
+        mState = type;
+        switch (type) {
             case TYPE_ERROR:
                 NetStateUtils.setNetWorkState(NetStateUtils.TYPE_ERROR);
-                for(NetLister netLister : listers){
+                for (NetLister netLister : listers) {
                     netLister.OutInternet();
                 }
                 break;
             case TYPE_MOBILE:
                 NetStateUtils.setNetWorkState(NetStateUtils.TYPE_MOBILE);
-                for(NetLister netLister : listers){
+                for (NetLister netLister : listers) {
                     netLister.GetInternet(TYPE_MOBILE);
                 }
                 break;
             case TYPE_WIFI:
                 NetStateUtils.setNetWorkState(NetStateUtils.TYPE_WIFI);
-                for(NetLister netLister : listers){
+                for (NetLister netLister : listers) {
                     netLister.GetInternet(TYPE_WIFI);
                 }
                 break;
