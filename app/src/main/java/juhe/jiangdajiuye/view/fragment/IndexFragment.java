@@ -24,8 +24,8 @@ import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
 import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
-import juhe.jiangdajiuye.view.Browse;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
+import juhe.jiangdajiuye.view.activity.Browse;
+import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
 
 /**
  * Created by wangqiang on 2016/9/27.
@@ -50,7 +50,7 @@ public class IndexFragment extends Fragment implements OnLoadMoreListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private HttpHelper httpHelper ;
     private StringBuilder str = new StringBuilder();
-    private XuanJiangMesHolder holder = new XuanJiangMesHolder();
+    private MesItemHolder holder = new MesItemHolder();
     public static IndexFragment newInstance(String url, String TAG, int tab) {
         IndexFragment f = new IndexFragment();
         Bundle b = new Bundle();

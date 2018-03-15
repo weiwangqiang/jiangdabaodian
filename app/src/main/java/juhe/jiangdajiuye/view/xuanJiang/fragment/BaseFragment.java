@@ -21,9 +21,9 @@ import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
 import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
-import juhe.jiangdajiuye.view.Browse;
+import juhe.jiangdajiuye.view.activity.Browse;
 import juhe.jiangdajiuye.view.adapter.IndexFragmentAdapter;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
+import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here
@@ -43,15 +43,26 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
     private Boolean isFirst = true;
     private SwipeRefreshLayout swipeRefreshLayout;
     private HttpHelper httpHelper;
-    private XuanJiangMesHolder holder;
+    private MesItemHolder holder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (view != null)
+        if (view != null){
+            if(recyclerView.isRefresh()){
+                swipeRefreshLayout.setRefreshing(true);
+            }
             return view;
+        }
         view = inflater.inflate(R.layout.fragment, container, false);
         init();
         return view;
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -62,7 +73,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
 
     public void init() {
         Bundle bundle = getArguments();
-        holder = new XuanJiangMesHolder();
+        holder = new MesItemHolder();
         holder.setBaseUrl(bundle.getString("BaseUrl"));
         holder.setCollege(bundle.getString("college"));
         holder.setCollegeId(bundle.getInt("collegeId"));
@@ -214,7 +225,7 @@ public abstract class BaseFragment extends Fragment implements OnLoadMoreListene
         showError();
     }
 
-    public abstract String getUrl(boolean isPull, XuanJiangMesHolder holder);
+    public abstract String getUrl(boolean isPull, MesItemHolder holder);
 
     public abstract void RequestSuccess();
 

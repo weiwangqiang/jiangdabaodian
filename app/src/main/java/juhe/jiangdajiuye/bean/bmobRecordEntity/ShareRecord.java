@@ -1,50 +1,62 @@
 package juhe.jiangdajiuye.bean.bmobRecordEntity;
 
+import android.util.Log;
+
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+import rx.Subscription;
 
 /**
  * class description here
  * 用户分享记录
+ *
  * @author wangqiang
  * @since 2017-08-06
  */
 
 public class ShareRecord extends BmobObject {
-    public static int QQZone = 0;
-    public static int QQ = 0;
-    public static int WeiXin = 0;
+    private static final String TAG = "ShareRecord ";
+    private static ShareRecord instance = new ShareRecord() ;
+    private int QQZone = 0;
+    private  int QQ = 0;
+    private  int WeiXin = 0;
+    private  int WXPenYou = 0;
 
-    public static int getQQZone() {
-        return QQZone;
+    private ShareRecord(){}
+    public static ShareRecord getInstance()
+    {
+        return instance ;
+    }
+    public  void toQQZone() {
+        QQZone++;
     }
 
-    public static void setQQZone(int QQZone) {
-        ShareRecord.QQZone = QQZone;
+
+    public  void toQQ() {
+        QQ++;
     }
 
-    public static int getQQ() {
-        return QQ;
+
+    public  void toWeiXin() {
+        WeiXin++;
     }
 
-    public static void setQQ(int QQ) {
-        ShareRecord.QQ = QQ;
+
+    public  void toWXPenYou() {
+        WXPenYou++;
     }
 
-    public static int getWeiXin() {
-        return WeiXin;
+    @Override
+    public Subscription save() {
+        if((QQZone+QQ+WeiXin+WXPenYou) !=0 ){
+            return super.save(new SaveListener<String>(){
+                @Override
+                public void done(String s, BmobException e) {
+                    Log.i(TAG, "done: finish ");
+                }
+            });
+        }
+        return null ;
     }
-
-    public static void setWeiXin(int weiXin) {
-        WeiXin = weiXin;
-    }
-
-    public static int getWXPenYou() {
-        return WXPenYou;
-    }
-
-    public static void setWXPenYou(int WXPenYou) {
-        ShareRecord.WXPenYou = WXPenYou;
-    }
-
-    public static int WXPenYou = 0;
 }

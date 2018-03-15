@@ -10,7 +10,7 @@ import juhe.jiangdajiuye.utils.httpUtils.HttpService;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IHttpListener;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IHttpService;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
+import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here
@@ -26,7 +26,7 @@ public class HttpTask implements Runnable {
     private IHttpService iHttpService;
     private IDataListener mIDataListener;
     private byte[] mRequestData;
-    private XuanJiangMesHolder mHolder ;
+    private MesItemHolder mHolder ;
     public enum Type {
         string, json, data,MessageItem,book
     }
@@ -45,7 +45,7 @@ public class HttpTask implements Runnable {
     }
 
 
-    public <T> HttpTask(String url, XuanJiangMesHolder holder , IDataListener<T> iDataListener, Type type) {
+    public <T> HttpTask(String url, MesItemHolder holder , IDataListener<T> iDataListener, Type type) {
         this.mIDataListener = iDataListener;
         this.mHolder = holder ;
         iHttpService = new HttpService(url, mRequestData, getHttpListener(type, mIDataListener));

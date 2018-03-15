@@ -45,6 +45,8 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import juhe.jiangdajiuye.bean.bmobAppMes.BootPicture;
+import juhe.jiangdajiuye.bean.bmobRecordEntity.ShareRecord;
+import juhe.jiangdajiuye.bean.bmobRecordEntity.UserBrowseRecord;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.core.BaseApplication;
@@ -54,17 +56,17 @@ import juhe.jiangdajiuye.utils.SharePreUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.imageUtils.ImageLocalLoad;
 import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
-import juhe.jiangdajiuye.utils.userInforUtils.UserActionRecordUtils;
-import juhe.jiangdajiuye.utils.userInforUtils.UserBrowseRecordUtils;
-import juhe.jiangdajiuye.utils.userInforUtils.UserShareUtils;
+import juhe.jiangdajiuye.user.UserActionRecordUtils;
 import juhe.jiangdajiuye.utils.versionUpGrade.CheckUpgrade;
-import juhe.jiangdajiuye.view.About;
-import juhe.jiangdajiuye.view.Browse;
-import juhe.jiangdajiuye.view.Collect;
-import juhe.jiangdajiuye.view.FeedBack;
-import juhe.jiangdajiuye.view.Game;
-import juhe.jiangdajiuye.view.Library;
-import juhe.jiangdajiuye.view.LoginActivity;
+import juhe.jiangdajiuye.view.JobFair.JobFEntrance;
+import juhe.jiangdajiuye.view.activity.About;
+import juhe.jiangdajiuye.view.activity.Browse;
+import juhe.jiangdajiuye.view.activity.Collect;
+import juhe.jiangdajiuye.view.activity.FeedBack;
+import juhe.jiangdajiuye.view.activity.Game;
+import juhe.jiangdajiuye.view.activity.Library;
+import juhe.jiangdajiuye.view.activity.LoginActivity;
+import juhe.jiangdajiuye.view.activity.More;
 import juhe.jiangdajiuye.view.adapter.FragmentAdapter;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 import juhe.jiangdajiuye.view.constant.FileConstant;
@@ -151,15 +153,13 @@ public class MainActivity extends BaseActivity
     }
 
 
-
-
     /**
      * 初始化微信
      */
     private void initShare() {
         sharedialog = new ShareDialog();
         sharedialog.setItemLister(new myItemList());
-        dialog = sharedialog.getDialog(this,ResourceUtils.getString(R.string.title_share_soft));
+        dialog = sharedialog.getDialog(this, ResourceUtils.getString(R.string.title_share_soft));
         api = WXAPIFactory.createWXAPI(this, WEI_ID, true);
         api.registerApp(WEI_ID);
         baseuiLister = new baseUiLister();
@@ -185,6 +185,7 @@ public class MainActivity extends BaseActivity
         viewPager.addOnPageChangeListener(new pagerList());
         viewPager.setCurrentItem(0);
     }
+
     private void initDrawerLayout() {
         //实现左右滑动
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -192,6 +193,7 @@ public class MainActivity extends BaseActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
     }
+
     private void initTabLayout() {
         setSupportActionBar(toolbar);
 
@@ -244,34 +246,41 @@ public class MainActivity extends BaseActivity
                 drawer.closeDrawer(Gravity.LEFT);
                 break;
             case R.id.nav_library:
-                UserBrowseRecordUtils.setmLibrary(1);
+                UserBrowseRecord.getInstance().inLibrary();
                 startActivitySlideInRight(this, Library.class);
                 break;
             case R.id.nav_favorite:
                 startActivitySlideInRight(this, Collect.class);
                 break;
             case R.id.nav_xuanjianghui:
-                UserBrowseRecordUtils.setmXuanJiangCollect(1);
+                UserBrowseRecord.getInstance().inXuanJiang();
                 startActivitySlideInRight(this, XuanEntrance.class);
+                break;
+            case R.id.nav_job_fair:
+                UserBrowseRecord.getInstance().inJobFair();
+                startActivitySlideInRight(this, JobFEntrance.class);
                 break;
             case R.id.nav_send:
                 startActivitySlideInRight(this, FeedBack.class);
 
                 break;
             case R.id.nav_game:
-                UserBrowseRecordUtils.setmOffLineGame(1);
+                UserBrowseRecord.getInstance().inOffLineGame();
                 startActivitySlideInRight(this, Game.class);
                 break;
             case R.id.nav_about:
-                UserBrowseRecordUtils.setmAboute(1);
+                UserBrowseRecord.getInstance().inAboute();
                 startActivitySlideInRight(this, About.class);
                 break;
             case R.id.nav_login:
                 startActivitySlideInRight(this, LoginActivity.class);
                 break;
             case R.id.nav_calender:
+                UserBrowseRecord.getInstance().inCalender();
                 Browse.StartActivity(this, "http://ehall.ujs.edu.cn/calendar/index#panel0");
                 break;
+            case R.id.nav_more:
+                startActivitySlideInRight(this, More.class);
             default:
                 break;
         }
@@ -353,19 +362,19 @@ public class MainActivity extends BaseActivity
 
         @Override
         public void shareToQzone() {
-            UserShareUtils.setQQZone(1);
+            ShareRecord.getInstance().toQQZone();
             ToQzone();
         }
 
         @Override
         public void shareToQQ() {
-            UserShareUtils.setQQ(1);
+            ShareRecord.getInstance().toQQ();
             ToQQ();
         }
 
         @Override
         public void shareTowei() {
-            UserShareUtils.setWeiXin(1);
+            ShareRecord.getInstance().toWeiXin();
             req = new SendMessageToWX.Req();
             req.scene = SendMessageToWX.Req.WXSceneSession;
             shareToWX();
@@ -373,7 +382,7 @@ public class MainActivity extends BaseActivity
 
         @Override
         public void shareTopyq() {
-            UserShareUtils.setWXPenYou(1);
+            ShareRecord.getInstance().toWXPenYou();
             req = new SendMessageToWX.Req();
             req.scene = SendMessageToWX.Req.WXSceneTimeline;
             shareToWX();
@@ -583,7 +592,7 @@ public class MainActivity extends BaseActivity
             unregisterReceiver(receiver);
         }
         UserActionRecordUtils.pushMes();
-        UserBrowseRecordUtils.save();
-        UserShareUtils.save();
+        UserBrowseRecord.getInstance().save();
+        ShareRecord.getInstance().save();
     }
 }

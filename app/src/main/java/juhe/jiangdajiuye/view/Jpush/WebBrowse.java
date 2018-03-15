@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
@@ -37,6 +35,7 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.push.XuanJiangPush;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.view.dialog.ProgressDialog;
 import juhe.jiangdajiuye.view.dialog.ShareDialog;
 
@@ -83,7 +82,7 @@ public class WebBrowse extends BaseActivity {
     private Toolbar toolbar;
 
     public void initToolbar() {
-        toolbar.setTitle(ResourceUtils.getString(R.string.title_browse_push));
+        toolbar.setTitle(title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -256,18 +255,16 @@ public class WebBrowse extends BaseActivity {
     }
 
     private void shareToWX() {
-        Toast.makeText(this, "正在跳转", Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "share to weixin");
+        ToastUtils.showToast(ResourceUtils.getString(R.string.toast_jump_wait));
         webpager = new WXWebpageObject();
         webpager.webpageUrl = targetUrl;
         message = new WXMediaMessage(webpager);
-        message.title = "江大宝典";
+        message.title = ResourceUtils.getString(R.string.app_name);
         message.description = title;
         req.transaction = "webPager";
         req.message = message;
         Boolean get = api.sendReq(req);
         dialog.cancel();
-        Log.e(TAG, "share return is " + get);
     }
 
     private void ToQQ() {
@@ -277,7 +274,7 @@ public class WebBrowse extends BaseActivity {
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, "我正在江大宝典看" + title);
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, targetUrl);
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, IcnUrl);
-        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, "江大宝典");
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, ResourceUtils.getString(R.string.app_name));
         dialog.cancel();
         tencent.shareToQQ(WebBrowse.this, params, baseuiLister);
     }
@@ -288,7 +285,7 @@ public class WebBrowse extends BaseActivity {
         list.add(IcnUrl);
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);//必填
-        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, "我正在宝典看" + title);//选填
+        params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, "我正在江大宝典看" + title);//选填
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, targetUrl);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, list);
         dialog.cancel();
@@ -302,7 +299,7 @@ public class WebBrowse extends BaseActivity {
 
         @Override
         public void onComplete(Object o) {
-            Toast.makeText(WebBrowse.this, "分享成功！", Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(ResourceUtils.getString(R.string.toast_share_success));
         }
 
         @Override
@@ -311,7 +308,8 @@ public class WebBrowse extends BaseActivity {
 
         @Override
         public void onCancel() {
-            Toast.makeText(WebBrowse.this, "取消分享！", Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast(ResourceUtils.getString(R.string.toast_share_cancel));
+
         }
     }
 

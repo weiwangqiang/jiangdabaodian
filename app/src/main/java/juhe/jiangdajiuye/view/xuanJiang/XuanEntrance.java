@@ -21,7 +21,7 @@ public class XuanEntrance extends BaseActivity {
     SimpleAdapter adapter ;
     XuanEntranceData data ;
     private Toolbar toolbar;
-    private String TAG = "XuanEntrance" ;
+    private String TAG = "JobFEntrance" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

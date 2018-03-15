@@ -24,7 +24,7 @@ android {
         multiDexKeepProguard file("multidexKeep.pro")//腾讯bugly的类放在主dex
         ndk {
             //设置支持的SO库架构
-            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86','x86_64','mips','mips64'
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'
         }
     }
     sourceSets {
@@ -68,7 +68,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:26.0.0'
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
-    compile 'cn.bmob.android:bmob-sdk:3.5.7'
+    compile 'cn.bmob.android:bmob-sdk:3.5.9'
     compile 'cn.bmob.android:bmob-push:1.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'

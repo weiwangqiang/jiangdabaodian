@@ -10,15 +10,16 @@ import juhe.jiangdajiuye.utils.ParseUtils;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IHttpListener;
 import juhe.jiangdajiuye.utils.httpUtils.ThreadHelper;
+import juhe.jiangdajiuye.view.JobFair.control.JobParseControl;
 import juhe.jiangdajiuye.view.xuanJiang.control.XuanParseControl;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
+import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here
- *
- *  返回数据类型 ； List<MessageItem>
- *
- *  当前线程处于异步线程，可以执行耗时操作
+ * <p>
+ * 返回数据类型 ； List<MessageItem>
+ * <p>
+ * 当前线程处于异步线程，可以执行耗时操作
  *
  * @author wangqiang
  * @since 2018-02-14
@@ -27,12 +28,13 @@ import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
 public class MessageItemHttpListener implements IHttpListener {
     private static final String TAG = "MessageItemHttpListener";
     private IDataListener mIDataListener;
-    private XuanJiangMesHolder mHolder  ;
+    private MesItemHolder mHolder;
     private StringBuilder result = new StringBuilder();
-    private List<MessageItem> resData ;
-    public MessageItemHttpListener(IDataListener<List<MessageItem>> mIDataListener,XuanJiangMesHolder mHolder) {
+    private List<MessageItem> resData;
+
+    public MessageItemHttpListener(IDataListener<List<MessageItem>> mIDataListener, MesItemHolder mHolder) {
         this.mIDataListener = mIDataListener;
-        this.mHolder = mHolder ;
+        this.mHolder = mHolder;
         if (null == mIDataListener) {
             throw new NullPointerException("IDataListener can not be null ");
         }
@@ -55,7 +57,7 @@ public class MessageItemHttpListener implements IHttpListener {
                 }
             });
         }
-        resData = parseResponse(result.toString(),mHolder) ;
+        resData = parseResponse(result.toString(), mHolder);
         ThreadHelper.getInstance().runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -66,21 +68,29 @@ public class MessageItemHttpListener implements IHttpListener {
 
     /**
      * 解析信息
+     *
      * @param response 服务器返回的结果
-     * @param holder 控制解析的holder
+     * @param holder   控制解析的holder
      * @return 解析结果
      */
-    private List<MessageItem> parseResponse(String response, XuanJiangMesHolder holder) {
-        if(null == holder){
+    private List<MessageItem> parseResponse(String response, MesItemHolder holder) {
+        if (null == holder) {
             return new ArrayList<>();
         }
-        if (holder.getTab() == -1) {
-            //解析各个学校的宣讲会
-            return XuanParseControl.getInStance().parse(response, holder);
-        }else{
+        if (holder.getTab() != -1) {
             //解析江苏大学的信息
             return ParseUtils.getInstance().parseMainMes(response, holder.getTab());
         }
+        //解析各个学校的宣讲会
+        switch (holder.getMessKind()) {
+            case MesItemHolder.mes_xuan_jiang:
+                return XuanParseControl.getInStance().parse(response, holder);
+            case MesItemHolder.mes_job_fair:
+                return JobParseControl.getInStance().parse(response, holder);
+            default:
+                return new ArrayList<>();
+        }
+
     }
 
     @Override
@@ -88,7 +98,7 @@ public class MessageItemHttpListener implements IHttpListener {
         ThreadHelper.getInstance().runOnMainThread(new Runnable() {
             @Override
             public void run() {
-                mIDataListener.onFail(exception,responseCode);
+                mIDataListener.onFail(exception, responseCode);
             }
         });
     }

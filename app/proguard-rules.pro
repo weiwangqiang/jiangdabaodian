@@ -16,7 +16,7 @@
 #   public *;
 #}
 
-
+#-dontoptimize#防止编译器将一些方法内联
 -keep class juhe.jiangdajiuye.view.xuanJiang.** {*;}
 
 -dontwarn java.nio.file.*

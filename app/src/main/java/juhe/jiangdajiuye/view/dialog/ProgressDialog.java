@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import juhe.jiangdajiuye.R;
@@ -52,6 +54,9 @@ public class ProgressDialog extends Dialog {
     }
     private void initView() {
         setContentView(R.layout.progress_dialog);
+        Window window = getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
 //        setProgressStyle(R.style.LodingDialog);
         //解决android 5以上dialog无法通过style 来设置透明背景的问题
         getWindow().setBackgroundDrawable(new ColorDrawable());

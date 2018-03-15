@@ -13,23 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.view.adapter.XJFragmentAdapter;
+import juhe.jiangdajiuye.view.adapter.MesFragmentAdapter;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.utils.ResourceUtils;
-import juhe.jiangdajiuye.view.xuanJiang.constant.XuanJiangData;
-import juhe.jiangdajiuye.view.xuanJiang.fragment.BaseFragmentImpl;
+import juhe.jiangdajiuye.view.xuanJiang.constant.XuanJiangUrl;
+import juhe.jiangdajiuye.view.xuanJiang.fragment.XuanFragment;
 
 /**
  * Created by wangqiang on 2016/10/1.
  * 省份里各个高校的宣讲会tab列表
  */
 public class XuanJiangTab extends BaseActivity {
-    private String TAG = "XuanJiangTab";
+    private String TAG = "JobFTab";
     private ViewPager viewPager;
     private Toolbar toolbar;
     private TabLayout  tabLayout;
     private List<Fragment> list = new ArrayList<>();
-    private XJFragmentAdapter adapter;
+    private MesFragmentAdapter adapter;
     public String[] college ;
     public String[] urls ;
     private int provinceId ;
@@ -50,14 +50,14 @@ public class XuanJiangTab extends BaseActivity {
         tabLayout = (TabLayout) findViewById(R.id.xuanjiang_tabLayout);
     }
     public void initList(){
-        XuanJiangData xuanJiangData =  XuanJiangData.getInstance();
-        college = xuanJiangData.getTitle(provinceId);
-        urls = xuanJiangData.getUrls(provinceId);
+        XuanJiangUrl xuanJiangUrl =  XuanJiangUrl.getInstance();
+        college = xuanJiangUrl.getTitle(provinceId);
+        urls = xuanJiangUrl.getUrls(provinceId);
         for(int i =0;i<college.length;i++){
-            Fragment f = BaseFragmentImpl.newInstance(urls[i],college[i],i,provinceId);
+            Fragment f = XuanFragment.newInstance(urls[i],college[i],i,provinceId);
             list.add(f);
         }
-        adapter  = new XJFragmentAdapter(getSupportFragmentManager(), list,college);
+        adapter  = new MesFragmentAdapter(getSupportFragmentManager(), list,college);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new pagerlist());
         viewPager.setCurrentItem(0);

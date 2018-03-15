@@ -11,7 +11,7 @@ import android.view.View;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.utils.ToastUtils;
-import juhe.jiangdajiuye.view.LoginActivity;
+import juhe.jiangdajiuye.view.activity.LoginActivity;
 
 /**
  * 基础activity

@@ -6,10 +6,10 @@ import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
-import juhe.jiangdajiuye.view.xuanJiang.parse.ParseHangZou;
-import juhe.jiangdajiuye.view.xuanJiang.parse.ParseJiangSu;
-import juhe.jiangdajiuye.view.xuanJiang.parse.ParseShangHai;
+import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.xuanJiang.parse.HangZouXuanParse;
+import juhe.jiangdajiuye.view.xuanJiang.parse.JiangSuXuanParse;
+import juhe.jiangdajiuye.view.xuanJiang.parse.ShangHaiXuanParse;
 
 /**
  * class description here
@@ -19,21 +19,21 @@ import juhe.jiangdajiuye.view.xuanJiang.parse.ParseShangHai;
  */
 
 public class XuanParseControl {
-    private String TAG = "XuanParseControl" ;
+    private String TAG = "JobParseControl" ;
     public static XuanParseControl instance ;
     public static XuanParseControl getInStance(){
         if(instance == null)
             instance = new XuanParseControl();
         return instance ;
     }
-    public List<MessageItem> parse(String result , XuanJiangMesHolder holder){
+    public List<MessageItem> parse(String result , MesItemHolder holder){
         switch (holder.getProvinceId()){
             case XuanEntranceData.JIANGSU:
-                return ParseJiangSu.getInstance().parse(result,holder);
+                return JiangSuXuanParse.getInstance().parse(result,holder);
             case XuanEntranceData.SHANGHAI:
-                return ParseShangHai.getParseShangHai().parse(result,holder);
+                return ShangHaiXuanParse.getShangHaiXuanParse().parse(result,holder);
             case XuanEntranceData.ZHEJIANG:
-                return ParseHangZou.parse(result,holder) ;
+                return HangZouXuanParse.parse(result,holder) ;
         }
         return new ArrayList<>();
     }

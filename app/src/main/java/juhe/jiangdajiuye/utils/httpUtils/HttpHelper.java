@@ -3,7 +3,7 @@ package juhe.jiangdajiuye.utils.httpUtils;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
 import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
 import juhe.jiangdajiuye.utils.httpUtils.task.TaskExecuteManager;
-import juhe.jiangdajiuye.view.xuanJiang.entity.XuanJiangMesHolder;
+import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here
@@ -34,7 +34,7 @@ public class HttpHelper<T> {
         HttpTask httpTask = new HttpTask(url, requestBean, iDataListener, type);
         taskExecuteManager.execute(httpTask);
     }
-    public void get(String url, XuanJiangMesHolder holder, IDataListener<T> iDataListener, HttpTask.Type type) {
+    public void get(String url, MesItemHolder holder, IDataListener<T> iDataListener, HttpTask.Type type) {
         HttpTask httpTask = new HttpTask(url, holder, iDataListener, type);
         taskExecuteManager.execute(httpTask);
     }

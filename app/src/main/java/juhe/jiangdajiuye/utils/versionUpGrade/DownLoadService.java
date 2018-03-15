@@ -3,6 +3,7 @@ package juhe.jiangdajiuye.utils.versionUpGrade;
 import android.app.IntentService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -59,6 +60,9 @@ public class DownLoadService extends IntentService {
                 .setProgress(100, 0, false)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(PendingIntent.getActivity(this,
+                        0, new Intent(), 0))
                 .setSound(Uri.parse("android.resource://"
                         + getPackageName() + "/"
                         + R.raw.silence));
@@ -101,8 +105,10 @@ public class DownLoadService extends IntentService {
                 @Override
                 public void done(String s, BmobException e) {
                     if (null == e) {
-                        builder.setProgress(100, 100, false);
-                        builder.setContentText(ResourceUtils.getString(R.string.downloaded));
+                        builder.setContentText(ResourceUtils.getString(R.string.notify_download_finish))
+                                // Removes the progress bar
+                                .setProgress(0,0,false);
+//                        builder.setProgress(100, 100, false);
                         mNM.notify(NOTIFICATION, builder.build());
                         install(CheckUpgrade.ApkFile);
                     } else {

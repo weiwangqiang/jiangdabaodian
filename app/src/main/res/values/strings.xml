@@ -36,7 +36,10 @@
 
     <string name="title_feed_back">反馈意见</string>
     <string name="title_xuanjiang_province">宣讲省份</string>
-    <string name="title_xuangjiang_tab">宣讲大全</string>
+    <string name="title_xuangjiang_tab">宣讲会</string>
+
+    <string name="title_job_fair_province">招聘会</string>
+    <string name="title_job_fair_tab">招聘会</string>
     <string name="title_collect">收藏夹</string>
     <string name="title_library">图书馆</string>
     <string name="title_activity_login">Sign in</string>
@@ -68,6 +71,9 @@
     <string name="toast_library_can_not_search_book">没有你要搜索的书</string>
     <string name="toast_network_error">网络不在服务区哦~</string>
     <string name="toast_data_null">没有数据</string>
+    <string name="toast_jump_wait">正在跳转</string>
+    <string name="toast_share_success">分享成功</string>
+    <string name="toast_share_cancel">分享成功</string>
 
     <string name="menu_syn_data_push">上传</string>
     <string name="menu_syn_data_download">下载</string>
@@ -77,6 +83,7 @@
     <string name="recycler_statues_not_any_more">没有更多了</string>
     <string name="recycler_statues_network_error">网络出错，请连接后再试</string>
 
+    <string name="notify_download_finish">下载完成</string>
     <!-- Strings related to login -->
     <string name="title_login">登陆</string>
     <string name="prompt_email">用户名</string>

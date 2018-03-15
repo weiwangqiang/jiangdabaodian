@@ -17,6 +17,10 @@
         android:icon="@drawable/ic_edu_black"
         android:title="宣讲啦" />
     <item
+        android:id="@+id/nav_job_fair"
+        android:icon="@drawable/ic_group_black"
+        android:title="招聘会" />
+    <item
         android:id="@+id/nav_favorite"
         android:icon="@drawable/ic_favorite_outline_black"
         android:title="收藏夹" />
@@ -41,7 +45,13 @@
     <item
         android:id="@+id/nav_login"
         android:visible="true"
+
         android:icon="@drawable/ic_account_box_black_36dp"
         android:title="登陆" />
+    <item
+        android:id="@+id/nav_more"
+        android:visible="true"
+        android:icon="@drawable/ic_perm_data_setting"
+        android:title="更多" />
 
 </menu>

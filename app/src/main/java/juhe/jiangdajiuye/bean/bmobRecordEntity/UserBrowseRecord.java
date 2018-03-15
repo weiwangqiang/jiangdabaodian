@@ -1,6 +1,11 @@
 package juhe.jiangdajiuye.bean.bmobRecordEntity;
 
+import android.util.Log;
+
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+import rx.Subscription;
 
 /**
  * class description here
@@ -12,47 +17,50 @@ import cn.bmob.v3.BmobObject;
  */
 
 public class UserBrowseRecord extends BmobObject{
+    private static final String TAG = "UserBrowseRecord";
+    private static UserBrowseRecord instance = new UserBrowseRecord() ;
     private int mLibrary;
-    private int mXuanJiangCollect;
+    private int mXuanJiang;
     private int mOffLineGame;
-
-    public int getmLibrary() {
-        return mLibrary;
+    private int mJobFair ;
+    private int mAboute ;
+    private int mCalender ;
+    private UserBrowseRecord(){}
+    public static UserBrowseRecord getInstance(){
+        return instance ;
+    }
+    public void inCalender(){
+        mCalender++;
+    }
+    public void inJobFair() {
+        mJobFair++;
     }
 
-    public void setmLibrary(int mLibrary) {
-        this.mLibrary = mLibrary;
+    public void inLibrary() {
+        mLibrary ++;
     }
 
-    public int getmXuanJiangCollect() {
-        return mXuanJiangCollect;
+    public  void inXuanJiang() {
+        mXuanJiang ++;
     }
 
-    public void setmXuanJiangCollect(int mXuanJiangCollect) {
-        this.mXuanJiangCollect = mXuanJiangCollect;
+    public void inOffLineGame() {
+        mOffLineGame ++;
     }
 
-    public int getmOffLineGame() {
-        return mOffLineGame;
+    public void inAboute() {
+        mAboute ++;
     }
-
-    public void setmOffLineGame(int mOffLineGame) {
-        this.mOffLineGame = mOffLineGame;
-    }
-
-    public int getmAboute() {
-        return mAboute;
-    }
-
-    public void setmAboute(int mAboute) {
-        this.mAboute = mAboute;
-    }
-
-        private int mAboute ;
-    public static class Key{
-        public static String mLibrary = "mLibrary";
-        public static String mXuanJiangCollect = "mXuanJiangCollect";
-        public static String mOffLineGame = "mOffLineGame";
-        public static String mAboute  = "mAboute";
+    @Override
+    public Subscription save() {
+        if((mLibrary+mAboute+mCalender+mJobFair+mOffLineGame+mXuanJiang) !=0 ){
+            return super.save(new SaveListener<String>(){
+                @Override
+                public void done(String s, BmobException e) {
+                    Log.i(TAG, "done: finish ");
+                }
+            });
+        }
+        return null ;
     }
 }
