@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -14,7 +16,6 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.bmobAppMes.AppVersionBean;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
-import juhe.jiangdajiuye.utils.versionUpGrade.DownLoadService;
 
 /**
  * class description here
@@ -70,31 +71,40 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
 
     //显示确认dialog
     private void showConfirmDialog() {
-        if (!NetStateUtils.isWifiState()) {
-            new AlertDialog.Builder(mCtx)
-                    .setTitle(ResourceUtils.getString(R.string.download_without_wifi))
-                    .setPositiveButton(ResourceUtils.getString(R.string.confirm),
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    DownLoadService.startDownLoadService(mCtx, bean.getDownLoadUrl());
-                                    dialog.cancel();
-                                }
-                            })
-                    .setNeutralButton(ResourceUtils.getString(R.string.cancel),
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            })
-                    .create()
-                    .show();
-        }else {
-            DownLoadService.startDownLoadService(mCtx, bean.getDownLoadUrl());
-        }
         cancel();
+        if (NetStateUtils.isWifiState()) {
+            upByMarket();
+//            DownLoadService.startDownLoadService(mCtx, bean.getDownLoadUrl());
+            return;
+        }
+        new AlertDialog.Builder(mCtx)
+                .setTitle(ResourceUtils.getString(R.string.download_without_wifi))
+                .setPositiveButton(ResourceUtils.getString(R.string.confirm),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                upByMarket();
+//                                    DownLoadService.startDownLoadService(mCtx, bean.getDownLoadUrl());
+//                                    dialog.cancel();
+                            }
+                        })
+                .setNeutralButton(ResourceUtils.getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                .create()
+                .show();
+    }
+    //通过应用商店更新
+    private void upByMarket() {
+        Uri uri = Uri.parse("market://details?id=" + mCtx.getPackageName());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mCtx.startActivity(intent);
     }
 }

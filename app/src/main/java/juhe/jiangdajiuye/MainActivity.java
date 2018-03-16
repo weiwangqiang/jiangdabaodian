@@ -50,24 +50,25 @@ import juhe.jiangdajiuye.bean.bmobRecordEntity.UserBrowseRecord;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.core.BaseApplication;
+import juhe.jiangdajiuye.user.UserActionRecordUtils;
 import juhe.jiangdajiuye.user.UserManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.SharePreUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.imageUtils.ImageLocalLoad;
 import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
-import juhe.jiangdajiuye.user.UserActionRecordUtils;
 import juhe.jiangdajiuye.utils.versionUpGrade.CheckUpgrade;
 import juhe.jiangdajiuye.view.JobFair.JobFEntrance;
 import juhe.jiangdajiuye.view.activity.About;
 import juhe.jiangdajiuye.view.activity.Browse;
 import juhe.jiangdajiuye.view.activity.Collect;
+import juhe.jiangdajiuye.view.activity.Disclaimer;
 import juhe.jiangdajiuye.view.activity.FeedBack;
 import juhe.jiangdajiuye.view.activity.Game;
 import juhe.jiangdajiuye.view.activity.Library;
 import juhe.jiangdajiuye.view.activity.LoginActivity;
-import juhe.jiangdajiuye.view.activity.More;
 import juhe.jiangdajiuye.view.adapter.FragmentAdapter;
+import juhe.jiangdajiuye.view.comment.CommentEntrance;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 import juhe.jiangdajiuye.view.constant.FileConstant;
 import juhe.jiangdajiuye.view.dialog.ShareDialog;
@@ -279,8 +280,11 @@ public class MainActivity extends BaseActivity
                 UserBrowseRecord.getInstance().inCalender();
                 Browse.StartActivity(this, "http://ehall.ujs.edu.cn/calendar/index#panel0");
                 break;
+            case R.id.nav_disclaimer:
+                startActivitySlideInRight(this, Disclaimer.class);
+                break;
             case R.id.nav_more:
-                startActivitySlideInRight(this, More.class);
+                startActivitySlideInRight(this, CommentEntrance.class);
             default:
                 break;
         }

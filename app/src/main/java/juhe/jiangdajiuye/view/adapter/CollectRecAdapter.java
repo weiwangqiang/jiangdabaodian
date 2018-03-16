@@ -23,10 +23,10 @@ import juhe.jiangdajiuye.sql.repository.CollectRepository;
  * @since 2018-01-06
  */
 
-public class CollectRecyclerViewAdapter extends SlipRecyclerAdapter<MessageItem> {
-    private String TAG = "CollectRecyclerViewAdapter";
+public class CollectRecAdapter extends SlipRecyclerAdapter<MessageItem> {
+    private String TAG = "CollectRecAdapter";
     private String margin = " ";
-    public CollectRecyclerViewAdapter(Context context, int view, List<MessageItem> data) {
+    public CollectRecAdapter(Context context, int view, List<MessageItem> data) {
         super(context, view, data);
     }
 

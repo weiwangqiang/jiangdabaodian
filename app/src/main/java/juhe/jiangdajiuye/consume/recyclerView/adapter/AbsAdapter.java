@@ -1,5 +1,6 @@
 package juhe.jiangdajiuye.consume.recyclerView.adapter;
 
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import java.util.Map;
 public abstract class AbsAdapter<T extends Object> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private String TAG = "AbsAdapter";
     protected int mLayout;
+    protected Context mContext;
     protected final int TYPE_ITEM = 1;
     protected final int TYPE_FOOTER = 2;
     protected int mStatus = 0;
@@ -40,6 +42,11 @@ public abstract class AbsAdapter<T extends Object> extends RecyclerView.Adapter<
 
     public AbsAdapter(@LayoutRes int layout) {
         mLayout = layout;
+    }
+
+    public AbsAdapter(Context mContext,@LayoutRes int mLayout) {
+        this.mLayout = mLayout;
+        this.mContext = mContext ;
     }
 
 

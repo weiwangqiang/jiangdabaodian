@@ -22,7 +22,6 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
-import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.core.BaseActivity;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
@@ -36,7 +35,7 @@ import juhe.jiangdajiuye.view.dialog.ProgressDialog;
  * Created by wangqiang on 2016/10/6.
  */
 public class Library extends BaseActivity implements
-        Toolbar.OnMenuItemClickListener, OnLoadMoreListener {
+        Toolbar.OnMenuItemClickListener, MyRecyclerView.OnLoadMoreListener {
     private EditText edit;
     private String TAG = "fragmentLibrary";
     private int currentPage = 1;

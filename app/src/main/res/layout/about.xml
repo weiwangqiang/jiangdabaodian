@@ -22,7 +22,7 @@
             android:layout_marginTop="20dp"
             android:id="@+id/main_my_icn"
             android:layout_centerHorizontal="true"
-            android:src="@mipmap/index"
+            android:src="@mipmap/logo"
             />
 
         <TextView
@@ -68,6 +68,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"

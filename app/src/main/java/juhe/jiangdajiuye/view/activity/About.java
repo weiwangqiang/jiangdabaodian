@@ -3,17 +3,16 @@ package juhe.jiangdajiuye.view.activity;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.core.BaseApplication;
 import juhe.jiangdajiuye.utils.AppConfigUtils;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
@@ -41,32 +40,6 @@ public class About extends BaseActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
 
-    /**
-     * Called when the current {@link Window} of the activity gains or loses
-     * focus.  This is the best indicator of whether this activity is visible
-     * to the user.  The default implementation clears the key tracking
-     * state, so should always be called.
-     * <p>
-     * <p>Note that this provides information about global focus state, which
-     * is managed independently of activity lifecycles.  As such, while focus
-     * changes will generally have some relation to lifecycle changes (an
-     * activity that is stopped will not generally get window focus), you
-     * should not rely on any particular order between the callbacks here and
-     * those in the other lifecycle methods such as {@link #onResume}.
-     * <p>
-     * <p>As a general rule, however, a resumed activity will have window
-     * focus...  unless it has displayed other dialogs or popups that take
-     * input focus, in which case the activity itself will not have focus
-     * when the other windows have it.  Likewise, the system may display
-     * system-level windows (such as the status bar notification panel or
-     * a system alert) which will temporarily take window input focus without
-     * pausing the foreground activity.
-     *
-     * @param hasFocus Whether the window of this activity has focus.
-     * @see #hasWindowFocus()
-     * @see #onResume
-     * @see View#onWindowFocusChanged(boolean)
-     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -79,10 +52,26 @@ public class About extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.aboute, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.nav_disclaimer) {
+            startActivitySlideInRight(this,Disclaimer.class);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
-        init();
+        findId();
+        initToolbar();
         CheckUpgrade.init(this);
     }
 
@@ -93,39 +82,20 @@ public class About extends BaseActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG, "onStop: ");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "onDestroy: ");
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_EXTERNAL_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 CheckUpgrade.checkUpgrade();
             } else {
-                ToastUtils.showToast("无法获取权限");
+                ToastUtils.showToast(ResourceUtils.getString(R.string.toast_permission_error));
             }
         }
     }
 
-
-
-    public void init() {
-        findId();
-        initToolbar();
-    }
-
     public void checkUpData(View view) {
         if(!NetStateUtils.getNetWorkAvailable()){
-            ToastUtils.showToast("当前网络不可用");
+            ToastUtils.showToast(ResourceUtils.getString(R.string.toast_network_error));
             return;
         }
         if (verifyStoragePermissions()) {

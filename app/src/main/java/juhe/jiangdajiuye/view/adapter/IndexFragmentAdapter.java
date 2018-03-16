@@ -153,7 +153,6 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageItem> {
             ((FooterViewHolder) holder).root.setVisibility(View.VISIBLE);
         else
             ((FooterViewHolder) holder).root.setVisibility(View.INVISIBLE);
-
     }
 
     public class mItemViewHolder extends ItemViewHolder {

@@ -109,7 +109,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
     private String[] content = {
             "全世界只有四人能过17关",
             "据说IQ超过180的人，才能玩到第四十关",
-            "五子棋！ |",
+            "五子棋！ ",
             "宠物大营救  ",
             "灌篮高手   ",
             "微信找你妹",

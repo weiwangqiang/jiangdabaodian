@@ -54,7 +54,7 @@ public class DownLoadService extends IntentService {
                     new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH));
         }
         builder = new NotificationCompat.Builder(getApplicationContext(), channelId)
-                .setSmallIcon(R.mipmap.index)
+                .setSmallIcon(R.mipmap.logo)
                 .setContentTitle(ResourceUtils.getString(R.string.download_ing))
                 .setContentText(ResourceUtils.getString(R.string.download))
                 .setProgress(100, 0, false)
@@ -136,12 +136,15 @@ public class DownLoadService extends IntentService {
             install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//添加这一句表示对目标应用临时授权该Uri所代表的文件
             install.setDataAndType(fileUri, "application/vnd.android.package-archive");
-            startActivity(install);
+
+                    startActivity(install);
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+
+                    startActivity(intent);
+
         }
     }
 

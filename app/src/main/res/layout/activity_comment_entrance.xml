@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer_layout"
+    tools:context="juhe.jiangdajiuye.view.comment.CommentEntrance">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/comment_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/baseColor"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:titleTextColor="@color/white" />
+    <juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView
+        android:id="@+id/comment_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/contact_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_border_color_white"
+        app:backgroundTintMode="multiply"
+        app:borderWidth="0dp"
+        android:layout_gravity="bottom|right"
+        app:elevation="@dimen/activity_horizontal_margin"
+        app:fabSize="auto"
+        app:pressedTranslationZ="@dimen/activity_horizontal_margin"
+        app:rippleColor="@color/baseColor"
+        app:useCompatPadding="true" />
+
+</android.support.design.widget.CoordinatorLayout>

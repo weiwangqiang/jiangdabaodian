@@ -14,24 +14,23 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.view.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
-import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
-import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
+import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
 import juhe.jiangdajiuye.view.activity.Browse;
+import juhe.jiangdajiuye.view.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
 
 /**
  * Created by wangqiang on 2016/9/27.
  * 首界面的fragment
  */
-public class IndexFragment extends Fragment implements OnLoadMoreListener {
+public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMoreListener {
     public static final int XUANJIANG = 1;//宣讲会
     public static final int ZHAOPINZHIWEI = 2;//招聘职位
     public static final int XINXI = 3;//信息速递

@@ -18,7 +18,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListListener;
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.view.adapter.CollectRecyclerViewAdapter;
+import juhe.jiangdajiuye.view.adapter.CollectRecAdapter;
 import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.bean.bmobUser.UserBean;
 import juhe.jiangdajiuye.consume.SlipRecyclerView.SlipItemClickListener;
@@ -41,7 +41,7 @@ public class Collect extends BaseActivity {
     private Toolbar toolbar;
     private View nothing;
     private LinearLayoutManager manager;
-    private CollectRecyclerViewAdapter adapter;
+    private CollectRecAdapter adapter;
     private List<MessageItem> data = new ArrayList<>();
 
     @Override
@@ -161,7 +161,7 @@ public class Collect extends BaseActivity {
 
     private void initList() {
         initDate();
-        adapter = new CollectRecyclerViewAdapter(this, R.layout.main_list_item, data);
+        adapter = new CollectRecAdapter(this, R.layout.main_list_item, data);
         manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);

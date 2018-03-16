@@ -72,7 +72,7 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
                 WebBrowse.getActivityInt(context,message),
                 PendingIntent.FLAG_UPDATE_CURRENT);
         notification = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.index)  // the status icon
+                .setSmallIcon(R.mipmap.logo)  // the status icon
 //                .setTicker(text)  // the status text
                 .setWhen(System.currentTimeMillis())  // the time stamp
                 .setContentTitle(message.getTitle())  // the label of the entry

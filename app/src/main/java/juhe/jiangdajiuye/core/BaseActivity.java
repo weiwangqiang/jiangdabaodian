@@ -6,24 +6,24 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.view.activity.LoginActivity;
 
 /**
  * 基础activity
  */
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     public static String EXIT_APP_ACTION = "com.joshua.exit";
 
-    public static final int REQUESTCODE_GETLOGIN_RESULT = 0x10 ;
+    public static final int REQUESTCODE_GETLOGIN_RESULT = 0x10;
     public final int NET_SUCCESS = 0x1;
     public final int NET_ERROR = 0x2;
     private String TAG = "BaseActivity";
-    public static ToastUtils toastUtils;
+    protected Toolbar toolbar;
 
     /**
      * Take care of popping the fragment back stack or finishing the activity
@@ -53,6 +53,14 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         return super.onOptionsItemSelected(item);
     }
 
+    protected void supportToolbar(int id, String title) {
+        toolbar = findViewById(id);
+        toolbar.setTitle(title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -62,6 +70,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onResume() {
         super.onResume();
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -78,6 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 //            }
 //        }
     }
+
     /**
      * 初始化屏幕方向
      */
@@ -86,10 +96,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     //通用的启动activity动画
-    protected void startActivitySlideInRight(Context mCtx , Class target) {
-        if(target.equals(LoginActivity.class)){
-            startActivityForResult(new Intent(mCtx, target),REQUESTCODE_GETLOGIN_RESULT);
-        }else{
+    protected void startActivitySlideInRight(Context mCtx, Class target) {
+        if (target.equals(LoginActivity.class)) {
+            startActivityForResult(new Intent(mCtx, target), REQUESTCODE_GETLOGIN_RESULT);
+        } else {
             startActivity(new Intent(mCtx, target));
         }
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

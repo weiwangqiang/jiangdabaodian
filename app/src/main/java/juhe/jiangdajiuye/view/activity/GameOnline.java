@@ -10,7 +10,6 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.tencent.connect.common.Constants;
@@ -29,10 +28,10 @@ import java.util.ArrayList;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.view.dialog.ProgressDialog;
-import juhe.jiangdajiuye.view.dialog.ShareDialog;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.view.constant.AppConstant;
+import juhe.jiangdajiuye.view.dialog.ProgressDialog;
+import juhe.jiangdajiuye.view.dialog.ShareDialog;
 
 /**
  * Created by wangqiang on 2016/10/1.
@@ -40,8 +39,6 @@ import juhe.jiangdajiuye.view.constant.AppConstant;
  */
 public class GameOnline extends BaseActivity {
     private String TAG = "WebBrowse";
-    private Boolean ischeck = false;
-    private Button back,share;
     private String url;
     private String title;
     private WebView webView;

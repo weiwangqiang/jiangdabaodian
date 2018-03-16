@@ -4,8 +4,8 @@ import cn.bmob.v3.BmobObject;
 
 /**
  * class description here
- *
- *  用户对象
+ * <p>
+ * 用户对象
  *
  * @author wangqiang
  * @since 2018-01-13
@@ -36,21 +36,21 @@ public class UserBean extends BmobObject {
         this.state = state;
     }
 
-    private String name ;
-    private String passWord ;
+    private String name;
+    private String passWord;
     private Integer state;
 
 
     @Override
     public boolean equals(Object obj) {
-        if(null == obj){
-            return false ;
+        if (null == obj) {
+            return false;
         }
-        if(obj instanceof UserBean){
+        if (obj instanceof UserBean) {
             UserBean bean = (UserBean) obj;
             return this.name.equals(bean.getName())
                     && this.passWord.equals(bean.getPassWord());
         }
-        return false ;
+        return false;
     }
 }

@@ -75,4 +75,12 @@ public class MyRecyclerView extends RecyclerView {
             ((AbsAdapter) getAdapter()).stateChange(status);
         }
     }
+
+    public interface OnLoadMoreListener {
+        /**
+         * 下拉加载更多
+         */
+        void onLoadMore();
+
+    }
 }

@@ -16,7 +16,6 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.MessageItem;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView;
-import juhe.jiangdajiuye.consume.recyclerView.OnLoadMoreListener;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
@@ -33,7 +32,7 @@ import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
  * @since 2017-09-30
  */
 
-public abstract class BaseFragment extends Fragment implements OnLoadMoreListener {
+public abstract class BaseFragment extends Fragment implements MyRecyclerView.OnLoadMoreListener {
     private static final String TAG = "BaseFragment";
     private View view, error;
     private MyRecyclerView recyclerView;
