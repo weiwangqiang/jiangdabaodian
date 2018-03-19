@@ -460,34 +460,6 @@ public class MainActivity extends BaseActivity
                 Tencent.handleResultData(data, new baseUiLister());
             }
         }
-        switch (requestCode) {
-            case REQUESTCODE_GETLOGIN_RESULT:
-                switch (resultCode) {
-                    case RESULT_OK:
-                        Log.i(TAG, "onActivityResult: ok");
-                        if (UserManager.getInStance().isLogin()) {
-                            navigationView.getMenu()
-                                    .findItem(R.id.nav_login)
-                                    .setTitle(ResourceUtils.getString(
-                                            R.string.title_fragment_logout));
-                        }
-                        break;
-                    case RESULT_CANCELED:
-                        Log.i(TAG, "onActivityResult: canceled ");
-                        if (!UserManager.getInStance().isLogin()) {
-                            navigationView.getMenu()
-                                    .findItem(R.id.nav_login)
-                                    .setTitle(ResourceUtils.getString(
-                                            R.string.title_fragment_login));
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     private class pagerList implements ViewPager.OnPageChangeListener {
@@ -563,6 +535,10 @@ public class MainActivity extends BaseActivity
                 SharePreUtils.setBoolean(SharePreUtils.hasShowSharePrompt, true);
             }
         }
+        navigationView.getMenu()
+                .findItem(R.id.nav_login)
+                .setTitle(ResourceUtils.getString(UserManager.getInStance().isLogin()?
+                        R.string.title_fragment_logout:R.string.title_fragment_login));
     }
 
     /**

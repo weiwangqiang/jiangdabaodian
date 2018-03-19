@@ -5,11 +5,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +44,7 @@ import juhe.jiangdajiuye.sql.repository.CollectRepository;
 import juhe.jiangdajiuye.utils.AppConfigUtils;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
+import juhe.jiangdajiuye.view.comment.CommentEntrance;
 import juhe.jiangdajiuye.view.constant.AppConstant;
 import juhe.jiangdajiuye.view.dialog.ProgressDialog;
 import juhe.jiangdajiuye.view.dialog.ShareDialog;
@@ -101,8 +104,9 @@ public class Browse extends BaseActivity {
         Intent intent = new Intent(context, Browse.class);
         intent.putExtra("url", url);
         context.startActivity(intent);
-        if (context instanceof Activity)
+        if (context instanceof Activity){
             ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
     }
 
     @Override
@@ -111,12 +115,21 @@ public class Browse extends BaseActivity {
         setContentView(R.layout.browse);
         collectRepository = CollectRepository.getInstance();
         myProgress = new ProgressDialog(this, R.drawable.waiting);
-        myProgress.show();
         init();
         findId();
         initToolbar();
         initParams();
         initWeb(messageItem.getUrl());
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(webView.canGoBack()){
+            Log.i(TAG, "onBackPressed: back webview ");
+            webView.goBack();
+        }else{
+            super.onBackPressed();
+        }
     }
 
     private Toolbar toolbar;
@@ -130,7 +143,6 @@ public class Browse extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ;
     }
 
     private void init() {
@@ -183,6 +195,7 @@ public class Browse extends BaseActivity {
         wSet.setLoadWithOverviewMode(true);
         wSet.setUseWideViewPort(true);
         wSet.setAllowFileAccess(false);
+        wSet.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webView.loadUrl(url);
 //        webView.setInitialScale(100);   //100代表不缩放
         webView.setWebViewClient(new WebViewClient() {
@@ -193,6 +206,30 @@ public class Browse extends BaseActivity {
                 } else {
                     return false;
                 }
+            }
+
+            /**
+             * Notify the host application that a page has started loading. This method
+             * is called once for each main frame load so a page with iframes or
+             * framesets will call onPageStarted one time for the main frame. This also
+             * means that onPageStarted will not be called when the contents of an
+             * embedded frame changes, i.e. clicking a link whose target is an iframe,
+             * it will also not be called for fragment navigations (navigations to
+             * #fragment_id).
+             *
+             * @param view    The WebView that is initiating the callback.
+             * @param url     The url to be loaded.
+             * @param favicon The favicon for this page if it already exists in the
+             */
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                Log.i(TAG, "onPageStarted: target url "+url);
+                myProgress.show();
+            }
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                myProgress.cancel();
             }
 
             public boolean shouldOverrideUrlLoading(WebView view, String url) { //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
@@ -257,6 +294,9 @@ public class Browse extends BaseActivity {
                     postBug(e);
                 }
                 return true;
+            case R.id.browse_comment:
+                CommentEntrance.StartActivity(this,messageItem);
+                return true ;
             default:
                 return super.onOptionsItemSelected(item);
         }

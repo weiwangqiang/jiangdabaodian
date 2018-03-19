@@ -11,5 +11,6 @@
     <dimen name="recycler_message_drawable_padding">4dp</dimen>
     <dimen name="recycler_message_child_margin">5dp</dimen>
     <dimen name="recycler_message_child_margin_left">4dp</dimen>
+    <dimen name="user_center_item_height">20dp</dimen>
 
 </resources>

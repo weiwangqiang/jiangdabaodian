@@ -39,7 +39,33 @@ public class UserBean extends BmobObject {
     private String name;
     private String passWord;
     private Integer state;
+    private String school = "无";
+    private String company = "无";
+    private String work = "无";
 
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getWork() {
+        return work;
+    }
+
+    public void setWork(String work) {
+        this.work = work;
+    }
 
     @Override
     public boolean equals(Object obj) {

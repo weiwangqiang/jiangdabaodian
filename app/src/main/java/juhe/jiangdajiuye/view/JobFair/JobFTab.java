@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import juhe.jiangdajiuye.view.adapter.MesFragmentAdapter;
 public class JobFTab extends BaseActivity {
     private String TAG = "JobFTab";
     private ViewPager viewPager;
-    private Toolbar toolbar;
     private TabLayout  tabLayout;
     private List<Fragment> list = new ArrayList<>();
     private MesFragmentAdapter adapter;
@@ -43,7 +41,6 @@ public class JobFTab extends BaseActivity {
     }
     public void findId(){
         viewPager = (ViewPager) findViewById(R.id.xuanjiang_viewpager);
-        toolbar = (Toolbar)findViewById(R.id.xuanjiang_toolbar);
         tabLayout = (TabLayout) findViewById(R.id.xuanjiang_tabLayout);
     }
     public void initList(){
@@ -60,10 +57,7 @@ public class JobFTab extends BaseActivity {
     }
 
     private void initTabLayout(){
-        toolbar.setTitle(ResourceUtils.getString(R.string.title_job_fair_tab));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        supportToolbar(R.id.xuanjiang_toolbar,ResourceUtils.getString(R.string.title_job_fair_tab));
         for(int i = 0;i<list.size();i++){
             TabLayout.Tab tabFirst = tabLayout.newTab();
             tabLayout.addTab(tabFirst);

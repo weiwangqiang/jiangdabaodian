@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -24,7 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public final int NET_ERROR = 0x2;
     private String TAG = "BaseActivity";
     protected Toolbar toolbar;
-
+    private boolean supportToolbar = true;
     /**
      * Take care of popping the fragment back stack or finishing the activity
      * as appropriate.
@@ -34,6 +35,17 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         super.onBackPressed();
         finish();
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return supportToolbar ;
     }
 
     @Override
@@ -57,6 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         toolbar = findViewById(id);
         toolbar.setTitle(title);
         setSupportActionBar(toolbar);
+        supportToolbar = true ;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
@@ -104,4 +117,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
+    protected void startActivitySlideInRight(Intent intent) {
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
+
 }

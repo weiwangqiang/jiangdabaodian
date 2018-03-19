@@ -56,11 +56,11 @@ public abstract class AbsAdapter<T extends Object> extends RecyclerView.Adapter<
     }
 
     public void appendDate(List<T> list) {
-        appendDate(list, list.size());
+        appendDate(data.size(),list);
     }
 
-    public void appendDate(List<T> list, int position) {
-        data.addAll(list);
+    public void appendDate(int position , List<T> list) {
+        data.addAll(position,list);
         notifyDataSetChanged();
     }
 

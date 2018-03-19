@@ -7,11 +7,32 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/item_comment_user_name"
+    android:text=""
+    android:textSize="15sp"
+    android:textColor="@color/black_transparency_900"
     android:layout_margin="10dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
+        android:text=""
+        android:textSize="10sp"
+        android:textColor="@color/gray"
         android:layout_marginRight="10dp"
+        android:id="@+id/item_comment_time"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text=""
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="15sp"
         android:id="@+id/item_comment_content"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="1dp"
+        android:background="@color/gray"/>
 </LinearLayout>

@@ -21,13 +21,4 @@
         android:layout_above="@+id/fragment_logout_button"
         android:layout_below="@+id/fragment_logout_toolbar" />
 
-    <Button
-        android:id="@+id/fragment_logout_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:background="@drawable/rectangle_5dp_basecolor"
-        android:text="@string/button_fragment_logout"
-        android:textColor="@color/white" />
 </RelativeLayout>

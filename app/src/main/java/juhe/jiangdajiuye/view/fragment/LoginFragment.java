@@ -2,7 +2,6 @@ package juhe.jiangdajiuye.view.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,9 +25,9 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.bmobUser.UserBean;
-import juhe.jiangdajiuye.sql.SharePreferHelper;
 import juhe.jiangdajiuye.user.UserManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
+import juhe.jiangdajiuye.utils.SharePreUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 
 /**
@@ -59,8 +58,7 @@ public class LoginFragment extends BaseTooBarFragment {
     private void init() {
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) viewRoot.findViewById(R.id.email);
-        mEmailView.setText(SharePreferHelper.
-                getInstance().getString(SharePreferHelper.KEY_USER_NAME,""));
+        mEmailView.setText(SharePreUtils.getString(SharePreUtils.KEY_USER_NAME,""));
 //        populateAutoComplete();
         toolbar = (Toolbar) viewRoot.findViewById(R.id.Library_toolbar);
         initToolBar();
@@ -105,8 +103,6 @@ public class LoginFragment extends BaseTooBarFragment {
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-//        email = "we@";
-//        password = "111111";
         boolean cancel = false;
         View focusView = null;
 
@@ -126,6 +122,10 @@ public class LoginFragment extends BaseTooBarFragment {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
+        }else if(isLongName(email)){
+            mEmailView.setError(getString(R.string.error_invalid_long_email));
+            focusView = mEmailView;
+            cancel = true;
         }
 
         if (cancel) {
@@ -142,6 +142,10 @@ public class LoginFragment extends BaseTooBarFragment {
             executeLogin(userBean);
         }
     }
+    //字符是否过长
+    private boolean isLongName(String email) {
+        return email.length()>20;
+    }
 
     private void executeLogin(final UserBean userBean) {
         BmobQuery<UserBean> query = new BmobQuery<>();
@@ -156,7 +160,6 @@ public class LoginFragment extends BaseTooBarFragment {
                         showProgress(false);
                         return;
                     }
-                    ToastUtils.showToast("登陆成功");
                     UserManager.getInStance().setLogin(object.get(0));
                     loginSuccess(object.get(0));
                 } else {
@@ -167,8 +170,8 @@ public class LoginFragment extends BaseTooBarFragment {
     }
 
     private void loginSuccess(UserBean userBean) {
-        SharePreferHelper.getInstance().setString(SharePreferHelper.KEY_USER_NAME,userBean.getName());
-        getActivity().setResult(Activity.RESULT_OK);
+        SharePreUtils.setString(SharePreUtils.KEY_USER_NAME,userBean.getName());
+        SharePreUtils.setString(SharePreUtils.KEY_USER_OBJECT_ID,userBean.getObjectId());
         finish();
     }
 
@@ -180,9 +183,6 @@ public class LoginFragment extends BaseTooBarFragment {
             public void done(String s, BmobException e) {
                 if (null == e) {
                     executeLogin(userBean);
-//                    ToastUtils.showToast("注册成功");
-//                    UserManager.getInStance().setLogin(userBean);
-//                    loginSuccess(userBean);
                 }else{
                     ToastUtils.showToast(ResourceUtils.getString(R.string.toast_register_failure));
                     showProgress(false);

@@ -8,6 +8,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.bean.bmobAppMes.IpBean;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.VisitCount;
+import juhe.jiangdajiuye.utils.AppConfigUtils;
 import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
 import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
@@ -39,6 +40,7 @@ public class UserActionRecordUtils {
 
     public static void setComeTime(long comeTime) {
         UserActionRecordUtils.comeTime = comeTime;
+
     }
 
     /**
@@ -54,6 +56,7 @@ public class UserActionRecordUtils {
         count.setIp(ipbean.getIp());
         count.setAddress(ipbean.getAddress());
         count.setVisitTime(df.format(comeTime));
+        count.setVersionName(AppConfigUtils.getVersionName());
         count.setStayTime(df.format(System.currentTimeMillis() - comeTime));
         count.save(new SaveListener<String>() {
             @Override

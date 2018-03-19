@@ -6,7 +6,9 @@ import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * class description here
- * 被评论的帖子
+ *
+ * 被评论的信息
+ *
  * @author wangqiang
  * @since 2018-03-15
  */
@@ -14,7 +16,7 @@ import cn.bmob.v3.datatype.BmobRelation;
 public class Post extends BmobObject {
     private String title;//帖子标题
 
-    private String content;// 帖子内容
+    private String url;// 帖子url
 
     private BmobFile image;//帖子图片
 
@@ -26,14 +28,6 @@ public class Post extends BmobObject {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public BmobFile getImage() {
@@ -50,5 +44,13 @@ public class Post extends BmobObject {
 
     public void setLikes(BmobRelation likes) {
         this.likes = likes;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

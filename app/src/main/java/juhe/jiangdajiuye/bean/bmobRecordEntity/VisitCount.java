@@ -14,6 +14,7 @@ import cn.bmob.v3.BmobObject;
 public class VisitCount extends BmobObject {
     private String ip;
 
+    private String versionName ;
     public String getAddress() {
         return address;
     }
@@ -49,4 +50,12 @@ public class VisitCount extends BmobObject {
     }
 
     private String visitTime;
+
+    public String getVersionName() {
+        return versionName;
+    }
+
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
+    }
 }

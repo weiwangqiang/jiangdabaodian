@@ -23,5 +23,10 @@
         android:title="分享"
         android:background="@color/white"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/browse_comment"
+        android:title="评论"
+        android:background="@color/white"
+        app:showAsAction="never" />
 </menu>
 

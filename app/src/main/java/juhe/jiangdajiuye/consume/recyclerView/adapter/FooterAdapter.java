@@ -22,14 +22,14 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
 
 public abstract class FooterAdapter<T> extends AbsAdapter<T> {
     private mFooterViewHolder footerViewHolder;
-    private OnItemClickListener listener ;
+    protected OnItemClickListener listener ;
     public FooterAdapter(Context mContext, int mLayout) {
         super(mContext, mLayout);
     }
 
 
     public interface OnItemClickListener<T> {
-        void onClick(T t, int position);
+        void onClick(View view , T t, int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -51,7 +51,7 @@ public abstract class FooterAdapter<T> extends AbsAdapter<T> {
                 @Override
                 public void onClick(View v) {
                     if (null != listener){
-                        listener.onClick(t,position);
+                        listener.onClick(v , t,position);
                     }
                 }
             });

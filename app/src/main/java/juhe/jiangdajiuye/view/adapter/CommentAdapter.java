@@ -46,22 +46,32 @@ public class CommentAdapter extends FooterAdapter<Comment> {
      * @param comment
      */
     @Override
-    protected void bindItemViewHolder(RecyclerView.ViewHolder holder, int position, Comment comment) {
+    protected void bindItemViewHolder(RecyclerView.ViewHolder holder, final int position, final Comment comment) {
         super.bindItemViewHolder(holder,position,comment);
         if(holder instanceof MyItemViewHolder){
             MyItemViewHolder itemViewHolder = (MyItemViewHolder) holder;
             itemViewHolder.userName.setText(comment.getUser().getName());
             itemViewHolder.content.setText(comment.getContent());
+            itemViewHolder.pushTime.setText(comment.getTime());
+            itemViewHolder.userName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        listener.onClick(v,comment,position);
+                    }
+                }
+            });
         }
     }
 
     class MyItemViewHolder extends ItemViewHolder {
-        TextView userName, content;
+        TextView userName, pushTime, content;
 
         public MyItemViewHolder(View itemView) {
             super(itemView);
             userName = (TextView) getView(R.id.item_comment_user_name);
             content = (TextView) getView(R.id.item_comment_content);
+            pushTime = (TextView) getView(R.id.item_comment_time);
         }
     }
 }

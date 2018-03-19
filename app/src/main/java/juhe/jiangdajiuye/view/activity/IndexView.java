@@ -3,6 +3,7 @@ package juhe.jiangdajiuye.view.activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,7 +19,9 @@ import java.io.File;
 
 import juhe.jiangdajiuye.MainActivity;
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.bean.bmobUser.UserBean;
 import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.user.UserManager;
 import juhe.jiangdajiuye.utils.SharePreUtils;
 import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
 import juhe.jiangdajiuye.user.UserActionRecordUtils;
@@ -54,7 +57,12 @@ public class IndexView extends BaseActivity {
     private void init() {
         findId();
         setBootAdvert();
-
+        if(!TextUtils.isEmpty(SharePreUtils.getString(SharePreUtils.KEY_USER_OBJECT_ID,""))){
+            UserBean userBean = new UserBean();
+            userBean.setName(SharePreUtils.getString(SharePreUtils.KEY_USER_NAME,""));
+            userBean.setObjectId(SharePreUtils.getString(SharePreUtils.KEY_USER_OBJECT_ID,""));
+            UserManager.getInStance().setLogin(userBean);
+        }
         LoadAnimation = AnimationUtils.loadAnimation(this, R.anim.loading);//点击跳转后等待的动画
         button.setOnClickListener(new View.OnClickListener() {
             @Override

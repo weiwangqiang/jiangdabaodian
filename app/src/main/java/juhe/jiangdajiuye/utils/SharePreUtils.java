@@ -20,10 +20,12 @@ public class SharePreUtils {
     public static final String visitFrequency = "visitFrequency";//用户访问次数
     public static final String hasShowSharePrompt = "hasShowSharePrompt";//是否提示分享给其他用户
     public static final String isFirst = "first";
+    public static final String KEY_USER_NAME = "userName";
+    public static final String KEY_USER_OBJECT_ID = "userId";
 
     public static void setBoolean(String key, boolean val) {
         SharedPreferences.Editor editor = getSharedPreEditor();
-        editor.putBoolean(key, val).commit();
+        editor.putBoolean(key, val).apply();
     }
 
     public static boolean getBoolean(String key, boolean defValue) {
@@ -31,12 +33,19 @@ public class SharePreUtils {
     }
 
     public static void setInt(String key, int val) {
-        SharedPreferences.Editor editor = getSharedPreEditor();
-        editor.putInt(key, val).commit();
+        getSharedPreEditor().putInt(key, val).apply();
     }
 
-    public static int getInt(String key,int defValue) {
+    public static int getInt(String key, int defValue) {
         return getSharedPre().getInt(key, defValue);
+    }
+
+    public static String getString(String key, String defValue) {
+        return getSharedPre().getString(key, defValue);
+    }
+
+    public static void setString(String key, String value) {
+        getSharedPreEditor().putString(key, value).apply();
     }
 
     //get SharedPreferences

@@ -51,6 +51,8 @@ public class HttpService implements IHttpService {
         }
         Log.i(TAG, "execute: "+mUrl);
         try {
+//            System.setProperty("http.proxyHost", "192.168.0.104");
+//            System.setProperty("http.proxyPort", "8888");
             URL url = new URL(mUrl);
             mHttpURLConnection = (HttpURLConnection) url.openConnection();
             mHttpURLConnection.setConnectTimeout(10000);

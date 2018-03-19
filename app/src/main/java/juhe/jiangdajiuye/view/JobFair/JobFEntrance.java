@@ -2,7 +2,6 @@ package juhe.jiangdajiuye.view.JobFair;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -21,7 +20,6 @@ public class JobFEntrance extends BaseActivity {
     ListView listView ;
     SimpleAdapter adapter ;
     private JobEntranceData data ;
-    private Toolbar toolbar;
     private String TAG = "JobFEntrance" ;
 
     @Override
@@ -33,10 +31,7 @@ public class JobFEntrance extends BaseActivity {
 
     private void initView() {
         findId();
-        toolbar.setTitle(ResourceUtils.getString(R.string.title_job_fair_province));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
+        supportToolbar(R.id.xuan_entrance_toolbar,ResourceUtils.getString(R.string.title_job_fair_province));
         data = new JobEntranceData();
         adapter = new SimpleAdapter(this,data.getData(),
                 R.layout.activity_xuan_entrance_item,
@@ -57,7 +52,6 @@ public class JobFEntrance extends BaseActivity {
 
     private void findId() {
         listView = (ListView) findViewById(R.id.xuan_entrance_listView);
-        toolbar = (Toolbar)findViewById(R.id.xuan_entrance_toolbar);
     }
 
     /**

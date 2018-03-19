@@ -38,9 +38,9 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <!-- 安装apk需要的权限 -->
-    <!--<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />-->
 
+    <!-- 安装apk需要的权限 -->
+    <!-- <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> -->
     <!-- 安装apk需要的权限 -->
     <application
         android:name=".core.BaseApplication"
@@ -239,9 +239,22 @@
                 android:resource="@xml/paths" />
         </provider>
 
-        <activity android:name=".view.activity.More" />
-        <activity android:name=".view.comment.CommentEntrance" />
-        <activity android:name=".view.activity.Disclaimer"></activity>
+        <activity
+            android:name=".view.activity.More"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".view.comment.CommentEntrance"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".view.activity.Disclaimer"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".view.activity.ChoiceSchool"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".view.activity.ChoiceProvince"
+            android:launchMode="singleTop" />
+        <activity android:name=".view.activity.UserMessage"></activity>
     </application>
 
 </manifest>

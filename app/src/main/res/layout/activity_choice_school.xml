@@ -1,63 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="juhe.jiangdajiuye.view.comment.CommentEntrance">
+    android:orientation="vertical"
+    android:background="@color/gray_little"
+    tools:context="juhe.jiangdajiuye.view.activity.ChoiceSchool">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/comment_toolbar"
+        android:id="@+id/choice_school_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:background="@color/baseColor"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:titleTextColor="@color/white" />
 
-    <juhe.jiangdajiuye.consume.recyclerView.MyRecyclerView
-        android:id="@+id/comment_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="597dp"
-        android:layout_above="@+id/comment_bottom"
-        android:layout_below="@+id/comment_toolbar"
-        app:layout_anchor="@+id/comment_toolbar"
-        app:layout_anchorGravity="bottom|center" />
-
-    <ViewStub
-        android:id="@+id/comment_viewsub"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/choice_school_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/comment_bottom"
-        android:layout_below="@+id/comment_toolbar"
-        android:layout="@layout/error_comment"/>
-
+         />
     <LinearLayout
-        android:id="@+id/comment_bottom"
+        android:id="@+id/choice_edit_parent"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/gray_little"
+        android:visibility="gone"
+        android:background="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center_vertical"
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/comment_input"
+            android:id="@+id/school_input"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_weight="5"
             android:inputType="text"
-            android:hint="@string/edit_comment_input"
-             />
+            android:hint=""
+            />
 
         <ImageButton
-            android:id="@+id/comment_send"
+            android:id="@+id/school_send"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/gray_little"
-            android:onClick="send"
+            android:background="@color/white"
+            android:onClick="sure"
             android:src="@drawable/ic_send_black" />
+
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
