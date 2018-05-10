@@ -14,7 +14,7 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.MessageBean;
 import juhe.jiangdajiuye.ui.SlipRecyclerView.SlipItemView;
 import juhe.jiangdajiuye.ui.SlipRecyclerView.SlipRecyclerAdapter;
-import juhe.jiangdajiuye.db.repository.CollectRepository;
+import juhe.jiangdajiuye.db.repository.CollectDepository;
 
 /**
  * class description here
@@ -23,10 +23,10 @@ import juhe.jiangdajiuye.db.repository.CollectRepository;
  * @since 2018-01-06
  */
 
-public class CollectRecAdapter extends SlipRecyclerAdapter<MessageBean> {
-    private String TAG = "CollectRecAdapter";
+public class CollectAdapter extends SlipRecyclerAdapter<MessageBean> {
+    private String TAG = "CollectAdapter";
     private String margin = " ";
-    public CollectRecAdapter(Context context, int view, List<MessageBean> data) {
+    public CollectAdapter(Context context, int view, List<MessageBean> data) {
         super(context, view, data);
     }
 
@@ -88,7 +88,7 @@ public class CollectRecAdapter extends SlipRecyclerAdapter<MessageBean> {
 
     @Override
     protected void deleteData(MessageBean messageBean) {
-        CollectRepository.getInstance().delete(messageBean);
+        CollectDepository.getInstance().delete(messageBean);
     }
 
     private class ViewHolder extends SlipViewHolder {

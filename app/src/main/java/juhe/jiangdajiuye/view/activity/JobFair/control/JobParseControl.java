@@ -1,14 +1,14 @@
-package juhe.jiangdajiuye.view.JobFair.control;
+package juhe.jiangdajiuye.view.activity.JobFair.control;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
+import juhe.jiangdajiuye.view.activity.JobFair.constant.JobEntranceData;
+import juhe.jiangdajiuye.view.activity.JobFair.parse.HangZouJobParse;
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.view.JobFair.constant.JobEntranceData;
-import juhe.jiangdajiuye.view.JobFair.parse.HangZouJobParse;
-import juhe.jiangdajiuye.view.JobFair.parse.JiangSuJobParse;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.JobFair.parse.JiangSuJobParse;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here

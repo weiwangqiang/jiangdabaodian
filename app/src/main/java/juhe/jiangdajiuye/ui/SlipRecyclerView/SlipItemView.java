@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.consume.SlipRecyclerView;
+package juhe.jiangdajiuye.ui.SlipRecyclerView;
 
 import android.content.Context;
 import android.util.AttributeSet;

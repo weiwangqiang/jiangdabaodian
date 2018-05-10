@@ -10,7 +10,7 @@ package juhe.jiangdajiuye.bean.push;
  */
 
 public class XuanJiangPush {
-    int type  ;
+    Integer type =0 ;
     String title;
 
     public String getTitle() {

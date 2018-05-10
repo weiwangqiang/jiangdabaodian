@@ -1,7 +1,7 @@
-package juhe.jiangdajiuye.view.JobFair.control;
+package juhe.jiangdajiuye.view.activity.JobFair.control;
 
-import juhe.jiangdajiuye.view.JobFair.constant.JobEntranceData;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.JobFair.constant.JobEntranceData;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.JobFair.parse;
+package juhe.jiangdajiuye.view.activity.JobFair.parse;
 
 import com.google.gson.Gson;
 
@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.view.JobFair.bean.HaiDianbean;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.db.repository.BrowseDepository;
+import juhe.jiangdajiuye.view.activity.JobFair.bean.HaiDianbean;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here
@@ -55,6 +56,7 @@ public class HangZouJobParse extends BaseParse {
             messageBean.setLocate(element.get(2).text());
             messageBean.setTheme(element.get(3).text());
             messageBean.setTime(element.get(4).text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
             list.add(messageBean);
         }
         return list;
@@ -91,6 +93,8 @@ public class HangZouJobParse extends BaseParse {
                     .get(1).attr("title"));
 
             messageBean.setFrom("杭州师范大学");
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
             list.add(messageBean);
         }
         return list;
@@ -111,6 +115,8 @@ public class HangZouJobParse extends BaseParse {
 //            messageBean.setFrom(element.get(2).text());
 //            messageBean.setLocate(element.get(3).text());
             messageBean.setTime(element.get(0).text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
             list.add(messageBean);
         }
         return list;
@@ -122,15 +128,17 @@ public class HangZouJobParse extends BaseParse {
         Elements element = doc.getElementsByClass("con");
         for (Element element1 : element) {
             Elements elements = element1.select("td");
-            MessageBean item = new MessageBean();
-            item.setTitle(elements.get(0).select("a").text());
-            item.setUrl("http://www.career.zju.edu.cn/ejob/"
+            MessageBean messageBean = new MessageBean();
+            messageBean.setTitle(elements.get(0).select("a").text());
+            messageBean.setUrl("http://www.career.zju.edu.cn/ejob/"
                     + elements.select("a").attr("href"));
-            item.setLocate(elements.get(1).text());
-            item.setTime(elements.get(2).text());
-            item.setFrom("浙江大学");
-            item.setCity("杭州市");
-            list.add(item);
+            messageBean.setLocate(elements.get(1).text());
+            messageBean.setTime(elements.get(2).text());
+            messageBean.setFrom("浙江大学");
+            messageBean.setCity("杭州市");
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            list.add(messageBean);
         }
         return list;
     }
@@ -143,17 +151,19 @@ public class HangZouJobParse extends BaseParse {
         List<HaiDianbean.DataBean> dataBeen = university.getData();
         List<MessageBean> res = new ArrayList<>();
         for (HaiDianbean.DataBean bean : dataBeen) {
-            MessageBean item = new MessageBean();
-            item.setTitle(bean.getTitle());
-            item.setFrom(bean.getOrganisers());
-//            item.setCompany(bean.getC());
-            item.setIndustry("大型");
-            item.setTime(bean.getMeet_day() + " " + bean.getMeet_time());
-//            item.setCity(bean.getAddress());
-            item.setLocate(bean.getAddress());
-            item.setUrl("http://career.hdu.edu.cn/detail/jobfair?id="
+            MessageBean messageBean = new MessageBean();
+            messageBean.setTitle(bean.getTitle());
+            messageBean.setFrom(bean.getOrganisers());
+//            messageBean.setCompany(bean.getC());
+            messageBean.setIndustry("大型");
+            messageBean.setTime(bean.getMeet_day() + " " + bean.getMeet_time());
+//            messageBean.setCity(bean.getAddress());
+            messageBean.setLocate(bean.getAddress());
+            messageBean.setUrl("http://career.hdu.edu.cn/detail/jobfair?id="
                     + bean.getFair_id());
-            res.add(item);
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            res.add(messageBean);
         }
         return res;
     }

@@ -14,36 +14,39 @@ import juhe.jiangdajiuye.db.helper.LibrarySqlHelper;
  * @since 2017-12-31
  */
 
-public class LibraryRepository {
-    public static LibraryRepository libraryRepository;
+public class LibraryDepository implements IDepository<BookBean>{
+    public static LibraryDepository libraryDepository;
     private LibrarySqlHelper collectSqlHelper;
 
-    public static LibraryRepository getInstance() {
-        if (null == libraryRepository)
-            libraryRepository = new LibraryRepository();
-        return libraryRepository;
+    public static LibraryDepository getInstance() {
+        if (null == libraryDepository)
+            libraryDepository = new LibraryDepository();
+        return libraryDepository;
     }
 
-    private LibraryRepository() {
+    private LibraryDepository() {
         collectSqlHelper = new LibrarySqlHelper(BaseApplication.getContext());
     }
-
-    public boolean add(BookBean bookBean) {
-        return collectSqlHelper.add(bookBean);
+    @Override
+    public void add(BookBean bookBean) {
+        collectSqlHelper.add(bookBean);
     }
-
-    public boolean add(List<BookBean> data){
-        return collectSqlHelper.add(data);
+    @Override
+    public void add(List<BookBean> data){
+         collectSqlHelper.add(data);
     }
+    @Override
     public ArrayList<BookBean> selectAll() {
         return collectSqlHelper.selectAll();
     }
 
-    public boolean hasURL(String url) {
-        return collectSqlHelper.hasURL(url);
-    }
-
+    @Override
     public void delete(BookBean bookBean) {
         collectSqlHelper.delete(bookBean);
+    }
+
+    @Override
+    public boolean contain(BookBean bookBean) {
+        return collectSqlHelper.hasURL(bookBean.getUrl());
     }
 }

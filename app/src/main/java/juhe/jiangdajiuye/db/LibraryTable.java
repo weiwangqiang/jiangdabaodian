@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.sql;
+package juhe.jiangdajiuye.db;
 
 /**
  * Created by wangqiang on 2016/10/28.

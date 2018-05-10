@@ -5,12 +5,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 
-import juhe.jiangdajiuye.core.BaseApplication;
+import juhe.jiangdajiuye.base.BaseApplication;
 
 /**
  * class description here
- *
- *  应用配置信息
+ * <p>
+ * 应用配置信息
  *
  * @version 1.0.0
  * @outher wangqiang
@@ -26,22 +26,23 @@ public class AppConfigUtils {
     }
 
     //应用图片存储的绝对路径
-    public static final  String savePictureUrl = Environment.getExternalStorageDirectory()+"/Game/";
+    public static final String savePictureUrl = Environment.getExternalStorageDirectory() + "/GameActivity/";
+
     public AppConfigUtils() {
     }
 
     /**
      * 获取app级别
+     *
      * @return
      */
-    public static String getVersionName()
-    {
+    public static String getVersionName() {
         // 获取packagemanager的实例
         PackageManager packageManager = getApplication().getPackageManager();
         // getPackageName()是你当前类的包名，0代表是获取版本信息
         PackageInfo packInfo = null;
         try {
-            packInfo = packageManager.getPackageInfo(getApplication().getPackageName(),0);
+            packInfo = packageManager.getPackageInfo(getApplication().getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -51,23 +52,26 @@ public class AppConfigUtils {
 
     /**
      * 获取手机型号信息
+     *
      * @return
      */
-    public static String getDevice(){
-        String   model= android.os.Build.MODEL;
-        String carrier= android.os.Build.MANUFACTURER;
-        return "型号："+model+ "\n  厂商 ：" +carrier ;
+    public static String getDevice() {
+        String model = android.os.Build.MODEL;
+        String carrier = android.os.Build.MANUFACTURER;
+        return "型号：" + model + "\n  厂商 ：" + carrier;
     }
 
     /**
      * 获取系统版本号
+     *
      * @return
      */
-    public static String getDeviceLevel(){
-        int currentapiVersion=android.os.Build.VERSION.SDK_INT;
-        return "系统："+android.os.Build.VERSION.RELEASE+" \n sdk :"+currentapiVersion+"";
+    public static String getDeviceLevel() {
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        return "系统：" + android.os.Build.VERSION.RELEASE + " \n sdk :" + currentapiVersion + "";
     }
-    private static Application getApplication(){
+
+    private static Application getApplication() {
         return BaseApplication.getApplication();
     }
 }

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.adapter;
+package juhe.jiangdajiuye.adapter;
 
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;

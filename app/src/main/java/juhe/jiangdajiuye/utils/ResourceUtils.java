@@ -4,7 +4,7 @@ import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 
-import juhe.jiangdajiuye.core.BaseApplication;
+import juhe.jiangdajiuye.base.BaseApplication;
 
 /**
  * class description here

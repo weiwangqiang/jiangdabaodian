@@ -17,46 +17,48 @@ import rx.Subscription;
 
 public class ShareRecord extends BmobObject {
     private static final String TAG = "ShareRecord ";
-    private static ShareRecord instance = new ShareRecord() ;
-    private int QQZone = 0;
-    private  int QQ = 0;
-    private  int WeiXin = 0;
-    private  int WXPenYou = 0;
+    private static ShareRecord instance = new ShareRecord();
+    private Integer QQZone = 0;
+    private Integer QQ = 0;
+    private Integer WeiXin = 0;
+    private Integer WXPenYou = 0;
 
-    private ShareRecord(){}
-    public static ShareRecord getInstance()
-    {
-        return instance ;
+    private ShareRecord() {
     }
-    public  void toQQZone() {
+
+    public static ShareRecord getInstance() {
+        return instance;
+    }
+
+    public void toQQZone() {
         QQZone++;
     }
 
 
-    public  void toQQ() {
+    public void toQQ() {
         QQ++;
     }
 
 
-    public  void toWeiXin() {
+    public void toWeiXin() {
         WeiXin++;
     }
 
 
-    public  void toWXPenYou() {
+    public void toWXPenYou() {
         WXPenYou++;
     }
 
     @Override
     public Subscription save() {
-        if((QQZone+QQ+WeiXin+WXPenYou) !=0 ){
-            return super.save(new SaveListener<String>(){
+        if ((QQZone + QQ + WeiXin + WXPenYou) != 0) {
+            return super.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
                     Log.i(TAG, "done: finish ");
                 }
             });
         }
-        return null ;
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.consume.recyclerView.adapter;
+package juhe.jiangdajiuye.ui.recyclerView.adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -29,9 +29,10 @@ public abstract class AbsAdapter<T extends Object> extends RecyclerView.Adapter<
     protected final int TYPE_FOOTER = 2;
     protected int mStatus = 0;
 
+
     public static final int STATUS_DEFAULT = 0;//不在刷新或者end状态
-    public static final int STATUS_REFRESHING = 0x10; //正在刷新状态
-    public static final int STATUS_PULL_TO_REFRESH = 0x11;//下拉刷新状态
+    public static final int STATUS_PULL_DOWN_TO_REFRESH = 0x10; //下拉刷新状态
+    public static final int STATUS_PULL_UP_TO_REFRESH = 0x11;//上拉刷新状态
     public static final int STATUS_END = 0x12;//没有更多状态
     public static final int STATUS_ERROR = 0x13;//出错状态
     private List<T> data = new ArrayList<>();
@@ -52,14 +53,14 @@ public abstract class AbsAdapter<T extends Object> extends RecyclerView.Adapter<
 
     public void upDate(List<T> list) {
         data.clear();
-        appendDate(list);
+        appendData(list);
     }
 
-    public void appendDate(List<T> list) {
-        appendDate(data.size(),list);
+    public void appendData(List<T> list) {
+        appendData(data.size(),list);
     }
 
-    public void appendDate(int position , List<T> list) {
+    public void appendData(int position , List<T> list) {
         data.addAll(position,list);
         notifyDataSetChanged();
     }

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.utils.httpUtils.task;
+package juhe.jiangdajiuye.net.httpUtils.task;
 
 import android.os.Looper;
 import android.util.Log;

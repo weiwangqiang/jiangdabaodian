@@ -6,7 +6,7 @@ import android.view.View;
 /**
  * 监听是否滑动到底部监听者
  */
-public abstract class OnLoadMoreListener extends RecyclerView.OnScrollListener {
+public abstract class OnScrollMoreListener extends RecyclerView.OnScrollListener {
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

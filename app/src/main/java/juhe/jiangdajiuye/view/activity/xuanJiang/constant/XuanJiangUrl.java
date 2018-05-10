@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.xuanJiang.constant;
+package juhe.jiangdajiuye.view.activity.xuanJiang.constant;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -45,6 +45,7 @@ public class XuanJiangUrl {
 //        shangHaiMap.put("上海理工大学", "http://91.usst.edu.cn/InformationNAVList.aspx");
         shangHaiMap.put("复旦大学", "http://www.career.fudan.edu.cn/html/qzxx/xjh/1.html");
         shangHaiMap.put("上海财经大学", "http://careersys.sufe.edu.cn/pros_jiuye/s/zxh/owebsiteData/preaching");
+        shangHaiMap.put("华南理工大学","http://jyzx.6ihnep7.cas.scut.edu.cn/jyzx/xs/zpxx/xyxj");
 
         zheJiangMap.put("杭州电子科技大学", "http://career.hdu.edu.cn/module/getcareers");
         zheJiangMap.put("浙江大学", "http://www.career.zju.edu.cn/ejob/zczphxxmorelogin.do");

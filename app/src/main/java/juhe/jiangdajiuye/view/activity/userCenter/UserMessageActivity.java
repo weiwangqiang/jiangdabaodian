@@ -23,7 +23,7 @@ import juhe.jiangdajiuye.view.activity.userCenter.engine.UserManager;
 /**
  * 提供他人查看用户信息的界面
  */
-public class UserMessage extends BaseActivity {
+public class UserMessageActivity extends BaseActivity {
     private String userId  ;
     private RecyclerView recyclerView;
     private UserCenterAdapter adapter;

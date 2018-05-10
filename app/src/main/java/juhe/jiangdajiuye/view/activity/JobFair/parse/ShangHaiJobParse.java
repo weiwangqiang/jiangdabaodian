@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.JobFair.parse;
+package juhe.jiangdajiuye.view.activity.JobFair.parse;
 
 import com.google.gson.Gson;
 
@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.view.xuanJiang.entity.ShangHaiCaiJinBean;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.ShangHaiCaiJinBean;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here

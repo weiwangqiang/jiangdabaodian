@@ -8,7 +8,7 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.base.BaseActivity;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 
-public class Disclaimer extends BaseActivity {
+public class DisclaimerActivity extends BaseActivity {
     private TextView tvOpen ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -9,7 +9,7 @@ import android.webkit.DownloadListener;
  * @since 2017-07-25
  */
 
-public class MyWebViewDownLoadListener implements DownloadListener {
+public class OnDownLoadListener implements DownloadListener {
 
     @Override
     public void onDownloadStart(String url, String userAgent,

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.utils.httpUtils;
+package juhe.jiangdajiuye.net.httpUtils;
 
 import android.os.Handler;
 import android.os.Looper;

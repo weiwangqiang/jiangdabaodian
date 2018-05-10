@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.activity.comment.bean;
+package juhe.jiangdajiuye.bean.comment;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;

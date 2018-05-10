@@ -27,9 +27,9 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
  * @since 2017-08-08
  */
 
-public class SearchLibraryAdapter extends AbsAdapter<BookBean> {
+public class LibraryAdapter extends AbsAdapter<BookBean> {
 
-    private static final String TAG = "SearchLibraryAdapter";
+    private static final String TAG = "LibraryAdapter";
     public mItemViewHolder itemViewHodler ;
     public mFooterViewHolder footerViewHolder ;
     private Context mCtx ;
@@ -42,7 +42,7 @@ public class SearchLibraryAdapter extends AbsAdapter<BookBean> {
         void OnItemClick(BookBean item);
     }
 
-    public SearchLibraryAdapter(Context mCtx , @LayoutRes int layout) {
+    public LibraryAdapter(Context mCtx , @LayoutRes int layout) {
         super(layout);
         this.mCtx = mCtx ;
     }
@@ -144,12 +144,12 @@ public class SearchLibraryAdapter extends AbsAdapter<BookBean> {
             return;
         }
         switch (status) {
-            case STATUS_PULL_TO_REFRESH:
+            case STATUS_PULL_DOWN_TO_REFRESH:
             case STATUS_DEFAULT:
 //                footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_pull_to_load_more));
 //                footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
-            case STATUS_REFRESHING:
+            case STATUS_PULL_UP_TO_REFRESH:
                 footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_loading));
                 footerViewHolder.progressBar.setVisibility(View.VISIBLE);
                 break;

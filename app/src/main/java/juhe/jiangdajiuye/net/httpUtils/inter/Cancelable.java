@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.net.httpUtils.Inter;
+package juhe.jiangdajiuye.net.httpUtils.inter;
 
 /**
  * class description here
@@ -7,5 +7,7 @@ package juhe.jiangdajiuye.net.httpUtils.Inter;
  * @since 2018-03-26
  */
 
-public interface CallBack {
+public interface Cancelable {
+    void cancel();
+    boolean isCanceled();
 }

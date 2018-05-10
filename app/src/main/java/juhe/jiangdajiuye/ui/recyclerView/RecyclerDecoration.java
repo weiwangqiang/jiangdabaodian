@@ -16,7 +16,7 @@ import android.view.View;
  * @since 2018-01-05
  */
 
-public class LibraryCollectDecoration extends RecyclerView.ItemDecoration {
+public class RecyclerDecoration extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[]{
             android.R.attr.listDivider
@@ -30,7 +30,7 @@ public class LibraryCollectDecoration extends RecyclerView.ItemDecoration {
 
     private int mOrientation;
 
-    public LibraryCollectDecoration(Context context, int orientation) {
+    public RecyclerDecoration(Context context, int orientation) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();

@@ -3,7 +3,7 @@ package juhe.jiangdajiuye.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import juhe.jiangdajiuye.core.BaseApplication;
+import juhe.jiangdajiuye.base.BaseApplication;
 
 /**
  * class description here

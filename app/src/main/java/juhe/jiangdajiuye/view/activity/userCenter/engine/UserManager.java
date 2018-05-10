@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.activity.userCenter;
+package juhe.jiangdajiuye.view.activity.userCenter.engine;
 
 import juhe.jiangdajiuye.bean.bmobUser.UserBean;
 

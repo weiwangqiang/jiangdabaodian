@@ -11,7 +11,7 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.ui.SlipRecyclerView.SlipItemView;
 import juhe.jiangdajiuye.ui.SlipRecyclerView.SlipRecyclerAdapter;
-import juhe.jiangdajiuye.db.repository.LibraryRepository;
+import juhe.jiangdajiuye.db.repository.LibraryDepository;
 
 /**
  * class description here
@@ -20,8 +20,8 @@ import juhe.jiangdajiuye.db.repository.LibraryRepository;
  * @since 2018-01-06
  */
 
-public class LibraryCollectAdapter extends SlipRecyclerAdapter<BookBean> {
-    public LibraryCollectAdapter(Context context, int view, ArrayList<BookBean> data) {
+public class LibraryColAdapter extends SlipRecyclerAdapter<BookBean> {
+    public LibraryColAdapter(Context context, int view, ArrayList<BookBean> data) {
         super(context, view, data);
     }
 
@@ -49,7 +49,7 @@ public class LibraryCollectAdapter extends SlipRecyclerAdapter<BookBean> {
 
     @Override
     protected void deleteData(BookBean bookBean) {
-        LibraryRepository.getInstance().delete(bookBean);
+        LibraryDepository.getInstance().delete(bookBean);
     }
 
     private class ViewHolder extends SlipViewHolder{

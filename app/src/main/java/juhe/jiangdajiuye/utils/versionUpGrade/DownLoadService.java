@@ -12,7 +12,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 
 import java.io.File;
 
@@ -20,6 +19,7 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.DownloadFileListener;
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.engine.UrlManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 
@@ -88,45 +88,43 @@ public class DownLoadService extends IntentService {
 
     public void downLoad(String urlPath) {
         final BmobFile bmobFile = new BmobFile(FILE_NAME, "", urlPath);
-        if (bmobFile != null) {
-            CheckUpgrade.ApkFile = new File(CheckUpgrade.downLoadFilePath, bmobFile.getFilename());
-            Log.i(TAG, "downLoad: " + CheckUpgrade.downLoadFilePath + "exit ? "
-                    + (new File(CheckUpgrade.downLoadFilePath).exists()));
-            bmobFile.download(CheckUpgrade.ApkFile, new DownloadFileListener() {
-
-                @Override
-                public void onProgress(Integer integer, long l) {
-                    builder.setProgress(100, integer, false);
-                    builder.setContentText(ResourceUtils.getString(R.string.has_downloaded) + integer + "%");
-                    mNM.notify(NOTIFICATION, builder.build());
-
-                }
-
-                @Override
-                public void done(String s, BmobException e) {
-                    if (null == e) {
-                        builder.setContentText(ResourceUtils.getString(R.string.notify_download_finish))
-                                // Removes the progress bar
-                                .setProgress(0,0,false);
-//                        builder.setProgress(100, 100, false);
-                        mNM.notify(NOTIFICATION, builder.build());
-                        install(CheckUpgrade.ApkFile);
-                    } else {
-                        ToastUtils.showToast("下载出错");
-                        e.printStackTrace();
-                    }
-                    mNM.cancel(NOTIFICATION);
-                }
-            });
-        } else {
-            ToastUtils.showToast("下载出错");
+        if (bmobFile == null) {
+            downloadInBrowse();
+            return;
         }
+        CheckUpgrade.ApkFile = new File(CheckUpgrade.downLoadFilePath, bmobFile.getFilename());
+        bmobFile.download(CheckUpgrade.ApkFile, new DownloadFileListener() {
+
+            @Override
+            public void onProgress(Integer integer, long l) {
+                builder.setProgress(100, integer, false);
+                builder.setContentText(ResourceUtils.getString(R.string.has_downloaded) + integer + "%");
+                mNM.notify(NOTIFICATION, builder.build());
+
+            }
+
+            @Override
+            public void done(String s, BmobException e) {
+                if (null == e) {
+                    builder.setContentText(ResourceUtils.getString(R.string.notify_download_finish))
+                            // Removes the progress bar
+                            .setProgress(0, 0, false);
+//                        builder.setProgress(100, 100, false);
+                    mNM.notify(NOTIFICATION, builder.build());
+                    install(CheckUpgrade.ApkFile);
+                } else {
+                    downloadInBrowse();
+                    e.printStackTrace();
+                }
+                mNM.cancel(NOTIFICATION);
+            }
+        });
     }
 
     //安装
     public void install(File file) {
         if (!file.exists()) {
-            ToastUtils.showToast("下载失败，请到应用商店下载");
+            downloadInBrowse();
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -136,16 +134,21 @@ public class DownLoadService extends IntentService {
             install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//添加这一句表示对目标应用临时授权该Uri所代表的文件
             install.setDataAndType(fileUri, "application/vnd.android.package-archive");
-
-                    startActivity(install);
+            startActivity(install);
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                    startActivity(intent);
+            startActivity(intent);
 
         }
     }
-
+    private void downloadInBrowse() {
+        ToastUtils.showToast("下载失败，请到应用商店下载");
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse(UrlManager.getInstance().getDownLoadAppUrl());
+        intent.setData(content_url);
+        startActivity(intent);
+    }
 }

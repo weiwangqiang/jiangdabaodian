@@ -26,7 +26,7 @@ import juhe.jiangdajiuye.ui.SlipRecyclerView.SlipItemClickListener;
 import juhe.jiangdajiuye.ui.SlipRecyclerView.SlipRecyclerView;
 import juhe.jiangdajiuye.ui.recyclerView.RecyclerDecoration;
 import juhe.jiangdajiuye.base.BaseActivity;
-import juhe.jiangdajiuye.db.repository.LibraryRepository;
+import juhe.jiangdajiuye.db.repository.LibraryDepository;
 import juhe.jiangdajiuye.view.activity.userCenter.engine.UserManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
@@ -34,15 +34,15 @@ import juhe.jiangdajiuye.utils.ToastUtils;
 /**
  * Created by wangqiang on 2016/10/6.
  */
-public class LibraryCollect extends BaseActivity {
-    private String TAG = "LibraryCollect";
+public class LibraryCollectActivity extends BaseActivity {
+    private String TAG = "LibraryCollectActivity";
     private Boolean first = true;
     public SlipRecyclerView recyclerView;
     private Toolbar toolbar;
     private View nothing;
     private LinearLayoutManager manager;
     public LibraryColAdapter adapter;
-    private LibraryRepository libraryRepository;
+    private LibraryDepository libraryDepository;
     private ArrayList<BookBean> data = new ArrayList<>();
 
     @Override
@@ -101,7 +101,7 @@ public class LibraryCollect extends BaseActivity {
         if(list.size() == 0){
              return;
         }
-        libraryRepository.add(list);
+        libraryDepository.add(list);
         initDate();
         adapter.notifyDataSetChanged();
         ToastUtils.showToast(ResourceUtils.getString(R.string.toast_syn_data_download_success));
@@ -158,7 +158,7 @@ public class LibraryCollect extends BaseActivity {
 
 
     public void initView() {
-        libraryRepository = LibraryRepository.getInstance();
+        libraryDepository = LibraryDepository.getInstance();
         findId();
         initList();
         initToolbar();
@@ -181,7 +181,7 @@ public class LibraryCollect extends BaseActivity {
         adapter.setOnItemLister(new SlipItemClickListener<BookBean>() {
             @Override
             public void onItemClick(BookBean bookBean, int position) {
-                Intent intent = new Intent(LibraryCollect.this, LibraryDetails.class);
+                Intent intent = new Intent(LibraryCollectActivity.this, LibraryDetailsActivity.class);
                 intent.putExtra("url", bookBean.getUrl());
                 intent.putExtra("book", bookBean.getBook());
                 intent.putExtra("editor", bookBean.getEditor());
@@ -208,7 +208,7 @@ public class LibraryCollect extends BaseActivity {
 
     public void initDate() {
         data.clear();
-        data.addAll(libraryRepository.selectAll());
+        data.addAll(libraryDepository.selectAll());
         first = false;
         if (data.size() == 0) {
             nothing.setVisibility(View.VISIBLE);

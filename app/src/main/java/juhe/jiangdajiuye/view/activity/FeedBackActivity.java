@@ -23,7 +23,7 @@ import juhe.jiangdajiuye.utils.ToastUtils;
  * Created by wangqiang on 2016/10/6.
  * 建议界面
  */
-public class FeedBack extends BaseActivity {
+public class FeedBackActivity extends BaseActivity {
     private String TAG = "fragmentCollect";
     private Toolbar toolbar;
     private EditText ETEmail, ETContent;

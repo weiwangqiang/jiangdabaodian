@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.consume;
+package juhe.jiangdajiuye.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;

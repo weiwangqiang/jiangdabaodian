@@ -2,6 +2,7 @@ package juhe.jiangdajiuye.utils.versionUpGrade;
 
 import android.content.Context;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
@@ -80,7 +81,7 @@ public class CheckUpgrade {
                     return;
                 }
                 for (AppVersionBean appVersionBean : object) {
-                    if (AppConfigUtils.getVersionName().compareTo(appVersionBean.getVersion()) >= 0) {
+                    if (!compareTo(AppConfigUtils.getVersionName(),appVersionBean.getVersion())) {
                         continue;
                     }
                     targetBean = appVersionBean;
@@ -96,6 +97,29 @@ public class CheckUpgrade {
         });
     }
 
+    /**
+     *
+     * @param curVersion 当前版本
+     * @param targetVersion 目标版本 可能为null
+     * @return 是否有新版本
+     */
+    public static boolean compareTo(String curVersion, String targetVersion){
+        if(TextUtils.isEmpty(targetVersion)){
+            return false;
+        }
+        String[] cur = curVersion.split("\\.");
+        String[] target = targetVersion.split("\\.");
+        int n = Math.min(cur.length,target.length);
+        for(int i = 0 ;i < n ;i++){
+            int curN = Integer.parseInt(cur[i]);
+            int targetN = Integer.parseInt(target[i]);
+            if(curN==targetN){
+                continue;
+            }
+            return curN < targetN ;
+        }
+        return cur.length < target.length ;
+    }
     private static void showDialog(Context mCtx, AppVersionBean bean) {
         dialog = new UpgradeDialog(mCtx);
         dialog.setBean(bean);

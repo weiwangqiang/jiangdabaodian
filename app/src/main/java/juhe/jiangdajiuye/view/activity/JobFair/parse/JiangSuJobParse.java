@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.JobFair.parse;
+package juhe.jiangdajiuye.view.activity.JobFair.parse;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.db.repository.BrowseDepository;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * Created by wangqiang on 2016/10/16.
@@ -37,19 +38,21 @@ public class JiangSuJobParse extends BaseParse  {
         Document doc = Jsoup.parse(response);
         Elements elements = doc.getElementsByClass("teachinList");
         for (int i = 1; i < elements.size(); i++) {
-            MessageBean item = new MessageBean();
+            MessageBean messageBean = new MessageBean();
             Elements elements1 = elements.get(i).getElementsByTag("li");
             if(elements1.get(0).children().size() >1){
                 // 【置顶】那一行，与宣讲会无关，直接跳过
                 continue;
             }
-            item.setUrl(baseUrl+elements1.get(0).select("a").attr("href"));
-            item.setTitle(elements1.get(0).select("a").attr("title"));
-            item.setCity(elements1.get(1).text());
-            item.setFrom(elements1.get(2).text());
-            item.setLocate(elements1.get(3).text());
-            item.setTime(elements1.get(4).text());
-            list.add(item);
+            messageBean.setUrl(baseUrl+elements1.get(0).select("a").attr("href"));
+            messageBean.setTitle(elements1.get(0).select("a").attr("title"));
+            messageBean.setCity(elements1.get(1).text());
+            messageBean.setFrom(elements1.get(2).text());
+            messageBean.setLocate(elements1.get(3).text());
+            messageBean.setTime(elements1.get(4).text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            list.add(messageBean);
         }
         return list;
     }
@@ -64,17 +67,19 @@ public class JiangSuJobParse extends BaseParse  {
         Document doc = Jsoup.parse(response);
         Elements elements = doc.getElementsByClass("jobfairList");
         for (int i = 1; i < elements.size(); i++) {
-            MessageBean item = new MessageBean();
+            MessageBean messageBean = new MessageBean();
             Elements elements1 = elements.get(i).getElementsByTag("li");
-            item.setUrl(baseUrl+
+            messageBean.setUrl(baseUrl+
                     elements1.get(0).select("a").attr("href"));
-            item.setTitle(elements1.get(0).select("b").text() +
+            messageBean.setTitle(elements1.get(0).select("b").text() +
                     elements1.get(0).select("a").attr("title"));
-            item.setCity(elements1.get(1).text());
-            item.setLocate(elements1.get(2).text());
-            item.setTheme(elements1.get(3).text());
-            item.setTime(elements1.get(4).text());
-            list.add(item);
+            messageBean.setCity(elements1.get(1).text());
+            messageBean.setLocate(elements1.get(2).text());
+            messageBean.setTheme(elements1.get(3).text());
+            messageBean.setTime(elements1.get(4).text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            list.add(messageBean);
         }
         return list;
     }
@@ -88,20 +93,22 @@ public class JiangSuJobParse extends BaseParse  {
         Document doc = Jsoup.parse(response);
         Elements elements = doc.getElementsByClass("article-lists").select("li");
         for (int i = 0; i < elements.size(); i++) {
-            MessageBean item = new MessageBean();
+            MessageBean messageBean = new MessageBean();
             Elements elements1 = elements.get(i).select("span");
             if(elements1.size() <2) {
                 continue;
             }
-            item.setUrl("http://job.nju.edu.cn:9081/login/nju/"+
+            messageBean.setUrl("http://job.nju.edu.cn:9081/login/nju/"+
                     elements1.get(0).select("a").attr("href"));
-            item.setTitle(elements1.get(0).select("a").text());
+            messageBean.setTitle(elements1.get(0).select("a").text());
             String string[] = elements1.get(1).text().replaceAll("\u00A0", ":").split("::");
-            item.setLocate(string[0]);
-            item.setTime(string[1]+" "+string[2]);
-            item.setFrom("南京大学");
-            item.setCity("南京");
-            list.add(item);
+            messageBean.setLocate(string[0]);
+            messageBean.setTime(string[1]+" "+string[2]);
+            messageBean.setFrom("南京大学");
+            messageBean.setCity("南京");
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            list.add(messageBean);
         }
         return list;
     }

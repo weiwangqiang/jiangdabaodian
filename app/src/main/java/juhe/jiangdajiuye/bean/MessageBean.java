@@ -1,9 +1,8 @@
 package juhe.jiangdajiuye.bean;
 
 
-import java.util.Date;
-
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobDate;
 
 /**
  * Created by wangqiang on 2016/10/19.
@@ -11,7 +10,7 @@ import cn.bmob.v3.BmobObject;
  *   网页信息的item
  *
  */
-public class MessageItem extends BmobObject {
+public class MessageBean extends BmobObject {
     public String getUserId() {
         return userId;
     }
@@ -30,7 +29,17 @@ public class MessageItem extends BmobObject {
     private String time;//举办时间
     private String company ; //公司
     private String userId; //用户ID
-    private Date dateTime ;
+    private BmobDate bmobDate ;//宣讲日期 ，bmob类型
+    private Boolean hasBrowse = false;//用户是否已经查看
+
+    public Boolean getHasBrowse() {
+        return hasBrowse;
+    }
+
+    public void setHasBrowse(Boolean hasBrowse) {
+        this.hasBrowse = hasBrowse;
+    }
+
     public String getCompany() {
         return company;
     }
@@ -105,20 +114,20 @@ public class MessageItem extends BmobObject {
         this.city = city;
     }
 
-    public Date getDateTime() {
-        return dateTime;
+    public BmobDate getBmobDate() {
+        return bmobDate;
     }
 
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
+    public void setBmobDate(BmobDate bmobDate) {
+        this.bmobDate = bmobDate;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if ((null == obj) || (!(obj instanceof MessageItem))) {
+        if ((null == obj) || (!(obj instanceof MessageBean))) {
             return false;
         }
-        MessageItem other = (MessageItem) obj;
+        MessageBean other = (MessageBean) obj;
         return other.getUrl().equals(this.url) && other.getUserId().equals(this.userId);
     }
 

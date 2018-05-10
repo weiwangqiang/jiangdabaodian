@@ -31,8 +31,8 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
  * @since 2017-08-08
  */
 
-public class IndexFragmentAdapter extends AbsAdapter<MessageBean> {
-    private static final String TAG = "IndexFragmentAdapter";
+public class IndexAdapter extends AbsAdapter<MessageBean> {
+    private static final String TAG = "IndexAdapter";
     private mFooterViewHolder footerViewHolder;
     private Context mCtx;
     private OnItemClickListener itemClickListener;
@@ -41,10 +41,10 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageBean> {
     }
 
     public interface OnItemClickListener {
-        void OnItemClick(MessageBean item);
+        void OnItemClick(MessageBean item,int position);
     }
 
-    public IndexFragmentAdapter(Context mCtx, @LayoutRes int layout) {
+    public IndexAdapter(Context mCtx, @LayoutRes int layout) {
         super(layout);
         this.mCtx = mCtx;
     }
@@ -87,7 +87,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageBean> {
      * @param messageBean
      */
     @Override
-    public void bindItemViewHolder(RecyclerView.ViewHolder holder, int position, final MessageBean messageBean) {
+    public void bindItemViewHolder(RecyclerView.ViewHolder holder, final int position, final MessageBean messageBean) {
         if (!(holder instanceof mItemViewHolder)) {
             return;
         }
@@ -98,6 +98,9 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageBean> {
         viewHolder.company.setVisibility(View.GONE);
         try {
             viewHolder.title.setText(messageBean.getTitle());
+            viewHolder.title.setTextColor(mCtx.getResources()
+                    .getColor(messageBean.getHasBrowse() ?
+                            R.color.grey_600:R.color.grey_900));
             viewHolder.time.setText(messageBean.getTime());
             if(!TextUtils.isEmpty(messageBean.getCompany())){
                 viewHolder.company.setVisibility(View.VISIBLE);
@@ -134,7 +137,7 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageBean> {
             @Override
             public void onClick(View v) {
                 if (null != itemClickListener) {
-                    itemClickListener.OnItemClick(messageBean);
+                    itemClickListener.OnItemClick(messageBean,position);
                 }
             }
         });
@@ -201,12 +204,12 @@ public class IndexFragmentAdapter extends AbsAdapter<MessageBean> {
             return;
         }
         switch (status) {
-            case STATUS_PULL_TO_REFRESH:
+            case STATUS_PULL_DOWN_TO_REFRESH:
             case STATUS_DEFAULT:
 //                footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_pull_to_load_more));
 //                footerViewHolder.progressBar.setVisibility(View.GONE);
 //                break;
-            case STATUS_REFRESHING:
+            case STATUS_PULL_UP_TO_REFRESH:
                 footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_loading));
                 footerViewHolder.progressBar.setVisibility(View.VISIBLE);
                 break;

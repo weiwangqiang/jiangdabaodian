@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.JobFair.bean;
+package juhe.jiangdajiuye.view.activity.JobFair.bean;
 
 import java.util.List;
 

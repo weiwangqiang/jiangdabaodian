@@ -1,8 +1,7 @@
-package juhe.jiangdajiuye.fragment;
+package juhe.jiangdajiuye.view.fragment;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,23 +13,24 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.adapter.IndexAdapter;
 import juhe.jiangdajiuye.bean.MessageBean;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
-import juhe.jiangdajiuye.ui.recyclerView.MyRecyclerView;
+import juhe.jiangdajiuye.db.repository.BrowseDepository;
+import juhe.jiangdajiuye.net.httpUtils.HttpHelper;
+import juhe.jiangdajiuye.net.httpUtils.inter.IDataListener;
+import juhe.jiangdajiuye.net.httpUtils.task.HttpTask;
+import juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
-import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
-import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
-import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
-import juhe.jiangdajiuye.activity.Browse;
-import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.browse.MesBrowseActivity;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * Created by wangqiang on 2016/9/27.
  * 首界面的fragment
  */
-public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMoreListener {
+public class IndexFragment extends BaseTooBarFragment implements LoadMoreRecyclerView.OnLoadMoreListener {
     public static final int XUANJIANG = 1;//宣讲会
     public static final int ZHAOPINZHIWEI = 2;//招聘职位
     public static final int XINXI = 3;//信息速递
@@ -40,9 +40,9 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
     private String baseUrl;
     private String TAG;
     private int tab;
-    private MyRecyclerView recyclerView;
+    private LoadMoreRecyclerView recyclerView;
     private LinearLayoutManager manager;
-    private IndexFragmentAdapter adapter;
+    private IndexAdapter adapter;
     //下拉刷新
     private Boolean isFirst = true;
     private int page = 1; //当前页面数
@@ -114,8 +114,8 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
         @Override
         public void GetInternet(int type) {
             if (recyclerView != null) {
-                if (recyclerView.getStatus() == MyRecyclerView.STATUS_ERROR) {
-                    recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+                if (recyclerView.isErrorStatus()) {
+                    recyclerView.setCanLoadMoreRefresh(true);
                 }
             }
         }
@@ -123,7 +123,7 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
 
     private void findId() {
         error = view.findViewById(R.id.error);
-        recyclerView = (MyRecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView = (LoadMoreRecyclerView) view.findViewById(R.id.recyclerView);
         manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
@@ -143,8 +143,8 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if ( recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
-                    recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+                if (! recyclerView.isErrorStatus()) {
+                    recyclerView.setPullDownToRefresh();
                     getMessage();
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
@@ -155,7 +155,7 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
             @Override
             public void run() {
                 if (tab == XUANJIANG) {
-                    recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+                    recyclerView.setPullDownToRefresh();
                     swipeRefreshLayout.setRefreshing(true);
                     getMessage();
                 }
@@ -173,19 +173,24 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
 
         @Override
         public void onFail(Exception exception, int responseCode) {
-            recyclerView.setStatus(MyRecyclerView.STATUS_ERROR);
+            recyclerView.setErrorStatus();
             swipeRefreshLayout.setRefreshing(false);
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_network_error));
             showError();
         }
     } ;
     private void initList() {
-        adapter = new IndexFragmentAdapter(getActivity(), R.layout.main_list_item);
+        adapter = new IndexAdapter(getActivity(), R.layout.main_list_item);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new IndexFragmentAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new IndexAdapter.OnItemClickListener() {
             @Override
-            public void OnItemClick(MessageBean item) {
-                Browse.StartActivity(getActivity(), item);
+            public void OnItemClick(MessageBean item,int position) {
+                if(!item.getHasBrowse()){
+                    item.setHasBrowse(true);
+                    BrowseDepository.getInstance().add(item.getUrl());
+                    adapter.notifyItemChanged(position);
+                }
+                MesBrowseActivity.StartActivity(getActivity(), item);
             }
         });
     }
@@ -212,24 +217,24 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
         }
         isFirst = false;
         //如果是下拉刷新就刷新adapter的数据，否则直接添加
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
+        if (recyclerView.isPullDownToRefresh()) {
             adapter.upDate(list);
         } else {
-            adapter.appendDate(list);
+            adapter.appendData(list);
         }
         //如果adapter的数据不够，说明没有更多的数据，直接提示没有更多数据
         if( adapter.getDataSize() <6){
-            recyclerView.setStatus(MyRecyclerView.STATUS_END);
+            recyclerView.setCanLoadMoreRefresh(false);
             return;
         }
-        recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+        recyclerView.setDefaultStatus();
         page++;
         showError();
     }
 
     private String getUrl() {
         str.setLength(0);
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH){
+        if (recyclerView.isPullDownToRefresh()){
             page = 1;
         }
         str.append(baseUrl);
@@ -240,8 +245,8 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
 
     @Override
     public void onLoadMore() {
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_DEFAULT) {
-            recyclerView.setStatus(MyRecyclerView.STATUS_REFRESHING);
+        if (!recyclerView.isRefreshing()) {
+            recyclerView.setPullUpToRefresh();
             getMessage();
         }
     }
@@ -250,12 +255,12 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isFirst && isVisibleToUser && adapter != null && adapter.getDataSize() == 0) {
-            if (swipeRefreshLayout != null && recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
+            if (swipeRefreshLayout != null && !recyclerView.isErrorStatus()) {
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(true);
-                        recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+                        recyclerView.setPullDownToRefresh();
                         getMessage();
                     }
                 });

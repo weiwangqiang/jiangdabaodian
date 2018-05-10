@@ -9,7 +9,7 @@ import android.net.NetworkInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
+import juhe.jiangdajiuye.net.NetStateUtils;
 
 /**
  * 网络状态 接收者

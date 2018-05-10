@@ -43,8 +43,8 @@ import juhe.jiangdajiuye.listener.OnDownLoadListener;
 /**
  * Created by wangqiang on 2016/10/1.
  */
-public class PushBrowse extends BaseActivity {
-    private String TAG = "PushBrowse";
+public class PushBrowseActivity extends BaseActivity {
+    private String TAG = "PushBrowseActivity";
     private String targetUrl, title;
     private WebView webView;
     private ProgressDialog myProgress;
@@ -62,7 +62,7 @@ public class PushBrowse extends BaseActivity {
     private String IcnUrl = "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3084594445,4206732502&fm=96";
 
     public static Intent getActivityInt(Context context, XuanJiangPush mes) {
-        Intent intent = new Intent(context, PushBrowse.class);
+        Intent intent = new Intent(context, PushBrowseActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("url", mes.getTargetUrl());
         bundle.putString("title", mes.getTitle());
@@ -97,8 +97,8 @@ public class PushBrowse extends BaseActivity {
         initWeb(targetUrl);
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
-        tencent = Tencent.createInstance(APP_ID, PushBrowse.this);
-        dialog = sharedialog.getDialog(PushBrowse.this, ResourceUtils.getString(R.string.title_share_message));
+        tencent = Tencent.createInstance(APP_ID, PushBrowseActivity.this);
+        dialog = sharedialog.getDialog(PushBrowseActivity.this, ResourceUtils.getString(R.string.title_share_message));
     }
 
     /**
@@ -161,7 +161,7 @@ public class PushBrowse extends BaseActivity {
                 super.onReceivedError(view, request, error);
                 webView.setVisibility(View.VISIBLE);
                 myProgress.cancel();
-//                Toast.makeText(PushBrowse.this,"加载失败",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(PushBrowseActivity.this,"加载失败",Toast.LENGTH_SHORT).show();
             }
         });
         webView.setWebChromeClient(new WebChromeClient() {
@@ -277,7 +277,7 @@ public class PushBrowse extends BaseActivity {
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, IcnUrl);
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, ResourceUtils.getString(R.string.app_name));
         dialog.cancel();
-        tencent.shareToQQ(PushBrowse.this, params, baseuiLister);
+        tencent.shareToQQ(PushBrowseActivity.this, params, baseuiLister);
     }
 
     private void ToQzone() {
@@ -290,7 +290,7 @@ public class PushBrowse extends BaseActivity {
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, targetUrl);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, list);
         dialog.cancel();
-        tencent.shareToQzone(PushBrowse.this, params, baseuiLister);
+        tencent.shareToQzone(PushBrowseActivity.this, params, baseuiLister);
     }
 
     /**
@@ -334,5 +334,14 @@ public class PushBrowse extends BaseActivity {
         finish();
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        if (myProgress != null && myProgress.isShowing()) {
+            myProgress.dismiss();
+        }
+    }
 }

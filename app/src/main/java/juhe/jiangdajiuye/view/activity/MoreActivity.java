@@ -6,7 +6,7 @@ import android.view.View;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.base.BaseActivity;
 
-public class More extends BaseActivity {
+public class MoreActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

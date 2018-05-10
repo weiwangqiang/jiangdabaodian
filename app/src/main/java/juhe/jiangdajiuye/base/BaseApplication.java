@@ -1,9 +1,7 @@
-package juhe.jiangdajiuye.core;
+package juhe.jiangdajiuye.base;
 
 import android.app.Application;
 import android.content.Context;
-
-import com.facebook.stetho.Stetho;
 
 /**
  * Created by wangqiang on 2017/4/23.
@@ -24,6 +22,7 @@ public class BaseApplication extends Application{
     public BaseApplication() {
     }
     public static Context context ;
+//    private static RefWatcher refWatcher ;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -33,11 +32,16 @@ public class BaseApplication extends Application{
          *  开一个service完成所有第三方的初始化工作
          */
 //        MyExceptionHolder holder = new MyExceptionHolder(this);
-        Stetho.initializeWithDefaults(this);//facebook的调试工具
+//        Stetho.initializeWithDefaults(this);//facebook的调试工具
         InitWorker.initSDK(this);
+//        refWatcher = LeakCanary.install(this);
     }
 
     public static BaseApplication getApplication(){
         return application;
     }
+
+//    public static RefWatcher getRefWatcher() {
+//        return refWatcher;
+//    }
 }

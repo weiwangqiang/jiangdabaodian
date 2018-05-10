@@ -43,7 +43,6 @@
     <string name="current_version">当前版本</string>
     <string name="about">\n author@weiwangqiang 版权所有 \nCopyright @2017-03-27 \n weiwangqiang.All Right Reserved  </string>
     <string name="download_without_wifi">确定在非WiFi环境下载？</string>
-    <string name="share_toast">正在跳转</string>
     <string name="add_success">添加成功</string>
     <string name="unKnowLocation">未知地点</string>
     <string name="collect">收藏</string>
@@ -124,4 +123,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="share_toast">正在跳转</string>
+    <string name="share_app_description">我正在江大宝典看宣讲会</string>
 </resources>

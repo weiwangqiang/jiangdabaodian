@@ -37,8 +37,8 @@ import juhe.jiangdajiuye.utils.ResourceUtils;
  * Created by wangqiang on 2016/10/1.
  * 在线游戏
  */
-public class GameOnline extends BaseActivity {
-    private String TAG = "PushBrowse";
+public class GameOnlineActivity extends BaseActivity {
+    private String TAG = "PushBrowseActivity";
     private String url;
     private String title;
     private WebView webView;
@@ -72,8 +72,8 @@ public class GameOnline extends BaseActivity {
         initWEi();
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
-        tencent = Tencent.createInstance(APP_ID, GameOnline.this);
-        dialog = sharedialog.getDialog(GameOnline.this,ResourceUtils.getString(R.string.title_share_game));
+        tencent = Tencent.createInstance(APP_ID, GameOnlineActivity.this);
+        dialog = sharedialog.getDialog(GameOnlineActivity.this,ResourceUtils.getString(R.string.title_share_game));
     }
     private Toolbar toolbar;
     public void initToolbar(){
@@ -187,7 +187,7 @@ public class GameOnline extends BaseActivity {
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,CacheConstant.AppIcnUrl);
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, ResourceUtils.getString(R.string.app_name));
         dialog.cancel();
-        tencent.shareToQQ(GameOnline.this, params,baseuiLister);
+        tencent.shareToQQ(GameOnlineActivity.this, params,baseuiLister);
     }
     private void  ToQzone(){
         Bundle params = new Bundle();
@@ -199,7 +199,7 @@ public class GameOnline extends BaseActivity {
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL,list);
         dialog.cancel();
-        tencent.shareToQzone(GameOnline.this, params,baseuiLister);
+        tencent.shareToQzone(GameOnlineActivity.this, params,baseuiLister);
     }
     /**
      * 腾讯的监听回调
@@ -208,7 +208,7 @@ public class GameOnline extends BaseActivity {
 
         @Override
         public void onComplete(Object o) {
-//            Toast.makeText(GameOnline.this,"分享成功！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(GameOnlineActivity.this,"分享成功！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -217,7 +217,7 @@ public class GameOnline extends BaseActivity {
 
         @Override
         public void onCancel() {
-//            Toast.makeText(GameOnline.this,"取消分享！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(GameOnlineActivity.this,"取消分享！", Toast.LENGTH_SHORT).show();
         }
     }
     //    //要想调用IUiListener 必须重写此函数

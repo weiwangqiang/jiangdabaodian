@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.xuanJiang.entity;
+package juhe.jiangdajiuye.view.activity.xuanJiang.entity;
 
 /**
  * class description here

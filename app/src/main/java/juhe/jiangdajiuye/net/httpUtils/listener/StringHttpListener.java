@@ -1,10 +1,10 @@
-package juhe.jiangdajiuye.net.httpUtils.HttpListener;
+package juhe.jiangdajiuye.net.httpUtils.listener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import juhe.jiangdajiuye.net.httpUtils.Inter.IDataListener;
-import juhe.jiangdajiuye.net.httpUtils.Inter.IHttpListener;
+import juhe.jiangdajiuye.net.httpUtils.inter.IDataListener;
+import juhe.jiangdajiuye.net.httpUtils.inter.IHttpListener;
 import juhe.jiangdajiuye.net.httpUtils.ThreadHelper;
 
 /**

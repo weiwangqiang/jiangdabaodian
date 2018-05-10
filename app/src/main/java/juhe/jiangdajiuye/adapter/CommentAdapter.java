@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.adapter;
+package juhe.jiangdajiuye.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.ui.recyclerView.adapter.FooterAdapter;
 import juhe.jiangdajiuye.utils.SkinManager;
-import juhe.jiangdajiuye.view.comment.bean.Comment;
+import juhe.jiangdajiuye.bean.comment.Comment;
 
 /**
  * class description here

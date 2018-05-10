@@ -10,7 +10,7 @@ android {
         }
     }
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
     //**bmob兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'**
     useLibrary 'org.apache.http.legacy'
 
@@ -59,23 +59,28 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:26.0.1'
-    compile 'com.android.support:design:26.0.1'
-    compile files('libs/jsoup-1.7.2.jar')
-    compile files('libs/open_sdk_r5793_lite.jar')
-    compile 'com.android.support:cardview-v7:26.0.1'
-    compile 'com.android.support:recyclerview-v7:26.0.0'
-    compile 'com.github.bumptech.glide:glide:3.8.0'
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
-    compile 'cn.bmob.android:bmob-sdk:3.5.7'
-    compile 'cn.bmob.android:bmob-push:1.0.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
-    compile 'com.tencent.bugly:nativecrashreport:latest.release'
-//    compile 'com.android.support:multidex:1.0.1'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.0.1'
+    implementation 'com.android.support:design:26.0.1'
+    implementation files('libs/jsoup-1.7.2.jar')
+    implementation files('libs/open_sdk_r5793_lite.jar')
+    implementation 'com.android.support:cardview-v7:26.0.1'
+    implementation 'com.android.support:recyclerview-v7:26.0.0'
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    implementation 'cn.bmob.android:bmob-sdk:3.5.7'
+    implementation 'cn.bmob.android:bmob-push:1.0.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+//    implementation 'com.android.support:multidex:1.0.1'
+//     https://mvnrepository.com/artifact/com.facebook.stetho/stetho
+//    debugImplementation group: 'com.facebook.stetho', name: 'stetho', version: '1.5.0'
+// https://mvnrepository.com/artifact/com.squareup.leakcanary/leakcanary-android
+    debugImplementation group: 'com.squareup.leakcanary', name: 'leakcanary-android', version: '1.5.4'
+
     // 多dex配置
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
 //解决support包不一致的问题，强制使用相同的版本库
 configurations.all {

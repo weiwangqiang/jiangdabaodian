@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import juhe.jiangdajiuye.core.BaseApplication;
+import juhe.jiangdajiuye.base.BaseApplication;
 
 /**
  * @author wangqiang

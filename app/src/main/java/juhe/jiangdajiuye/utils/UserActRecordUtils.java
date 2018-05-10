@@ -4,31 +4,29 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UpdateListener;
 import juhe.jiangdajiuye.bean.bmobAppMes.IpBean;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.VisitCount;
 import juhe.jiangdajiuye.net.httpUtils.HttpHelper;
-import juhe.jiangdajiuye.net.httpUtils.Inter.IDataListener;
+import juhe.jiangdajiuye.net.httpUtils.inter.IDataListener;
 import juhe.jiangdajiuye.net.httpUtils.task.HttpTask;
 
 /**
  * class description here
- *
+ *  用户浏览记录
  * @author wangqiang
  * @since 2017-08-02
  */
 
-public class UserActionRecordUtils {
+public class UserActRecordUtils {
     public static long comeTime;
     public static long outTime;
     public static Map<String, Integer> mRecordMap = new HashMap<>();
-    public static String TAG = "UserActionRecordUtils";
+    public static String TAG = "UserActRecordUtils";
     private static final String ipUrl = "http://ip.chinaz.com/getip.aspx";
     private static boolean hasPushMes = false ;//是否将用户位置上传
 
     public static void setIpBean(IpBean ipbean) {
-        UserActionRecordUtils.ipbean = ipbean;
+        UserActRecordUtils.ipbean = ipbean;
     }
 
     public static IpBean getIpBean() {
@@ -38,7 +36,7 @@ public class UserActionRecordUtils {
     public static IpBean ipbean;
 
     public static void setComeTime(long comeTime) {
-        UserActionRecordUtils.comeTime = comeTime;
+        UserActRecordUtils.comeTime = comeTime;
 
     }
 
@@ -57,15 +55,15 @@ public class UserActionRecordUtils {
         count.setVisitTime(df.format(comeTime));
         count.setVersionName(AppConfigUtils.getVersionName());
         count.setStayTime(df.format(System.currentTimeMillis() - comeTime));
-//        count.save()
-        count.update(new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if(e != null){
-                    e.printStackTrace();
-                }
-            }
-        });
+        count.save();
+//        count.update(new UpdateListener() {
+//            @Override
+//            public void done(BmobException e) {
+//                if(e != null){
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     /**

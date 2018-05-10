@@ -1,10 +1,10 @@
-package juhe.jiangdajiuye.view.xuanJiang.fragment;
+package juhe.jiangdajiuye.view.activity.xuanJiang.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import juhe.jiangdajiuye.view.xuanJiang.control.XuanUrlControl;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.xuanJiang.control.XuanUrlControl;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 
 /**

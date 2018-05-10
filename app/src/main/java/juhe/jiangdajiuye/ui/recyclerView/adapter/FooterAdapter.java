@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.consume.recyclerView.adapter;
+package juhe.jiangdajiuye.ui.recyclerView.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -65,12 +65,12 @@ public abstract class FooterAdapter<T> extends AbsAdapter<T> {
             return;
         }
         switch (status) {
-            case STATUS_PULL_TO_REFRESH:
+            case STATUS_PULL_DOWN_TO_REFRESH:
             case STATUS_DEFAULT:
 //                footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_pull_to_load_more));
 //                footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
-            case STATUS_REFRESHING:
+            case STATUS_PULL_UP_TO_REFRESH:
                 footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_loading));
                 footerViewHolder.progressBar.setVisibility(View.VISIBLE);
                 break;

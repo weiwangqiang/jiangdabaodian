@@ -1,11 +1,10 @@
-package juhe.jiangdajiuye.fragment;
+package juhe.jiangdajiuye.view.fragment;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.core.BaseApplication;
 
 /**
  * class description here
@@ -17,7 +16,6 @@ import juhe.jiangdajiuye.core.BaseApplication;
 public class BaseTooBarFragment extends Fragment {
     /**
      * Called when a fragment is first attached to its context.
-     * {@link #onCreate(Bundle)} will be called after this.
      *
      * @param context
      */
@@ -44,5 +42,6 @@ public class BaseTooBarFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+//        BaseApplication.getRefWatcher().watch(this);
     }
 }

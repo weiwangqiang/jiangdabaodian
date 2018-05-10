@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="juhe.jiangdajiuye.view.xuanJiang.XuanEntrance">
+    tools:context="juhe.jiangdajiuye.view.activity.xuanJiang.XuanEntrance">
   <TextView
       android:layout_width="match_parent"
       android:layout_height="match_parent"

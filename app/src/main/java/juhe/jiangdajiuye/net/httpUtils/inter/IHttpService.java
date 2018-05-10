@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.utils.httpUtils.Inter;
+package juhe.jiangdajiuye.net.httpUtils.inter;
 
 /**
  * class description here

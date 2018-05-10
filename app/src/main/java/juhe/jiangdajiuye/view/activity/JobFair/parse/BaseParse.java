@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.JobFair.parse;
+package juhe.jiangdajiuye.view.activity.JobFair.parse;
 
 /**
  * class description here

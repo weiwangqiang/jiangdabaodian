@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.JobFair.constant;
+package juhe.jiangdajiuye.view.activity.JobFair.constant;
 
 import java.util.ArrayList;
 import java.util.HashMap;

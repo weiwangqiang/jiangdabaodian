@@ -7,6 +7,12 @@ import android.util.AttributeSet;
 
 import juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter;
 
+import static juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter.STATUS_DEFAULT;
+import static juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter.STATUS_END;
+import static juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter.STATUS_ERROR;
+import static juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter.STATUS_PULL_DOWN_TO_REFRESH;
+import static juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter.STATUS_PULL_UP_TO_REFRESH;
+
 
 /**
  * class description here
@@ -15,27 +21,35 @@ import juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter;
  * @since 2017-08-08
  */
 
-public class MyRecyclerView extends RecyclerView {
-    public static String TAG = "MyRecyclerView";
+public class LoadMoreRecyclerView extends RecyclerView {
+    public static String TAG = "LoadMoreRecyclerView";
 
     public int getStatus() {
         return mStatus;
     }
+
     //是否处于刷新状态
-    public boolean isRefresh(){
-        return mStatus == STATUS_REFRESHING || mStatus ==STATUS_PULL_TO_REFRESH ;
+    public boolean isRefreshing() {
+        return mStatus == STATUS_PULL_UP_TO_REFRESH || mStatus == STATUS_PULL_DOWN_TO_REFRESH;
     }
+
     //是否是下拉刷新
-    public boolean isPullRefresh(){
-        return mStatus == STATUS_PULL_TO_REFRESH ;
+    public boolean isPullDownToRefresh() {
+        return mStatus == STATUS_PULL_DOWN_TO_REFRESH;
+    }
+    public boolean isPullUpToRefresh(){
+        return mStatus == STATUS_PULL_UP_TO_REFRESH;
+    }
+
+    //设置默认状态
+    public void setDefaultStatus(){
+      setStatus(STATUS_DEFAULT );
+    }
+    public boolean isErrorStatus(){
+        return mStatus == STATUS_ERROR ;
     }
     private int mStatus = 0;
 
-    public static final int STATUS_DEFAULT = 0;//不在刷新或者end状态
-    public static final int STATUS_REFRESHING = 0x10; //正在刷新状态
-    public static final int STATUS_PULL_TO_REFRESH = 0x11;//下拉刷新状态
-    public static final int STATUS_END = 0x12;//没有更多状态
-    public static final int STATUS_ERROR = 0x13;//出错状态
 
     @Override
     public void addOnAttachStateChangeListener(OnAttachStateChangeListener listener) {
@@ -44,46 +58,54 @@ public class MyRecyclerView extends RecyclerView {
 
     public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
         this.mOnLoadMoreListener = mOnLoadMoreListener;
-        addOnScrollListener(this.mOnLoadMoreListener);
+        addOnScrollListener(new ScrollListener());
     }
-    public OnLoadMoreListener mOnLoadMoreListener ;
-    public MyRecyclerView(Context context) {
+
+    public OnLoadMoreListener mOnLoadMoreListener;
+
+    public LoadMoreRecyclerView(Context context) {
         super(context);
     }
 
-    public MyRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public LoadMoreRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MyRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public LoadMoreRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    private juhe.jiangdajiuye.ui.recyclerView.OnLoadMoreListener mOnLoadMoreListener = new juhe.jiangdajiuye.ui.recyclerView.OnLoadMoreListener() {
+    public void setCanLoadMoreRefresh(boolean refresh) {
+        setStatus(refresh ? STATUS_DEFAULT : STATUS_END);
+    }
+    public void setErrorStatus(){
+        setStatus(STATUS_ERROR);
+    }
+    private void setStatus(int status) {
+        mStatus = status;
+        if (getAdapter() instanceof AbsAdapter) {
+            ((AbsAdapter) getAdapter()).stateChange(mStatus);
+        }
+    }
+    //设置上拉刷新状态
+    public void setPullUpToRefresh(){
+        setStatus(STATUS_PULL_UP_TO_REFRESH);
+    }
+    //设置下拉刷新状态
+    public void setPullDownToRefresh(){
+        setStatus(STATUS_PULL_DOWN_TO_REFRESH);
+    }
+    private class ScrollListener extends OnScrollMoreListener {
+
         @Override
         public void onLoadMore(RecyclerView recyclerView) {
             if (mOnLoadMoreListener != null && mStatus == STATUS_DEFAULT) {
                 mOnLoadMoreListener.onLoadMore();
             }
         }
-    };
-    public void setCanLoadMoreRefresh(boolean refresh){
-        mStatus = refresh ? STATUS_DEFAULT : STATUS_END ;
-        setStatus(mStatus);
-    }
-
-    public void setStatus(int status){
-        mStatus = status ;
-        if(getAdapter() instanceof AbsAdapter){
-            ((AbsAdapter) getAdapter()).stateChange(status);
-        }
     }
 
     public interface OnLoadMoreListener {
-        /**
-         * 下拉加载更多
-         */
         void onLoadMore();
-
     }
 }

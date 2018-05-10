@@ -18,7 +18,7 @@ import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.bean.BookMesBean;
 import juhe.jiangdajiuye.base.BaseActivity;
 import juhe.jiangdajiuye.view.dialog.ProgressDialog;
-import juhe.jiangdajiuye.db.repository.LibraryRepository;
+import juhe.jiangdajiuye.db.repository.LibraryDepository;
 import juhe.jiangdajiuye.net.httpUtils.HttpHelper;
 import juhe.jiangdajiuye.net.httpUtils.task.HttpTask;
 import juhe.jiangdajiuye.net.httpUtils.inter.IDataListener;
@@ -31,9 +31,9 @@ import juhe.jiangdajiuye.utils.ToastUtils;
  * <p>
  * Created by wangqiang on 2016/10/2.
  */
-public class LibraryDetails extends BaseActivity {
+public class LibraryDetailsActivity extends BaseActivity {
 
-    private String TAG = "LibraryDetails";
+    private String TAG = "LibraryDetailsActivity";
     private String title, editer, bookMessage;
     private Button back;
     private TextView titleTextView, editorTextView, bookMesTextView;
@@ -47,7 +47,7 @@ public class LibraryDetails extends BaseActivity {
     private BookMesBean bookMesBean;
     public static List<List<String>> list = new ArrayList<>();
     private JiangDaParseUtils parseTools = JiangDaParseUtils.getInstance();
-    private LibraryRepository libraryRepository;
+    private LibraryDepository libraryDepository;
     private HttpHelper httpHelper;
 
     private IDataListener<String> dataListener = new IDataListener<String>() {
@@ -70,7 +70,7 @@ public class LibraryDetails extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_book);
-        libraryRepository = LibraryRepository.getInstance();
+        libraryDepository = LibraryDepository.getInstance();
         getParam();
         initView();
 
@@ -92,7 +92,7 @@ public class LibraryDetails extends BaseActivity {
         back.setOnClickListener(this);
         collect.setOnClickListener(this);
 
-        isCheck = libraryRepository.hasURL(bookBean.getUrl());
+        isCheck = libraryDepository.contain(bookBean);
         collect.setChecked(isCheck);
     }
 
@@ -119,7 +119,7 @@ public class LibraryDetails extends BaseActivity {
         bookMesTextView.setText(bookMessage);
         mListView.addHeaderView(headView);
         mListView.addFooterView(footerView);
-        adapter = new BookDetailsAdapter(LibraryDetails.this, title, list);
+        adapter = new BookDetailsAdapter(LibraryDetailsActivity.this, title, list);
         mListView.setAdapter(adapter);
     }
 
@@ -157,12 +157,12 @@ public class LibraryDetails extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
-        boolean containUrl = libraryRepository.hasURL(bookBean.getUrl());
+        boolean containUrl = libraryDepository.contain(bookBean);
         if (!containUrl && collect.isChecked()) {
-            libraryRepository.add(bookBean);
+            libraryDepository.add(bookBean);
         } else if (containUrl && !collect.isChecked()) {
             //取消收藏
-            libraryRepository.delete(bookBean);
+            libraryDepository.delete(bookBean);
         }
     }
 }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.widget.Toast;
 
-import juhe.jiangdajiuye.core.BaseApplication;
+import juhe.jiangdajiuye.base.BaseApplication;
 
 /**
  * class description here

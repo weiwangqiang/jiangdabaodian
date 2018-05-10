@@ -1,5 +1,6 @@
-package juhe.jiangdajiuye.utils.httpUtils;
+package juhe.jiangdajiuye.net.httpUtils;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -11,8 +12,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import juhe.jiangdajiuye.utils.httpUtils.Inter.IHttpListener;
-import juhe.jiangdajiuye.utils.httpUtils.Inter.IHttpService;
+import juhe.jiangdajiuye.net.httpUtils.inter.IHttpService;
+import juhe.jiangdajiuye.net.httpUtils.inter.IHttpListener;
 
 /**
  * class description here
@@ -28,12 +29,11 @@ public class HttpService implements IHttpService {
     private static final String TAG = "HttpService";
     private IHttpListener mIHttpListener;
     private HttpURLConnection mHttpURLConnection;
-
     private String mUrl;
     private byte[] mRequestParams;
     private BufferedReader mBufferedReader;
     private int mResponseCode;
-
+    private CookieManager cookieManager = CookieManager.getInstance() ;
     public HttpService(String url, byte[] mRequestParams, IHttpListener iHttpListener) {
         this.mUrl = url;
         this.mRequestParams = mRequestParams;
@@ -45,18 +45,19 @@ public class HttpService implements IHttpService {
      */
     @Override
     public void execute() {
-
         if (null == mIHttpListener) {
             throw new NullPointerException("IHttpListener can not be null !");
         }
         Log.i(TAG, "execute: "+mUrl);
         try {
-//            System.setProperty("http.proxyHost", "192.168.0.104");
-//            System.setProperty("http.proxyPort", "8888");
             URL url = new URL(mUrl);
+            String cookie = cookieManager.getCookie(url.getHost());
             mHttpURLConnection = (HttpURLConnection) url.openConnection();
             mHttpURLConnection.setConnectTimeout(10000);
             //设置请求属性
+            if(!TextUtils.isEmpty(cookie)){
+                mHttpURLConnection.setRequestProperty("Cookie",cookie);
+            }
             mHttpURLConnection.setRequestProperty("Accept",
                     "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
             mHttpURLConnection.setRequestProperty("User-Agent",
@@ -69,6 +70,9 @@ public class HttpService implements IHttpService {
             mResponseCode = mHttpURLConnection.getResponseCode();
             Map<String, List<String>> map = mHttpURLConnection.getHeaderFields();
             String strings[] = map.get("Content-Type").get(0).split(";");
+            if(map.containsKey("Set-Cookie")){
+                cookieManager.addCookie(url.getHost(),map.get("Set-Cookie").get(0));
+            }
             //如果响应头的编码格式是 GBK 就采用 GBK格式解码
             mResponseCode = mHttpURLConnection.getResponseCode();
             if (containGBK(strings)) {

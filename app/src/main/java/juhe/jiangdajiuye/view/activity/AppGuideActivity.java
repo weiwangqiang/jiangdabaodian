@@ -27,7 +27,7 @@ import juhe.jiangdajiuye.adapter.ViewPagerAdapter;
  *  暂时不用
  */
 
-public class AppGuide extends BaseActivity {
+public class AppGuideActivity extends BaseActivity {
     private ViewPager viewpager;
     private Button begin;
     private ImageView view1,view2,view3;
@@ -60,8 +60,8 @@ public class AppGuide extends BaseActivity {
     }
 
     public void getView(){
-        in = AnimationUtils.loadAnimation(AppGuide.this,R.anim.in_from_bottom_to_top);
-        out = AnimationUtils.loadAnimation(AppGuide.this,R.anim.out_from_top_to_bottom);
+        in = AnimationUtils.loadAnimation(AppGuideActivity.this,R.anim.in_from_bottom_to_top);
+        out = AnimationUtils.loadAnimation(AppGuideActivity.this,R.anim.out_from_top_to_bottom);
         view1 = (ImageView) getLayoutInflater().inflate(R.layout.guideimage,null);
         view2 = (ImageView) getLayoutInflater().inflate(R.layout.guideimage,null);
         view3 = (ImageView) getLayoutInflater().inflate(R.layout.guideimage,null);
@@ -117,7 +117,7 @@ public class AppGuide extends BaseActivity {
         switch (v.getId()){
             case R.id.guideButton:
                 SharePreUtils.setBoolean(SharePreUtils.isFirst,false);
-                Intent intent = new Intent(AppGuide.this, MainActivity.class);
+                Intent intent = new Intent(AppGuideActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 break;

@@ -1,6 +1,7 @@
-package juhe.jiangdajiuye.core;
+package juhe.jiangdajiuye.base;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -16,8 +17,8 @@ import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.InstallationListener;
 import cn.bmob.v3.exception.BmobException;
-import juhe.jiangdajiuye.net.httpUtils.HttpHelper;
 import juhe.jiangdajiuye.net.NetStateUtils;
+import juhe.jiangdajiuye.net.httpUtils.HttpHelper;
 
 /**
  * class description here
@@ -54,12 +55,27 @@ public class InitWorker {
         // 设置是否为上报进程
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(mCtx);
         strategy.setUploadProcess(processName == null || processName.equals(packageName));
-
-        CrashReport.initCrashReport(mCtx, Bugly_APPId,false);
-        CrashReport.startCrashReport();
+        strategy.setAppChannel("debug");
+        if(!isApkInDebug(mCtx)){
+            Log.i(TAG, "initSDK: start bugly init ");
+            CrashReport.initCrashReport(mCtx, Bugly_APPId,false);
+            CrashReport.startCrashReport();
+        }
         HttpHelper.getInstance().init();
         Log.i(TAG, "onStartCommand: 初始化完成 ！ ");
 
+    }
+    /**
+     * 判断当前应用是否是debug状态
+     */
+
+    public static boolean isApkInDebug(Context context) {
+        try {
+            ApplicationInfo info = context.getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
     private static String getProcessName(int pid) {
         BufferedReader reader = null;

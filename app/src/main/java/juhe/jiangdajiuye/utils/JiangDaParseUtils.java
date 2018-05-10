@@ -11,18 +11,19 @@ import java.util.List;
 import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.bean.BookMesBean;
 import juhe.jiangdajiuye.bean.MessageBean;
+import juhe.jiangdajiuye.db.repository.BrowseDepository;
 import juhe.jiangdajiuye.view.fragment.IndexFragment;
 
 /**
  * Created by wangqiang on 2016/9/27.
  */
-public class ParseUtils {
-    private String TAG = "ParseUtils";
-    public static ParseUtils parse;
+public class JiangDaParseUtils {
+    private String TAG = "JiangDaParseUtils";
+    public static JiangDaParseUtils parse;
 
-    public static ParseUtils getInstance() {
+    public static JiangDaParseUtils getInstance() {
         if (parse == null) {
-            parse = new ParseUtils();
+            parse = new JiangDaParseUtils();
         }
         return parse;
     }
@@ -59,6 +60,7 @@ public class ParseUtils {
             messageBean.setFrom("江苏大学");
             messageBean.setTheme(elements1.get(3).text());
             messageBean.setTime(elements1.get(4).text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
             data.add(messageBean);
         }
         return data;
@@ -76,6 +78,8 @@ public class ParseUtils {
             messageBean.setUrl("http://ujs.91job.gov.cn" + elements1.get((0)).select("a").attr("href"));
             messageBean.setCity(elements1.get(1).text());
             messageBean.setTime(elements1.get(2).text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
             data.add(messageBean);
         }
         return data;
@@ -104,7 +108,7 @@ public class ParseUtils {
             }else{
                 realTime = mes.getTime() ;
             }
-
+            mes.setHasBrowse(BrowseDepository.getInstance().contain(mes.getUrl()));
             list.add(mes);
         }
         return list;
@@ -117,15 +121,17 @@ public class ParseUtils {
         Document doc = Jsoup.parse(response);
         Elements elements = doc.getElementsByClass("infoList");
         for (int i = 0; i < elements.size(); i++) {
-            MessageBean mes = new MessageBean();
+            MessageBean messageBean = new MessageBean();
             Elements e = elements.get(i).getElementsByClass("span1");
-            mes.setUrl("http://ujs.91job.gov.cn" + e.select("a").attr("href"));
-            mes.setTitle(e.select("a").attr("title"));
-            mes.setFrom(elements.get(i).getElementsByClass("span2").select("a").text());
-            mes.setCity(elements.get(i).getElementsByClass("span3").get(0).text());
-            mes.setIndustry(elements.get(i).getElementsByClass("span3").get(1).text());
-            mes.setTime(elements.get(i).getElementsByClass("span4").text());
-            list.add(mes);
+            messageBean.setUrl("http://ujs.91job.gov.cn" + e.select("a").attr("href"));
+            messageBean.setTitle(e.select("a").attr("title"));
+            messageBean.setFrom(elements.get(i).getElementsByClass("span2").select("a").text());
+            messageBean.setCity(elements.get(i).getElementsByClass("span3").get(0).text());
+            messageBean.setIndustry(elements.get(i).getElementsByClass("span3").get(1).text());
+            messageBean.setTime(elements.get(i).getElementsByClass("span4").text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            list.add(messageBean);
         }
         return list;
     }
@@ -137,13 +143,14 @@ public class ParseUtils {
         Document doc = Jsoup.parse(response);
         Elements elements = doc.getElementsByClass("newsList");
         for (int i = 0; i < elements.size(); i++) {
-            MessageBean mes = new MessageBean();
+            MessageBean messageBean = new MessageBean();
             Elements e = elements.get(i).select("li");
-            mes.setTime(e.get(0).text());
-            mes.setTitle(e.get(1).select("b").text() + e.get(1).select("a").text());
-            mes.setUrl("http://ujs.91job.gov.cn" +
+            messageBean.setTime(e.get(0).text());
+            messageBean.setTitle(e.get(1).select("b").text() + e.get(1).select("a").text());
+            messageBean.setUrl("http://ujs.91job.gov.cn" +
                     e.get(1).select("a").attr("href"));
-            list.add(mes);
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+            list.add(messageBean);
         }
         return list;
     }

@@ -8,10 +8,10 @@ import java.util.List;
  * @author wangqiang
  * @since 2018-04-12
  */
-public interface IRespository<T> {
+public interface IDepository<T> {
     void add(T t);
     void add(List<T> data);
     void delete(T t);
     boolean contain(T t);
-    T selectAll();
+    List<T> selectAll();
 }

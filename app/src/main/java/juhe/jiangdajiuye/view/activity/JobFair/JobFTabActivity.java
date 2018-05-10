@@ -20,8 +20,8 @@ import juhe.jiangdajiuye.adapter.MesFragmentAdapter;
  * Created by wangqiang on 2016/10/1.
  * 省份里各个高校的宣讲会tab列表
  */
-public class JobFTab extends BaseActivity {
-    private String TAG = "JobFTab";
+public class JobFTabActivity extends BaseActivity {
+    private String TAG = "JobFTabActivity";
     private ViewPager viewPager;
     private TabLayout  tabLayout;
     private List<Fragment> list = new ArrayList<>();

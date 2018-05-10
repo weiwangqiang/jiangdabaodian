@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.adapter;
+package juhe.jiangdajiuye.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

@@ -25,8 +25,8 @@ import juhe.jiangdajiuye.ui.SlipRecyclerView.SlipItemClickListener;
 import juhe.jiangdajiuye.ui.SlipRecyclerView.SlipRecyclerView;
 import juhe.jiangdajiuye.ui.recyclerView.RecyclerDecoration;
 import juhe.jiangdajiuye.base.BaseActivity;
-import juhe.jiangdajiuye.db.repository.CollectRepository;
-import juhe.jiangdajiuye.view.activity.browse.MesBrowse;
+import juhe.jiangdajiuye.db.repository.CollectDepository;
+import juhe.jiangdajiuye.view.activity.browse.MesBrowseActivity;
 import juhe.jiangdajiuye.view.activity.userCenter.engine.UserManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
@@ -35,7 +35,7 @@ import juhe.jiangdajiuye.utils.ToastUtils;
  * Created by wangqiang on 2016/10/6.
  * 收藏夹
  */
-public class MesCollect extends BaseActivity {
+public class MesCollectActivity extends BaseActivity {
     private String TAG = "fragmentCollect";
     private Boolean first = true;
     private SlipRecyclerView recyclerView;
@@ -91,7 +91,7 @@ public class MesCollect extends BaseActivity {
         if(list.size() == 0){
             return;
         }
-        CollectRepository.getInstance().add(list);
+        CollectDepository.getInstance().add(list);
         initDate();
         adapter.notifyDataSetChanged();
         ToastUtils.showToast(ResourceUtils.getString(R.string.toast_syn_data_download_success));
@@ -172,7 +172,7 @@ public class MesCollect extends BaseActivity {
         adapter.setOnItemLister(new SlipItemClickListener<MessageBean>() {
             @Override
             public void onItemClick(MessageBean messageBean, int position) {
-                MesBrowse.StartActivity(MesCollect.this, messageBean);
+                MesBrowseActivity.StartActivity(MesCollectActivity.this, messageBean);
             }
 
             @Override
@@ -192,7 +192,7 @@ public class MesCollect extends BaseActivity {
 
     private void initDate() {
         data.clear();
-        data.addAll( CollectRepository.getInstance().selectAll());
+        data.addAll( CollectDepository.getInstance().selectAll());
         first = false;
         if (data.size() == 0) {
             nothing.setVisibility(View.VISIBLE);

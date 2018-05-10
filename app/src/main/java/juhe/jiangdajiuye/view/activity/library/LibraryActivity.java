@@ -22,7 +22,7 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.LibraryAdapter;
 import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
-import juhe.jiangdajiuye.ui.recyclerView.MyRecyclerView;
+import juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView;
 import juhe.jiangdajiuye.base.BaseActivity;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
@@ -34,8 +34,8 @@ import juhe.jiangdajiuye.view.dialog.ProgressDialog;
 /**
  * Created by wangqiang on 2016/10/6.
  */
-public class Library extends BaseActivity implements
-        Toolbar.OnMenuItemClickListener, MyRecyclerView.OnLoadMoreListener {
+public class LibraryActivity extends BaseActivity implements
+        Toolbar.OnMenuItemClickListener, LoadMoreRecyclerView.OnLoadMoreListener {
     private EditText edit;
     private String TAG = "fragmentLibrary";
     private int currentPage = 1;
@@ -43,7 +43,7 @@ public class Library extends BaseActivity implements
     private String mTitle;
     private TextView search;
     private ProgressDialog mProgress;
-    private MyRecyclerView recyclerView;
+    private LoadMoreRecyclerView recyclerView;
     private Toolbar toolbar;
     private InputMethodManager imm;
     private LibraryAdapter adapter;
@@ -62,7 +62,7 @@ public class Library extends BaseActivity implements
 
         @Override
         public void onFail(Exception exception, int responseCode) {
-            recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+            recyclerView.setErrorStatus();
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_network_error));
             mProgress.cancel();
         }
@@ -87,7 +87,7 @@ public class Library extends BaseActivity implements
     public void findId() {
         edit =  findViewById(R.id.library_edit);
         search = findViewById(R.id.library_search);
-        recyclerView = (MyRecyclerView) findViewById(R.id.library_listView);
+        recyclerView = (LoadMoreRecyclerView) findViewById(R.id.library_listView);
         toolbar = (Toolbar) findViewById(R.id.Library_toolbar);
     }
 
@@ -99,7 +99,7 @@ public class Library extends BaseActivity implements
         adapter.setOnItemClickListener(new LibraryAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(BookBean data) {
-                Intent intent = new Intent(Library.this, LibraryDetails.class);
+                Intent intent = new Intent(LibraryActivity.this, LibraryDetailsActivity.class);
                 intent.putExtra("url", data.getUrl());
                 intent.putExtra("book", data.getBook());
                 intent.putExtra("editor", data.getEditor());
@@ -152,8 +152,8 @@ public class Library extends BaseActivity implements
             @Override
             public void GetInternet(int type) {
                 if (recyclerView != null) {
-                    if (recyclerView.getStatus() == MyRecyclerView.STATUS_ERROR) {
-                        recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+                    if (recyclerView.isErrorStatus()) {
+                        recyclerView.setDefaultStatus();
                     }
                 }
             }
@@ -191,21 +191,21 @@ public class Library extends BaseActivity implements
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_input_warn));
             return;
         }
-        if(recyclerView.isRefresh()){
+        if(recyclerView.isRefreshing()){
             //处于获取数据状态
             return;
         }
         mTitle = edit.getText().toString();
-        recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+        recyclerView.setPullUpToRefresh();
         showProgress();
         searchBook();
     }
 
     public void searchBook() {
-        if (recyclerView.getStatus() != MyRecyclerView.STATUS_PULL_TO_REFRESH) {
+        if (!recyclerView.isPullUpToRefresh()) {
             if ((currentPage * 10) >= totalNum && adapter.getDataSize() != 0) {
-                recyclerView.setStatus(MyRecyclerView.STATUS_END);
-                ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_content_not_more));
+                recyclerView.setCanLoadMoreRefresh(false);
+//                ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_content_not_more));
                 return;
             }
         }
@@ -225,34 +225,32 @@ public class Library extends BaseActivity implements
     public void upData(List<BookBean> data) {
         Log.i(TAG, "upData: "+data);
         if (data.size() == 0) {
-            if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
+            if (recyclerView.isPullDownToRefresh()) {
                 ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_can_not_search_book));
-                recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+                recyclerView.setDefaultStatus();
             } else{
-                recyclerView.setStatus(MyRecyclerView.STATUS_END);
+                recyclerView.setCanLoadMoreRefresh(false);
             }
             return;
         }
         totalNum = data.get(0).getTotalNum() ; //获取搜索结果的数量
         Log.i(TAG, "upData: "+totalNum);
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
+        if (recyclerView.isPullDownToRefresh()) {
             adapter.upDate(data);
             recyclerView.scrollToPosition(0);
         } else {
-            adapter.appendDate(data);
+            adapter.appendData(data);
         }
-        if (totalNum != 0 && (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH)
+        if (totalNum != 0 && (recyclerView.isPullDownToRefresh())
                 && adapter.getDataSize() >= totalNum) {
-            recyclerView.setStatus(MyRecyclerView.STATUS_END);
-            Log.i(TAG, "upData: set end ");
+            recyclerView.setCanLoadMoreRefresh(false);
             return;
         }
-        Log.i(TAG, "upData: set STATUS_DEFAULT");
-        recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+        recyclerView.setDefaultStatus();
     }
 
     public String getUrl() {
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
+        if (recyclerView.isPullDownToRefresh()) {
             currentPage = 1;
         }
         return url + "&page=" + currentPage + "&title=" + mTitle;
@@ -277,7 +275,7 @@ public class Library extends BaseActivity implements
     }
 
     public void to() {
-        Intent intent = new Intent(this, LibraryCollect.class);
+        Intent intent = new Intent(this, LibraryCollectActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
@@ -291,8 +289,8 @@ public class Library extends BaseActivity implements
 
     @Override
     public void onLoadMore() {
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_DEFAULT) {
-            recyclerView.setStatus(MyRecyclerView.STATUS_REFRESHING);
+        if (!recyclerView.isRefreshing()) {
+            recyclerView.setPullUpToRefresh();
             searchBook();
         }
     }

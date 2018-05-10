@@ -1,4 +1,4 @@
-package com.demo.garcia.base;
+package juhe.jiangdajiuye.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,11 +9,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.TextView;
 
-import com.demo.garcia.R;
-import com.demo.garcia.ui.recyclerView.LoadMoreRecyclerView;
-import com.demo.garcia.ui.recyclerView.adapter.AbsAdapter;
-
 import java.util.List;
+
+import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView;
+import juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter;
 
 /**
  * class description here
@@ -45,7 +45,7 @@ public abstract class BaseListActivity<T> extends BaseActivity {
             @Override
             public void onLoadMore() {
                 if (!loadMoreRecyclerView.isRefreshing() && canLoadMore()) {
-                    loadMoreRecyclerView.setStatusDownToRefresh();
+                    loadMoreRecyclerView.setPullDownToRefresh();
                     requestMes();
                 } else {
                     loadMoreRecyclerView.setCanLoadMoreRefresh(false);
@@ -70,7 +70,7 @@ public abstract class BaseListActivity<T> extends BaseActivity {
             @Override
             public void onRefresh() {
                 if (!loadMoreRecyclerView.isRefreshing() && canPullRefresh()) {
-                    loadMoreRecyclerView.setStatusDownToRefresh();
+                    loadMoreRecyclerView.setPullDownToRefresh();
                     resetParams();
                     requestMes();
                 }
@@ -85,7 +85,7 @@ public abstract class BaseListActivity<T> extends BaseActivity {
                 if (loadMoreRecyclerView.isRefreshing()) {
                     return;
                 }
-                loadMoreRecyclerView.setStatusPullToRefresh();
+                loadMoreRecyclerView.setPullDownToRefresh();
                 swipeRefreshLayout.setRefreshing(true);
                 resetParams();
                 requestMes();
@@ -108,14 +108,14 @@ public abstract class BaseListActivity<T> extends BaseActivity {
             if (adapter.getDataSize() == 0) {
                 showError(true);
                 return;
-            } else if (loadMoreRecyclerView.isDownRefresh()) {
+            } else if (loadMoreRecyclerView.isPullDownToRefresh()) {
                 adapter.upDate(data);
             }
             loadMoreRecyclerView.setCanLoadMoreRefresh(false);
             return;
         }
         showError(false);
-        if (loadMoreRecyclerView.isDownRefresh()) {
+        if (loadMoreRecyclerView.isPullDownToRefresh()) {
             adapter.upDate(data);
         } else {
             adapter.appendData(data);
@@ -124,7 +124,7 @@ public abstract class BaseListActivity<T> extends BaseActivity {
         if (adapter.getDataSize() < 5) {
             loadMoreRecyclerView.setCanLoadMoreRefresh(false);
         } else {
-            loadMoreRecyclerView.setStatusDefault();
+            loadMoreRecyclerView. setDefaultStatus();
         }
     }
 
@@ -143,16 +143,16 @@ public abstract class BaseListActivity<T> extends BaseActivity {
     protected void requestStart(boolean isDownToRefresh) {
         if (isDownToRefresh) {
             swipeRefreshLayout.setRefreshing(true);
-            loadMoreRecyclerView.setStatusDownToRefresh();
+            loadMoreRecyclerView.isPullDownToRefresh();
         } else {
-            loadMoreRecyclerView.setStatusPullToRefresh();
+            loadMoreRecyclerView.setPullUpToRefresh();
         }
     }
 
     protected void requestEnd() {
         swipeRefreshLayout.setRefreshing(false);
         if (loadMoreRecyclerView.isRefreshing()) {
-            loadMoreRecyclerView.setStatusDefault();
+            loadMoreRecyclerView.setDefaultStatus();
         }
     }
 

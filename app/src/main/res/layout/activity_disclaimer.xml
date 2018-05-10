@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="juhe.jiangdajiuye.view.activity.Disclaimer">
+    tools:context="juhe.jiangdajiuye.view.activity.aboute.DisclaimerActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/disclaimer_toolbar"
         android:layout_width="match_parent"

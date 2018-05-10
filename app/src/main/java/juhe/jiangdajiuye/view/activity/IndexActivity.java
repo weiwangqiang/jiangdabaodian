@@ -30,8 +30,8 @@ import juhe.jiangdajiuye.constant.CacheConstant;
  * Created by wangqiang on 2016/7/3.
  * 启动界面
  */
-public class IndexView extends BaseActivity {
-    private String TAG = "IndexView";
+public class IndexActivity extends BaseActivity {
+    private String TAG = "IndexActivity";
     private Animation LoadAnimation;
     private AlphaAnimation alphaAnima;
     private ScaleAnimation scaleAnimat;
@@ -77,7 +77,7 @@ public class IndexView extends BaseActivity {
         alphaAnima = new AlphaAnimation(0.42f, 1.0f);
         scaleAnimat.setDuration(4000);//设置动画持续时间
         alphaAnima.setDuration(4000);
-//        IndexView.setAnimation(alphaAnima);
+//        IndexActivity.setAnimation(alphaAnima);
         AnimationSet set = new AnimationSet(true);
         set.addAnimation(scaleAnimat);
         set.addAnimation(alphaAnima);
@@ -146,11 +146,11 @@ public class IndexView extends BaseActivity {
                     SharePreUtils.getInt(SharePreUtils.visitFrequency,0)+1);
             Intent intent;
 //            if(isFirst)
-//                intent = new Intent(IndexView.this,AppGuide.class);
+//                intent = new Intent(IndexActivity.this,AppGuide.class);
 //            else
-            intent = new Intent(IndexView.this, MainActivity.class);
+            intent = new Intent(IndexActivity.this, MainActivity.class);
             startActivity(intent);
-            IndexView.this.finish();
+            IndexActivity.this.finish();
         }
     }
 

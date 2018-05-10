@@ -1,15 +1,15 @@
-package juhe.jiangdajiuye.view.xuanJiang.control;
+package juhe.jiangdajiuye.view.activity.xuanJiang.control;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
+import juhe.jiangdajiuye.view.activity.xuanJiang.constant.XuanEntranceData;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.xuanJiang.parse.HangZouXuanParse;
+import juhe.jiangdajiuye.view.activity.xuanJiang.parse.ShangHaiXuanParse;
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
-import juhe.jiangdajiuye.view.xuanJiang.parse.HangZouXuanParse;
-import juhe.jiangdajiuye.view.xuanJiang.parse.JiangSuXuanParse;
-import juhe.jiangdajiuye.view.xuanJiang.parse.ShangHaiXuanParse;
+import juhe.jiangdajiuye.view.activity.xuanJiang.parse.JiangSuXuanParse;
 
 /**
  * class description here

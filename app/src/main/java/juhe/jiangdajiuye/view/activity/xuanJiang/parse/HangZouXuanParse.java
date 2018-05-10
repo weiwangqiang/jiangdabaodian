@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.xuanJiang.parse;
+package juhe.jiangdajiuye.view.activity.xuanJiang.parse;
 
 import com.google.gson.Gson;
 
@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.view.xuanJiang.entity.HangDianUniversity;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.db.repository.BrowseDepository;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.HangDianUniversity;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here
@@ -67,7 +68,7 @@ public class HangZouXuanParse {
                 time = time.substring(1,time.length()-1);
             }
             messageBean.setTime(time);
-
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
             list.add(messageBean);
         }
         return list;
@@ -88,6 +89,8 @@ public class HangZouXuanParse {
             messageBean.setFrom(element.get(2).text());
             messageBean.setLocate(element.get(3).text());
             messageBean.setTime(element.get(4).text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
             list.add(messageBean);
         }
         return list;
@@ -99,15 +102,17 @@ public class HangZouXuanParse {
         Elements element = doc.getElementsByClass("con");
         for (Element element1 : element) {
             Elements elements = element1.select("td");
-            MessageBean item = new MessageBean();
-            item.setTitle(elements.get(0).select("a").text());
-            item.setUrl("http://www.career.zju.edu.cn/ejob/"
+            MessageBean messageBean = new MessageBean();
+            messageBean.setTitle(elements.get(0).select("a").text());
+            messageBean.setUrl("http://www.career.zju.edu.cn/ejob/"
                     + elements.select("a").attr("href"));
-            item.setLocate(elements.get(1).text());
-            item.setTime(elements.get(2).text());
-            item.setFrom("浙江大学");
-            item.setCity("杭州市");
-            list.add(item);
+            messageBean.setLocate(elements.get(1).text());
+            messageBean.setTime(elements.get(2).text());
+            messageBean.setFrom("浙江大学");
+            messageBean.setCity("杭州市");
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            list.add(messageBean);
         }
         return list;
     }
@@ -120,17 +125,19 @@ public class HangZouXuanParse {
         List<HangDianUniversity.DataBean> dataBeen = university.getData();
         List<MessageBean> res = new ArrayList<>();
         for (HangDianUniversity.DataBean bean : dataBeen) {
-            MessageBean item = new MessageBean();
-            item.setTitle(bean.getMeet_name());
-            item.setFrom(bean.getSchool_name());
-            item.setCompany(bean.getCompany_name());
-            item.setIndustry(bean.getIndustry_category());
-            item.setTime(bean.getMeet_day() + " " + bean.getMeet_time());
-            item.setCity(bean.getCity_name());
-            item.setLocate(bean.getAddress());
-            item.setUrl("http://career.hdu.edu.cn/detail/career?id="
+            MessageBean messageBean = new MessageBean();
+            messageBean.setTitle(bean.getMeet_name());
+            messageBean.setFrom(bean.getSchool_name());
+            messageBean.setCompany(bean.getCompany_name());
+            messageBean.setIndustry(bean.getIndustry_category());
+            messageBean.setTime(bean.getMeet_day() + " " + bean.getMeet_time());
+            messageBean.setCity(bean.getCity_name());
+            messageBean.setLocate(bean.getAddress());
+            messageBean.setUrl("http://career.hdu.edu.cn/detail/career?id="
                     + bean.getCareer_talk_id());
-            res.add(item);
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            res.add(messageBean);
         }
         return res;
     }

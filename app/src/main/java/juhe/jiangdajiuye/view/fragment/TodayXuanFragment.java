@@ -1,7 +1,6 @@
-package juhe.jiangdajiuye.fragment;
+package juhe.jiangdajiuye.view.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,12 +19,13 @@ import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.adapter.IndexAdapter;
 import juhe.jiangdajiuye.bean.MessageBean;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
-import juhe.jiangdajiuye.ui.recyclerView.MyRecyclerView;
+import juhe.jiangdajiuye.db.repository.BrowseDepository;
+import juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView;
 import juhe.jiangdajiuye.utils.ToastUtils;
-import juhe.jiangdajiuye.activity.Browse;
-import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
+import juhe.jiangdajiuye.view.activity.browse.MesBrowseActivity;
 
 /**
  * class description here
@@ -35,12 +35,12 @@ import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
  * @since 2017-09-30
  */
 
-public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoadMoreListener {
+public class TodayXuanFragment extends BaseTooBarFragment implements LoadMoreRecyclerView.OnLoadMoreListener {
     private static final String TAG = "TodayXuanFragment";
     private View view, error;
-    private MyRecyclerView recyclerView;
+    private LoadMoreRecyclerView recyclerView;
     private LinearLayoutManager manager;
-    private IndexFragmentAdapter adapter;
+    private IndexAdapter adapter;
     //是否没有初始化数据
     private Boolean isFirst = true;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -51,7 +51,7 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view != null){
-            if(recyclerView.isRefresh()){
+            if(recyclerView.isRefreshing()){
                 swipeRefreshLayout.setRefreshing(true);
             }
             return view;
@@ -100,8 +100,8 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
         @Override
         public void GetInternet(int type) {
             if (recyclerView != null) {
-                if (recyclerView.getStatus() == MyRecyclerView.STATUS_ERROR) {
-                    recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+                if (recyclerView.isErrorStatus()) {
+                    recyclerView.setCanLoadMoreRefresh(true);
                 }
             }
         }
@@ -128,8 +128,8 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
-                    recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+                if (!recyclerView.isErrorStatus()) {
+                    recyclerView.setPullDownToRefresh();
                     getMessage();
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
@@ -141,7 +141,7 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
                 @Override
                 public void run() {
                     swipeRefreshLayout.setRefreshing(true);
-                    recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+                    recyclerView.setPullDownToRefresh();
                     getMessage();
                 }
             });
@@ -149,12 +149,17 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
     }
 
     public void initList() {
-        adapter = new IndexFragmentAdapter(getActivity(), R.layout.main_list_item);
+        adapter = new IndexAdapter(getActivity(), R.layout.main_list_item);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new IndexFragmentAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new IndexAdapter.OnItemClickListener() {
             @Override
-            public void OnItemClick(MessageBean item) {
-                Browse.StartActivity(getActivity(), item);
+            public void OnItemClick(MessageBean item,int position) {
+                if(!item.getHasBrowse()){
+                    item.setHasBrowse(true);
+                    BrowseDepository.getInstance().add(item.getUrl());
+                    adapter.notifyItemChanged(position);
+                }
+                MesBrowseActivity.StartActivity(getActivity(), item);
             }
         });
     }
@@ -170,7 +175,7 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        cal.add(Calendar.DAY_OF_MONTH, day);
+//        cal.add(Calendar.DAY_OF_MONTH, day);
         return  cal.getTime();
     }
     public void getMessage() {
@@ -178,20 +183,22 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
         List<BmobQuery<MessageBean>> and = new ArrayList<>();
 //大于00：00：00
         BmobQuery<MessageBean> q1 = new BmobQuery<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date curDate  = Calendar.getInstance().getTime() ;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        Date curDate  = Calendar.getInstance().getTime() ;
+        Date curDate  = getTimeOf12() ;
         String curTime = sdf.format(curDate);
-        q1.addWhereGreaterThanOrEqualTo("bmobDate",new BmobDate(curDate));
-        and.add(q1);
-//小于23：59：59
-        BmobQuery<MessageBean> q2 = new BmobQuery<>();
-        Date nextDay = getTimeOf12();
-        String nextTime = sdf.format(nextDay);
-        q2.addWhereLessThanOrEqualTo("bmobDate",new BmobDate(nextDay));
-        and.add(q2);
-//添加复合与查询
-        query.and(and);
-        if(recyclerView.isPullRefresh()){
+//        q1.addWhereGreaterThanOrEqualTo("bmobDate",new BmobDate(curDate));
+//        and.add(q1);
+////小于23：59：59
+//        BmobQuery<MessageBean> q2 = new BmobQuery<>();
+//        Date nextDay = getTimeOf12();
+//        String nextTime = sdf.format(nextDay);
+//        q2.addWhereLessThanOrEqualTo("bmobDate",new BmobDate(nextDay));
+//        and.add(q2);
+////添加复合与查询
+//        query.and(and);
+        query.addWhereGreaterThanOrEqualTo("bmobDate",new BmobDate(curDate));
+        if(recyclerView.isPullDownToRefresh()){
             query.setSkip(0);
         }else{
             query.setSkip(adapter.getDataSize());
@@ -210,7 +217,7 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }else{
-                    recyclerView.setStatus(MyRecyclerView.STATUS_ERROR);
+                    recyclerView.setErrorStatus();
                     swipeRefreshLayout.setRefreshing(false);
                     ToastUtils.showToast("网络不太顺畅哦！");
                     showError();
@@ -231,6 +238,11 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
     }
 
     public void upDate(List<MessageBean> list) {
+        for(MessageBean bean:list){
+            if (BrowseDepository.getInstance().contain(bean.getUrl())){
+                bean.setHasBrowse(true);
+            }
+        }
         //没有更多了
         if ((list.size() == 0 && adapter.getDataSize() != 0)) {
             recyclerView.setCanLoadMoreRefresh(false);
@@ -238,17 +250,17 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
         }
         isFirst = false;
         //如果是下拉刷新就刷新adapter的数据，否则直接添加
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
+        if (recyclerView.isPullDownToRefresh()) {
             adapter.upDate(list);
         } else {
-            adapter.appendDate(list);
+            adapter.appendData(list);
         }
         //如果adapter的数据不够，说明没有更多的数据，直接提示没有更多数据
         if (adapter.getDataSize() < 6) {
-            recyclerView.setStatus(MyRecyclerView.STATUS_END);
+            recyclerView.setCanLoadMoreRefresh(false);
             return;
         }
-        recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+        recyclerView.setDefaultStatus();
         RequestSuccess();
         showError();
     }
@@ -259,8 +271,8 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
 
     @Override
     public void onLoadMore() {
-        if (!recyclerView.isRefresh()) {
-            recyclerView.setStatus(MyRecyclerView.STATUS_REFRESHING);
+        if (!recyclerView.isRefreshing()) {
+            recyclerView.setPullUpToRefresh();
             getMessage();
         }
     }
@@ -269,12 +281,12 @@ public class TodayXuanFragment extends Fragment implements MyRecyclerView.OnLoad
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isFirst && isVisibleToUser) {
-            if (swipeRefreshLayout != null && recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
+            if (swipeRefreshLayout != null && !recyclerView.isErrorStatus()) {
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(true);
-                        recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+                        recyclerView.setPullDownToRefresh();
                         getMessage();
                     }
                 });

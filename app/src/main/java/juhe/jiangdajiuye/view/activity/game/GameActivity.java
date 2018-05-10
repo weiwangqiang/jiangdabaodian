@@ -37,8 +37,8 @@ import juhe.jiangdajiuye.utils.ToastUtils;
 /**
  * Created by wangqiang on 2016/10/1.
  */
-public class Game extends BaseActivity implements ListView.OnItemClickListener{
-    private String TAG = "Game";
+public class GameActivity extends BaseActivity implements ListView.OnItemClickListener{
+    private String TAG = "GameActivity";
     private ArrayList<HashMap<String,String>> data;
     private ListView list;
     private GameAdapter adapter ;
@@ -142,8 +142,8 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
         data = new ArrayList<>();
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
-        tencent = Tencent.createInstance(APP_ID, Game.this);
-        dialog = sharedialog.getDialog(Game.this, ResourceUtils.getString(R.string.title_share_game));
+        tencent = Tencent.createInstance(APP_ID, GameActivity.this);
+        dialog = sharedialog.getDialog(GameActivity.this, ResourceUtils.getString(R.string.title_share_game));
     }
     private Toolbar toolbar;
     public void initToolbar(){
@@ -210,7 +210,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(Game.this,GameOnline.class);
+        Intent intent = new Intent(GameActivity.this,GameOnlineActivity.class);
         String url = data.get(position).get("url");
         intent.putExtra("url",url);
         intent.putExtra("title",data.get(position).get("title"));
@@ -267,7 +267,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,CacheConstant.AppIcnUrl);
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME,ResourceUtils.getString(R.string.app_name));
         dialog.cancel();
-        tencent.shareToQQ(Game.this, params,baseuiLister);
+        tencent.shareToQQ(GameActivity.this, params,baseuiLister);
     }
     private void  ToQzone(){
         Bundle params = new Bundle();
@@ -279,7 +279,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, CacheConstant.AppDownLoad);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL,list);
         dialog.cancel();
-        tencent.shareToQzone(Game.this, params,baseuiLister);
+        tencent.shareToQzone(GameActivity.this, params,baseuiLister);
     }
     /**
      * 腾讯的监听回调
@@ -288,7 +288,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
 
         @Override
         public void onComplete(Object o) {
-//            Toast.makeText(Game.this,"分享成功！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(GameActivity.this,"分享成功！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -297,7 +297,7 @@ public class Game extends BaseActivity implements ListView.OnItemClickListener{
 
         @Override
         public void onCancel() {
-//            Toast.makeText(Game.this,"取消分享！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(GameActivity.this,"取消分享！", Toast.LENGTH_SHORT).show();
         }
     }
     //    //要想调用IUiListener 必须重写此函数

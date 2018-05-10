@@ -14,18 +14,18 @@ import juhe.jiangdajiuye.db.helper.CollectSqlHelper;
  * @since 2018-01-06
  */
 
-public class CollectRepository implements IRespository<MessageBean> {
-    public static CollectRepository collectRepository;
+public class CollectDepository implements IDepository<MessageBean> {
+    public static CollectDepository collectDepository;
     private CollectSqlHelper collectSqlHelper;
 
-    public static CollectRepository getInstance() {
-        if (null == collectRepository) {
-            collectRepository = new CollectRepository();
+    public static CollectDepository getInstance() {
+        if (null == collectDepository) {
+            collectDepository = new CollectDepository();
         }
-        return collectRepository;
+        return collectDepository;
     }
 
-    private CollectRepository() {
+    private CollectDepository() {
         collectSqlHelper = new CollectSqlHelper(BaseApplication.getContext());
     }
     @Override
@@ -42,10 +42,11 @@ public class CollectRepository implements IRespository<MessageBean> {
         return collectSqlHelper.selectAll();
     }
 
+    @Override
     public boolean contain(MessageBean messageBean) {
         return collectSqlHelper.contain(messageBean);
     }
-
+    @Override
     public void delete(MessageBean messageBean) {
         collectSqlHelper.delete(messageBean);
     }

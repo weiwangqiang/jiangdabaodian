@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.xuanJiang;
+package juhe.jiangdajiuye.view.activity.xuanJiang;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,17 +14,17 @@ import java.util.List;
 
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.MesFragmentAdapter;
-import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.base.BaseActivity;
 import juhe.jiangdajiuye.utils.ResourceUtils;
-import juhe.jiangdajiuye.view.xuanJiang.constant.XuanJiangUrl;
-import juhe.jiangdajiuye.view.xuanJiang.fragment.XuanFragment;
+import juhe.jiangdajiuye.view.activity.xuanJiang.constant.XuanJiangUrl;
+import juhe.jiangdajiuye.view.activity.xuanJiang.fragment.XuanFragment;
 
 /**
  * Created by wangqiang on 2016/10/1.
  * 省份里各个高校的宣讲会tab列表
  */
 public class XuanJiangTab extends BaseActivity {
-    private String TAG = "JobFTab";
+    private String TAG = "JobFTabActivity";
     private ViewPager viewPager;
     private Toolbar toolbar;
     private TabLayout  tabLayout;

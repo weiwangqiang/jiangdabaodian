@@ -3,7 +3,7 @@
     android:id="@+id/include_load_more_SwipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.demo.garcia.ui.recyclerView.LoadMoreRecyclerView
+    <juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView
         android:id="@+id/include_load_more_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

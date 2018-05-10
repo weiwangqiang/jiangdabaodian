@@ -16,7 +16,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal|center_vertical"
         >
-        <juhe.jiangdajiuye.consume.CircleImageView
+        <juhe.jiangdajiuye.ui.CircleImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="20dp"
@@ -60,7 +60,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="更新"
+        android:text="检查更新"
         android:layout_margin="20dp"
         android:textColor="@color/white"
         android:background="@drawable/rectangle_5dp_basecolor"

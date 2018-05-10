@@ -1,11 +1,10 @@
-package juhe.jiangdajiuye.view.xuanJiang.fragment;
+package juhe.jiangdajiuye.view.activity.xuanJiang.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +12,17 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.adapter.IndexAdapter;
 import juhe.jiangdajiuye.bean.MessageBean;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
-import juhe.jiangdajiuye.ui.recyclerView.MyRecyclerView;
+import juhe.jiangdajiuye.db.repository.BrowseDepository;
+import juhe.jiangdajiuye.net.httpUtils.HttpHelper;
+import juhe.jiangdajiuye.net.httpUtils.inter.IDataListener;
+import juhe.jiangdajiuye.net.httpUtils.task.HttpTask;
+import juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView;
 import juhe.jiangdajiuye.utils.ToastUtils;
-import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
-import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
-import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
-import juhe.jiangdajiuye.activity.Browse;
-import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.browse.MesBrowseActivity;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here
@@ -32,12 +32,12 @@ import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
  * @since 2017-09-30
  */
 
-public abstract class BaseFragment extends Fragment implements MyRecyclerView.OnLoadMoreListener {
+public abstract class BaseFragment extends Fragment implements LoadMoreRecyclerView.OnLoadMoreListener {
     private static final String TAG = "BaseFragment";
     private View view, error;
-    private MyRecyclerView recyclerView;
+    private LoadMoreRecyclerView recyclerView;
     private LinearLayoutManager manager;
-    private IndexFragmentAdapter adapter;
+    private IndexAdapter adapter;
     //是否没有初始化数据
     private Boolean isFirst = true;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -46,8 +46,8 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (view != null){
-            if(recyclerView.isRefresh()){
+        if (view != null) {
+            if (recyclerView.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(true);
             }
             return view;
@@ -103,8 +103,8 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
         @Override
         public void GetInternet(int type) {
             if (recyclerView != null) {
-                if (recyclerView.getStatus() == MyRecyclerView.STATUS_ERROR) {
-                    recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+                if (recyclerView.isErrorStatus()) {
+                    recyclerView.setDefaultStatus();
                 }
             }
         }
@@ -112,7 +112,7 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
 
     public void findId() {
         error = view.findViewById(R.id.error);
-        recyclerView =  view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
@@ -131,8 +131,8 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
-                    recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+                if (!recyclerView.isErrorStatus()) {
+                    recyclerView.setPullDownToRefresh();
                     getMessage();
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
@@ -144,7 +144,7 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
                 @Override
                 public void run() {
                     swipeRefreshLayout.setRefreshing(true);
-                    recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+                    recyclerView.setPullDownToRefresh();
                     getMessage();
                 }
             });
@@ -152,12 +152,17 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
     }
 
     public void initList() {
-        adapter = new IndexFragmentAdapter(getActivity(), R.layout.main_list_item);
+        adapter = new IndexAdapter(getActivity(), R.layout.main_list_item);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new IndexFragmentAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new IndexAdapter.OnItemClickListener() {
             @Override
-            public void OnItemClick(MessageBean item) {
-                Browse.StartActivity(getActivity(), item);
+            public void OnItemClick(MessageBean item,int position) {
+                if(!item.getHasBrowse()){
+                    item.setHasBrowse(true);
+                    BrowseDepository.getInstance().add(item.getUrl());
+                    adapter.notifyItemChanged(position);
+                }
+                MesBrowseActivity.StartActivity(getActivity(), item);
             }
         });
     }
@@ -172,10 +177,10 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
 
         @Override
         public void onFail(Exception exception, int responseCode) {
-            recyclerView.setStatus(MyRecyclerView.STATUS_ERROR);
+            recyclerView.setErrorStatus();
             swipeRefreshLayout.setRefreshing(false);
             ToastUtils.showToast("网络不太顺畅哦！");
-            showError();
+            showError(true);
         }
     };
 
@@ -183,21 +188,16 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
      * http://career.hdu.edu.cn/module/getcareers?start_page=1&keyword=&type=inner&day=&count=10&start=1
      */
     public void getMessage() {
-        String url = getUrl(recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH
+        String url = getUrl(recyclerView.isPullDownToRefresh()
                 , holder);
-        Log.i(TAG, "connect url : " + url);
         httpHelper.get(url, holder, iDataListener, HttpTask.Type.MessageItem);
     }
 
     /**
      * 判断当前是否需要显示Error
      */
-    private void showError() {
-        if (adapter.getDataSize() == 0) {
-            error.setVisibility(View.VISIBLE);
-        } else {
-            error.setVisibility(View.GONE);
-        }
+    private void showError(boolean isError) {
+        error.setVisibility(isError ? View.VISIBLE:View.GONE);
     }
 
     public void upDate(List<MessageBean> list) {
@@ -208,31 +208,29 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
         }
         isFirst = false;
         //如果是下拉刷新就刷新adapter的数据，否则直接添加
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH) {
+        if (recyclerView.isPullDownToRefresh()) {
             adapter.upDate(list);
         } else {
-            adapter.appendDate(list);
+            adapter.appendData(list);
         }
         //如果adapter的数据不够，说明没有更多的数据，直接提示没有更多数据
         if (adapter.getDataSize() < 6) {
-            Log.i(TAG, "upDate: end ------- size is  " + list.size());
-            recyclerView.setStatus(MyRecyclerView.STATUS_END);
+            recyclerView.setCanLoadMoreRefresh(false);
             return;
         }
-        recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+        recyclerView.setDefaultStatus();
         RequestSuccess();
-        showError();
+        showError(adapter.getDataSize() ==0);
     }
 
-    public abstract String getUrl(boolean isPull, MesItemHolder holder);
+    public abstract String getUrl(boolean isPullDownToRefresh, MesItemHolder holder);
 
     public abstract void RequestSuccess();
 
     @Override
     public void onLoadMore() {
-        Log.i(TAG, "onLoadMore: ");
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_DEFAULT) {
-            recyclerView.setStatus(MyRecyclerView.STATUS_REFRESHING);
+        if (!recyclerView.isRefreshing()) {
+            recyclerView.setPullUpToRefresh();
             getMessage();
         }
     }
@@ -241,12 +239,12 @@ public abstract class BaseFragment extends Fragment implements MyRecyclerView.On
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isFirst && isVisibleToUser) {
-            if (swipeRefreshLayout != null && recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
+            if (swipeRefreshLayout != null && !recyclerView.isErrorStatus()) {
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(true);
-                        recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+                        recyclerView.setPullDownToRefresh();
                         getMessage();
                     }
                 });

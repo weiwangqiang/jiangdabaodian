@@ -31,7 +31,7 @@ import juhe.jiangdajiuye.adapter.ChoiceSchoolAdapter;
 import juhe.jiangdajiuye.view.dialog.ProgressDialog;
 import juhe.jiangdajiuye.view.activity.userCenter.engine.UserManager;
 
-public class ChoiceSchool extends BaseActivity {
+public class ChoiceSchoolActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private ChoiceSchoolAdapter adapter;
@@ -47,8 +47,8 @@ public class ChoiceSchool extends BaseActivity {
         startActivity(context,kind,"");
     }
     public static void startActivity(Context context, int kind,String id){
-        ChoiceSchool.kind = kind;
-        Intent intent = new Intent(context, ChoiceSchool.class);
+        ChoiceSchoolActivity.kind = kind;
+        Intent intent = new Intent(context, ChoiceSchoolActivity.class);
         intent.putExtra("school",id);
         context.startActivity(intent);
         if (context instanceof Activity) {

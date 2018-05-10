@@ -1,11 +1,11 @@
-package juhe.jiangdajiuye.view.JobFair;
+package juhe.jiangdajiuye.view.activity.JobFair;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import juhe.jiangdajiuye.view.JobFair.control.JobUrlControl;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
-import juhe.jiangdajiuye.view.xuanJiang.fragment.BaseFragment;
+import juhe.jiangdajiuye.view.activity.JobFair.control.JobUrlControl;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.xuanJiang.fragment.BaseFragment;
 
 
 /**

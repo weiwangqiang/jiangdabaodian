@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.xuanJiang;
+package juhe.jiangdajiuye.view.activity.xuanJiang;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,9 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.core.BaseActivity;
+import juhe.jiangdajiuye.base.BaseActivity;
 import juhe.jiangdajiuye.utils.ResourceUtils;
-import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
+import juhe.jiangdajiuye.view.activity.xuanJiang.constant.XuanEntranceData;
 
 /**
  * 宣讲会入口
@@ -21,7 +21,7 @@ public class XuanEntrance extends BaseActivity {
     SimpleAdapter adapter ;
     XuanEntranceData data ;
     private Toolbar toolbar;
-    private String TAG = "JobFEntrance" ;
+    private String TAG = "JobEntranceActivity" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

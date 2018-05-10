@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.xuanJiang.parse;
+package juhe.jiangdajiuye.view.activity.xuanJiang.parse;
 
 import com.google.gson.Gson;
 
@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.view.xuanJiang.entity.ShangHaiCaiJinBean;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.db.repository.BrowseDepository;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.ShangHaiCaiJinBean;
 
 /**
  * class description here
@@ -42,9 +43,31 @@ public class ShangHaiXuanParse {
                 return parseFuDan(response) ;
             case "上海财经大学":
                 return parseShangCai(response);
+            case "华南理工大学":
+                return parseHuaNan(response);
         }
         return new ArrayList<>() ;
     }
+    //华南理工大学
+    private List<MessageBean> parseHuaNan(String response) {
+        List<MessageBean> list = new ArrayList<>();
+        Document doc = Jsoup.parse(response);
+        Elements elements = doc.getElementsByClass("list").select("li");
+        for (int i = 0; i < elements.size(); i++) {
+            MessageBean messageBean = new MessageBean();
+            messageBean.setUrl("http://jyzx.6ihnep7.cas.scut.edu.cn"+
+                    elements.get(i).select("a")
+                            .get(0).attr("href"));
+            messageBean.setTitle(elements.get(i).select("a").get(0).text());
+            messageBean.setFrom("华南理工大学");
+            messageBean.setCity("上海市");
+            messageBean.setTime(elements.get(i).select("div").text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+            list.add(messageBean);
+        }
+        return list;
+    }
+
     //上海财经大学
     private List<MessageBean> parseShangCai(String response) {
         Gson gson = new Gson();
@@ -60,6 +83,7 @@ public class ShangHaiXuanParse {
             messageBean.setCity("上海市");
             messageBean.setTime(listDataBean.getApkssj());
             messageBean.setTheme(listDataBean.getUsertype());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
             list.add(messageBean);
         }
         return list;
@@ -76,17 +100,19 @@ public class ShangHaiXuanParse {
         Document doc = Jsoup.parse(response);
         Elements elements = doc.getElementsByClass("z_newsl").select("li");
         for (int i = 1; i < elements.size(); i++) {
-            MessageBean item = new MessageBean();
+            MessageBean messageBean = new MessageBean();
             Elements elements1 = elements.get(i).getElementsByTag("div");
             String s = elements1.get(0).select("a").attr("onclick") ;
-            item.setUrl(stringJiaoda+s.substring(11,s.length() - 2));
-            item.setTitle(elements1.get(0).select("a").text());
-            item.setTheme(elements1.get(1).text());
-            item.setFrom("上海交通大学");
-            item.setCity("上海市");
-            item.setLocate(elements1.get(2).text());
-            item.setTime(elements1.get(3).text() + " "+elements1.get(4).text());
-            list.add(item);
+            messageBean.setUrl(stringJiaoda+s.substring(11,s.length() - 2));
+            messageBean.setTitle(elements1.get(0).select("a").text());
+            messageBean.setTheme(elements1.get(1).text());
+            messageBean.setFrom("上海交通大学");
+            messageBean.setCity("上海市");
+            messageBean.setLocate(elements1.get(2).text());
+            messageBean.setTime(elements1.get(3).text() + " "+elements1.get(4).text());
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            list.add(messageBean);
         }
         return list;
     }
@@ -114,17 +140,19 @@ public class ShangHaiXuanParse {
         Document doc = Jsoup.parse(response);
         Elements elements = doc.select("div[id=tab1_bottom]");
         for (int i = 1; i < elements.size(); i++) {
-            MessageBean item = new MessageBean();
-            item.setUrl("http://www.career.fudan.edu.cn/html/xjh/1.html?view=true&key="
+            MessageBean messageBean = new MessageBean();
+            messageBean.setUrl("http://www.career.fudan.edu.cn/html/xjh/1.html?view=true&key="
                     +elements.get(i).attr("key"));
-            item.setTitle(elements.get(i).getElementsByClass("tab1_bottom1").text());
-            item.setTheme(elements.get(i).getElementsByClass("tab1_bottom2").text());
-            item.setFrom("复旦大学");
-            item.setCity("上海市");
-            item.setLocate(elements.get(i).getElementsByClass("tab1_bottom5").text());
-            item.setTime(elements.get(i).getElementsByClass("tab1_bottom3").text()
+            messageBean.setTitle(elements.get(i).getElementsByClass("tab1_bottom1").text());
+            messageBean.setTheme(elements.get(i).getElementsByClass("tab1_bottom2").text());
+            messageBean.setFrom("复旦大学");
+            messageBean.setCity("上海市");
+            messageBean.setLocate(elements.get(i).getElementsByClass("tab1_bottom5").text());
+            messageBean.setTime(elements.get(i).getElementsByClass("tab1_bottom3").text()
                     + " "+elements.get(i).getElementsByClass("tab1_bottom4").text());
-            list.add(item);
+            messageBean.setHasBrowse(BrowseDepository.getInstance().contain(messageBean.getUrl()));
+
+            list.add(messageBean);
         }
         return list;
     }

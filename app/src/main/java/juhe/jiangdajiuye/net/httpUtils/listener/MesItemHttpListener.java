@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.net.httpUtils.HttpListener;
+package juhe.jiangdajiuye.net.httpUtils.listener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,8 +7,8 @@ import java.util.List;
 
 import juhe.jiangdajiuye.bean.MessageBean;
 import juhe.jiangdajiuye.utils.JiangDaParseUtils;
-import juhe.jiangdajiuye.net.httpUtils.Inter.IDataListener;
-import juhe.jiangdajiuye.net.httpUtils.Inter.IHttpListener;
+import juhe.jiangdajiuye.net.httpUtils.inter.IDataListener;
+import juhe.jiangdajiuye.net.httpUtils.inter.IHttpListener;
 import juhe.jiangdajiuye.net.httpUtils.ThreadHelper;
 import juhe.jiangdajiuye.view.activity.JobFair.control.JobParseControl;
 import juhe.jiangdajiuye.view.activity.xuanJiang.control.XuanParseControl;
@@ -25,14 +25,14 @@ import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
  * @since 2018-02-14
  */
 
-public class MessageItemHttpListener implements IHttpListener {
-    private static final String TAG = "MessageItemHttpListener";
+public class MesItemHttpListener implements IHttpListener {
+    private static final String TAG = "MesItemHttpListener";
     private IDataListener mIDataListener;
     private MesItemHolder mHolder;
     private StringBuilder result = new StringBuilder();
     private List<MessageBean> resData;
 
-    public MessageItemHttpListener(IDataListener<List<MessageBean>> mIDataListener, MesItemHolder mHolder) {
+    public MesItemHttpListener(IDataListener<List<MessageBean>> mIDataListener, MesItemHolder mHolder) {
         this.mIDataListener = mIDataListener;
         this.mHolder = mHolder;
         if (null == mIDataListener) {
@@ -81,7 +81,7 @@ public class MessageItemHttpListener implements IHttpListener {
             //解析江苏大学的信息
             return JiangDaParseUtils.getInstance().parseMainMes(response, holder.getTab());
         }
-        //解析各个学校的宣讲会
+        //解析各个学校的宣讲会、招聘会
         switch (holder.getMessKind()) {
             case MesItemHolder.mes_xuan_jiang:
                 return XuanParseControl.getInStance().parse(response, holder);

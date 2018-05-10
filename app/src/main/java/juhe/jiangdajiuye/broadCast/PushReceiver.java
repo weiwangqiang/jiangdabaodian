@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.broadCast.bomb;
+package juhe.jiangdajiuye.broadCast;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,7 +17,7 @@ import cn.bmob.push.PushConstants;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.push.MessageType;
 import juhe.jiangdajiuye.bean.push.XuanJiangPush;
-import juhe.jiangdajiuye.view.activity.browse.PushBrowse;
+import juhe.jiangdajiuye.view.activity.browse.PushBrowseActivity;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -30,7 +30,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  * @since 2017-11-05
  */
 
-public class MyPushMessageReceiver extends BroadcastReceiver {
+public class PushReceiver extends BroadcastReceiver {
     Gson gson = new Gson();
     Context context ;
     @Override
@@ -69,7 +69,7 @@ public class MyPushMessageReceiver extends BroadcastReceiver {
         //需要传入PendingIntent.FLAG_UPDATE_CURRENT intent方能传入数据
         //FLAG_UPDATE_CURRENT：如果该PendingIntent已经存在，则用新传入的Intent更新当前的数据。
         PendingIntent  contentIntent = PendingIntent.getActivity(context, 0,
-                PushBrowse.getActivityInt(context,message),
+                PushBrowseActivity.getActivityInt(context,message),
                 PendingIntent.FLAG_UPDATE_CURRENT);
         notification = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.logo)  // the status icon

@@ -19,12 +19,12 @@ import rx.Subscription;
 public class UserBrowseRecord extends BmobObject{
     private static final String TAG = "UserBrowseRecord";
     private static UserBrowseRecord instance = new UserBrowseRecord() ;
-    private int mLibrary;
-    private int mXuanJiang;
-    private int mOffLineGame;
-    private int mJobFair ;
-    private int mAboute ;
-    private int mCalender ;
+    private Integer mLibrary = 0;
+    private Integer mXuanJiang= 0;
+    private Integer mOffLineGame= 0 ;
+    private Integer mJobFair = 0;
+    private Integer mAboute = 0;
+    private Integer mCalender = 0;
     private UserBrowseRecord(){}
     public static UserBrowseRecord getInstance(){
         return instance ;

@@ -29,8 +29,8 @@ import juhe.jiangdajiuye.utils.versionUpGrade.CheckUpgrade;
  * @project jiangdajiuye
  * @since 2017-03-27
  */
-public class About extends BaseActivity {
-    private static final String TAG = "About";
+public class AboutActivity extends BaseActivity {
+    private static final String TAG = "AboutActivity";
     private Toolbar toolbar;
     private TextView textViewUp;
     private TextView currentVersion;
@@ -60,7 +60,7 @@ public class About extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_disclaimer) {
-            startActivitySlideInRight(this,Disclaimer.class);
+            startActivitySlideInRight(this,DisclaimerActivity.class);
             return true;
         }
         return super.onOptionsItemSelected(item);

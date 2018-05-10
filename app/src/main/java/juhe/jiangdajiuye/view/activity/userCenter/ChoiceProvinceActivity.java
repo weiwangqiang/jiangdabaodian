@@ -22,7 +22,7 @@ import juhe.jiangdajiuye.net.httpUtils.task.HttpTask;
 import juhe.jiangdajiuye.adapter.ChoiceSchoolAdapter;
 import juhe.jiangdajiuye.view.dialog.ProgressDialog;
 
-public class ChoiceProvince extends BaseActivity {
+public class ChoiceProvinceActivity extends BaseActivity {
 
     private static final String TAG = "choiceProvince";
     private RecyclerView recyclerView;
@@ -82,8 +82,8 @@ public class ChoiceProvince extends BaseActivity {
         adapter.setItemClick(new ChoiceSchoolAdapter.ItemClick() {
             @Override
             public void onItemClick(String school,int position) {
-                ChoiceSchool.startActivity(ChoiceProvince.this,
-                        ChoiceSchool.GET_SCHOOL,provinceList.get(position).getProvince_id());
+                ChoiceSchoolActivity.startActivity(ChoiceProvinceActivity.this,
+                        ChoiceSchoolActivity.GET_SCHOOL,provinceList.get(position).getProvince_id());
                 finish();
             }
         });

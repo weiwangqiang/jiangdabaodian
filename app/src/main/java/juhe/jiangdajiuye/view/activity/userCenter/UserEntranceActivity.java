@@ -13,13 +13,13 @@ import juhe.jiangdajiuye.view.fragment.LogoutFragment;
 /**
  * A login screen that offers login via email/password.
  */
-public class UserEntrance extends BaseActivity  {
+public class UserEntranceActivity extends BaseActivity  {
 
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String TAG = "UserEntrance";
+    private static final String TAG = "UserEntranceActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

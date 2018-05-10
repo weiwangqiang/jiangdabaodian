@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye;
+package juhe.jiangdajiuye.view.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -44,37 +44,34 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.adapter.FragmentAdapter;
 import juhe.jiangdajiuye.bean.bmobAppMes.BootPicture;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.ShareRecord;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.UserBrowseRecord;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
-import juhe.jiangdajiuye.core.BaseActivity;
-import juhe.jiangdajiuye.core.BaseApplication;
-import juhe.jiangdajiuye.user.UserActionRecordUtils;
-import juhe.jiangdajiuye.user.UserManager;
+import juhe.jiangdajiuye.constant.CacheConstant;
+import juhe.jiangdajiuye.base.BaseActivity;
+import juhe.jiangdajiuye.base.BaseApplication;
+import juhe.jiangdajiuye.view.activity.JobFair.JobEntranceActivity;
+import juhe.jiangdajiuye.view.activity.aboute.AboutActivity;
+import juhe.jiangdajiuye.view.activity.browse.MesBrowseActivity;
+import juhe.jiangdajiuye.view.activity.game.GameActivity;
+import juhe.jiangdajiuye.view.activity.library.LibraryActivity;
+import juhe.jiangdajiuye.view.dialog.ShareDialog;
+import juhe.jiangdajiuye.net.NetStateUtils;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.SharePreUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
+import juhe.jiangdajiuye.utils.UserActRecordUtils;
 import juhe.jiangdajiuye.utils.imageUtils.ImageLocalLoad;
-import juhe.jiangdajiuye.utils.NetStateUtils;
 import juhe.jiangdajiuye.utils.versionUpGrade.CheckUpgrade;
-import juhe.jiangdajiuye.view.activity.JobFair.JobFEntrance;
-import juhe.jiangdajiuye.view.activity.aboute.About;
-import juhe.jiangdajiuye.view.activity.Browse;
-import juhe.jiangdajiuye.view.activity.Collect;
-import juhe.jiangdajiuye.view.activity.aboute.Disclaimer;
-import juhe.jiangdajiuye.view.activity.FeedBack;
-import juhe.jiangdajiuye.view.activity.game.Game;
-import juhe.jiangdajiuye.view.activity.library.Library;
-import juhe.jiangdajiuye.view.activity.userCenter.LoginActivity;
-import juhe.jiangdajiuye.adapter.FragmentAdapter;
-import juhe.jiangdajiuye.view.activity.CommentEntrance;
-import juhe.jiangdajiuye.constant.AppConstant;
-import juhe.jiangdajiuye.constant.FileConstant;
-import juhe.jiangdajiuye.dialog.ShareDialog;
+import juhe.jiangdajiuye.view.activity.aboute.DisclaimerActivity;
+import juhe.jiangdajiuye.view.activity.userCenter.UserEntranceActivity;
+import juhe.jiangdajiuye.view.activity.userCenter.engine.UserManager;
+import juhe.jiangdajiuye.view.activity.xuanJiang.XuanEntrance;
 import juhe.jiangdajiuye.view.fragment.IndexFragment;
 import juhe.jiangdajiuye.view.fragment.TodayXuanFragment;
-import juhe.jiangdajiuye.view.activity.xuanJiang.XuanEntrance;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -200,6 +197,7 @@ public class MainActivity extends BaseActivity
     private void initTabLayout() {
         setSupportActionBar(toolbar);
 
+
 //        DrawerLayout drawer = findViewById(R.id.main_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -250,10 +248,10 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.nav_library:
                 UserBrowseRecord.getInstance().inLibrary();
-                startActivitySlideInRight(this, Library.class);
+                startActivitySlideInRight(this, LibraryActivity.class);
                 break;
             case R.id.nav_favorite:
-                startActivitySlideInRight(this, Collect.class);
+                startActivitySlideInRight(this, MesCollectActivity.class);
                 break;
             case R.id.nav_xuanjianghui:
                 UserBrowseRecord.getInstance().inXuanJiang();
@@ -261,32 +259,32 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.nav_job_fair:
                 UserBrowseRecord.getInstance().inJobFair();
-                startActivitySlideInRight(this, JobFEntrance.class);
+                startActivitySlideInRight(this, JobEntranceActivity.class);
                 break;
             case R.id.nav_send:
-                startActivitySlideInRight(this, FeedBack.class);
+                startActivitySlideInRight(this, FeedBackActivity.class);
 
                 break;
             case R.id.nav_game:
                 UserBrowseRecord.getInstance().inOffLineGame();
-                startActivitySlideInRight(this, Game.class);
+                startActivitySlideInRight(this, GameActivity.class);
                 break;
             case R.id.nav_about:
                 UserBrowseRecord.getInstance().inAboute();
-                startActivitySlideInRight(this, About.class);
+                startActivitySlideInRight(this, AboutActivity.class);
                 break;
             case R.id.nav_login:
-                startActivitySlideInRight(this, LoginActivity.class);
+                startActivitySlideInRight(this, UserEntranceActivity.class);
                 break;
             case R.id.nav_calender:
                 UserBrowseRecord.getInstance().inCalender();
-                Browse.StartActivity(this, "http://ehall.ujs.edu.cn/calendar/index#panel0");
+                MesBrowseActivity.StartActivity(this, "http://ehall.ujs.edu.cn/calendar/index#panel0");
                 break;
             case R.id.nav_disclaimer:
-                startActivitySlideInRight(this, Disclaimer.class);
+                startActivitySlideInRight(this, DisclaimerActivity.class);
                 break;
             case R.id.nav_more:
-                startActivitySlideInRight(this, CommentEntrance.class);
+                startActivitySlideInRight(this, CommentActivity.class);
             default:
                 break;
         }
@@ -297,7 +295,7 @@ public class MainActivity extends BaseActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_my_icn:
-                startActivitySlideInRight(this, LoginActivity.class);
+                startActivitySlideInRight(this, UserEntranceActivity.class);
                 break;
         }
     }
@@ -349,11 +347,11 @@ public class MainActivity extends BaseActivity
             if (pictureUri != null)
                 kind = pictureUri.substring(pictureUri.lastIndexOf(".") + 1, pictureUri.length());
             final ImageLocalLoad load = new ImageLocalLoad();
-            final String saveFile = FileConstant.BootAdvertSaveRootFile;
+            final String saveFile = CacheConstant.BootAdvertSaveRootFile;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    load.saveBitmapToLocal(saveFile, FileConstant.BootAdvertSavePictureName, "jpg", myBitmap);
+                    load.saveBitmapToLocal(saveFile, CacheConstant.BootAdvertSavePictureName, "jpg", myBitmap);
                 }
             }).start();
 
@@ -398,9 +396,9 @@ public class MainActivity extends BaseActivity
     private void shareToWX() {
         ToastUtils.showToast("正在跳转");
         webpager = new WXWebpageObject();
-        webpager.webpageUrl = AppConstant.AppDownLoad;
+        webpager.webpageUrl = CacheConstant.AppDownLoad;
         message = new WXMediaMessage(webpager);
-        message.title = AppConstant.AppName;
+        message.title = ResourceUtils.getString(R.string.app_name);
         message.description = content;
         req.transaction = "webPager";
         req.message = message;
@@ -412,11 +410,11 @@ public class MainActivity extends BaseActivity
     private void ToQQ() {
         Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-        params.putString(QQShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);
+        params.putString(QQShare.SHARE_TO_QQ_TITLE, ResourceUtils.getString(R.string.app_name));
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, content);
-        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, AppConstant.AppDownLoad);
-        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, AppConstant.AppIcnUrl);
-        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, AppConstant.AppName);
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, CacheConstant.AppDownLoad);
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, CacheConstant.AppIcnUrl);
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, ResourceUtils.getString(R.string.app_name));
         dialog.cancel();
         tencent.shareToQQ(this, params, baseuiLister);
     }
@@ -424,11 +422,11 @@ public class MainActivity extends BaseActivity
     private void ToQzone() {
         Bundle params = new Bundle();
         ArrayList<String> list = new ArrayList<>();
-        list.add(AppConstant.AppIcnUrl);
+        list.add(CacheConstant.AppIcnUrl);
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, AppConstant.AppName);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_TITLE, ResourceUtils.getString(R.string.app_name));//必填
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, content);//选填
-        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, AppConstant.AppDownLoad);//必填
+        params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, CacheConstant.AppDownLoad);//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, list);
         dialog.cancel();
         tencent.shareToQzone(this, params, baseuiLister);
@@ -562,7 +560,7 @@ public class MainActivity extends BaseActivity
                 if (type == NetStateReceiver.TYPE_WIFI) {
                     getAdvert();
                 }
-                UserActionRecordUtils.setIP();
+                UserActRecordUtils.setIP();
             }
         });
     }
@@ -576,8 +574,14 @@ public class MainActivity extends BaseActivity
         if (null != receiver) {
             unregisterReceiver(receiver);
         }
-        UserActionRecordUtils.pushMes();
+        UserActRecordUtils.pushMes();
         UserBrowseRecord.getInstance().save();
         ShareRecord.getInstance().save();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: start gc ");
     }
 }

@@ -1,14 +1,14 @@
-package juhe.jiangdajiuye.utils.httpUtils;
+package juhe.jiangdajiuye.net.httpUtils;
 
-import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
-import juhe.jiangdajiuye.utils.httpUtils.task.HttpTask;
-import juhe.jiangdajiuye.utils.httpUtils.task.TaskExecuteManager;
+import juhe.jiangdajiuye.net.httpUtils.inter.IDataListener;
+import juhe.jiangdajiuye.net.httpUtils.task.HttpTask;
+import juhe.jiangdajiuye.net.httpUtils.task.TaskExecuteManager;
 import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here
  *
- * 提供给客户端调用的类
+ *  提供给客户端调用的类
  *
  * @author wangqiang
  * @since 2018-02-14

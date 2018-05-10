@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.adapter;
+package juhe.jiangdajiuye.adapter;
 
 import android.content.Context;
 import android.os.Environment;

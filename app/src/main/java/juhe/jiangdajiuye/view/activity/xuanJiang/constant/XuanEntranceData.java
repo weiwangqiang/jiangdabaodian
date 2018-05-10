@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.xuanJiang.constant;
+package juhe.jiangdajiuye.view.activity.xuanJiang.constant;
 
 import java.util.ArrayList;
 import java.util.HashMap;

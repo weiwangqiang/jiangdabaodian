@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.core;
+package juhe.jiangdajiuye.base;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,23 +7,24 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import juhe.jiangdajiuye.R;
-import juhe.jiangdajiuye.view.activity.userCenter.UserEntrance;
+import juhe.jiangdajiuye.view.activity.userCenter.UserEntranceActivity;
 
 /**
  * 基础activity
  */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     public static String EXIT_APP_ACTION = "com.joshua.exit";
+    private String TAG = "BaseActivity";
 
     public static final int REQUESTCODE_GETLOGIN_RESULT = 0x10;
     public final int NET_SUCCESS = 0x1;
     public final int NET_ERROR = 0x2;
-    private String TAG = "BaseActivity";
     protected Toolbar toolbar;
     private boolean supportToolbar = true;
     /**
@@ -36,7 +37,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         finish();
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
-
     @Override
     public void finish() {
         super.finish();
@@ -99,6 +99,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 //                Log.e(TAG,"------>> is to backStage<<<<<-------------");
 //            }
 //        }
+        Log.i(TAG, "onStop: system has gc action ");
     }
 
     /**
@@ -110,7 +111,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     //通用的启动activity动画
     protected void startActivitySlideInRight(Context mCtx, Class target) {
-        if (target.equals(UserEntrance.class)) {
+        if (target.equals(UserEntranceActivity.class)) {
             startActivityForResult(new Intent(mCtx, target), REQUESTCODE_GETLOGIN_RESULT);
         } else {
             startActivity(new Intent(mCtx, target));
@@ -122,8 +123,4 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

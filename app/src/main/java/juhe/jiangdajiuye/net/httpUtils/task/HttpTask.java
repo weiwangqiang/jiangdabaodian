@@ -1,15 +1,18 @@
-package juhe.jiangdajiuye.utils.httpUtils.task;
+package juhe.jiangdajiuye.net.httpUtils.task;
 
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
-import juhe.jiangdajiuye.utils.httpUtils.HttpListener.BookHttpListener;
-import juhe.jiangdajiuye.utils.httpUtils.HttpListener.MessageItemHttpListener;
-import juhe.jiangdajiuye.utils.httpUtils.HttpListener.StringHttpListener;
-import juhe.jiangdajiuye.utils.httpUtils.HttpService;
-import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
-import juhe.jiangdajiuye.utils.httpUtils.Inter.IHttpListener;
-import juhe.jiangdajiuye.utils.httpUtils.Inter.IHttpService;
+import juhe.jiangdajiuye.bean.BookBean;
+import juhe.jiangdajiuye.bean.MessageBean;
+import juhe.jiangdajiuye.net.httpUtils.listener.MesItemHttpListener;
+import juhe.jiangdajiuye.net.httpUtils.listener.StringHttpListener;
+import juhe.jiangdajiuye.net.httpUtils.HttpService;
+import juhe.jiangdajiuye.net.httpUtils.inter.IDataListener;
+import juhe.jiangdajiuye.net.httpUtils.inter.IHttpService;
+import juhe.jiangdajiuye.net.httpUtils.listener.BookHttpListener;
+import juhe.jiangdajiuye.net.httpUtils.inter.IHttpListener;
 import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
@@ -55,16 +58,16 @@ public class HttpTask implements Runnable {
         iHttpService.execute();
     }
 
-    private IHttpListener getHttpListener(Type type, IDataListener iDataListener) {
+    private <T> IHttpListener getHttpListener(Type type, IDataListener<T> iDataListener) {
         switch (type) {
             case data:
             case string:
                 return new StringHttpListener((IDataListener<String>) iDataListener);
             case json:
             case MessageItem:
-                return new MessageItemHttpListener(iDataListener,mHolder);
+                return new MesItemHttpListener((IDataListener<List<MessageBean>>) iDataListener,mHolder);
             case book:
-                return new BookHttpListener(iDataListener);
+                return new BookHttpListener((IDataListener<List<BookBean>>) iDataListener);
             default:
                 return null ;
         }

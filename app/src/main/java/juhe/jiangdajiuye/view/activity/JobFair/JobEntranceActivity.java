@@ -16,11 +16,11 @@ import juhe.jiangdajiuye.view.activity.xuanJiang.constant.XuanEntranceData;
 /**
  * 招聘会入口
  */
-public class JobFEntrance extends BaseActivity {
+public class JobEntranceActivity extends BaseActivity {
     ListView listView ;
     SimpleAdapter adapter ;
     private JobEntranceData data ;
-    private String TAG = "JobFEntrance" ;
+    private String TAG = "JobEntranceActivity" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class JobFEntrance extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int provinceId = (int) data.getData().get(position).get("provinceId");
-                Intent intent = new Intent(JobFEntrance.this,JobFTab.class);
+                Intent intent = new Intent(JobEntranceActivity.this,JobFTabActivity.class);
                 intent.putExtra("provinceId",provinceId);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

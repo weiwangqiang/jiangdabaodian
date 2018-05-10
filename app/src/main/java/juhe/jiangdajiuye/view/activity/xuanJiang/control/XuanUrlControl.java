@@ -1,7 +1,7 @@
-package juhe.jiangdajiuye.view.xuanJiang.control;
+package juhe.jiangdajiuye.view.activity.xuanJiang.control;
 
-import juhe.jiangdajiuye.view.xuanJiang.constant.XuanEntranceData;
-import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
+import juhe.jiangdajiuye.view.activity.xuanJiang.constant.XuanEntranceData;
+import juhe.jiangdajiuye.view.activity.xuanJiang.entity.MesItemHolder;
 
 /**
  * class description here
@@ -83,9 +83,16 @@ public class XuanUrlControl {
                 return getFuDanUrl(holder) ;
             case "上海财经大学":
                 return getShangCaiUrl(holder);
+            case "华南理工大学":
+                return getHuaNanUrl(holder);
         }
         return "";
     }
+
+    private String getHuaNanUrl(MesItemHolder holder) {
+        return holder.getBaseUrl()+"?pageNO="+holder.getPager();
+    }
+
     //上海财经大学
     private String getShangCaiUrl(MesItemHolder holder) {
         return holder.getBaseUrl()+"?eachPageRows=10&currentPageno="+holder.getPager();

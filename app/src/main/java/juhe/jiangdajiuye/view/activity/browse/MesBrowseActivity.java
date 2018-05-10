@@ -41,25 +41,25 @@ import juhe.jiangdajiuye.bean.MessageBean;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.LeaveMes;
 import juhe.jiangdajiuye.constant.CacheConstant;
 import juhe.jiangdajiuye.base.BaseActivity;
-import juhe.jiangdajiuye.db.repository.CollectRepository;
+import juhe.jiangdajiuye.db.repository.CollectDepository;
 import juhe.jiangdajiuye.view.dialog.ProgressDialog;
 import juhe.jiangdajiuye.view.dialog.ShareDialog;
 import juhe.jiangdajiuye.utils.AppConfigUtils;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
-import juhe.jiangdajiuye.view.activity.CommentArea;
+import juhe.jiangdajiuye.view.activity.CommentActivity;
 
 /**
  * Created by wangqiang on 2016/10/1.
  * 浏览器界面
  */
-public class MesBrowse extends BaseActivity {
+public class MesBrowseActivity extends BaseActivity {
     private static final String WEI_ID = "wxc306137ab1a20319";
     private static int VISIT_MESSAGE_ITEM = 0x1;
     private static int VISIT_CALENDER = 0x2;
     private static int visitKind = VISIT_MESSAGE_ITEM;
     private int SendCalendarCode = 0x12;
-    private String TAG = "PushBrowse";
+    private String TAG = "PushBrowseActivity";
     private String APP_ID = "1105550872";
     private Boolean isCollect = false;//记录是否处于收藏状态
     private WebView webView;
@@ -74,7 +74,7 @@ public class MesBrowse extends BaseActivity {
     private WXMediaMessage message;
     private SendMessageToWX.Req req;
     private MessageBean messageBean;
-    private CollectRepository collectRepository;
+    private CollectDepository collectDepository;
 
     /**
      * @param context 上下文
@@ -82,7 +82,7 @@ public class MesBrowse extends BaseActivity {
      */
     public static void StartActivity(Context context, MessageBean item) {
         visitKind = VISIT_MESSAGE_ITEM;
-        Intent intent = new Intent(context, MesBrowse.class);
+        Intent intent = new Intent(context, MesBrowseActivity.class);
         intent.putExtra(MessageBean.keyVal.url, item.getUrl());
         intent.putExtra(MessageBean.keyVal.title, item.getTitle());
         intent.putExtra(MessageBean.keyVal.time, item.getTime());
@@ -101,10 +101,10 @@ public class MesBrowse extends BaseActivity {
      */
     public static void StartActivity(Context context, String url) {
         visitKind = VISIT_CALENDER;
-        Intent intent = new Intent(context, MesBrowse.class);
+        Intent intent = new Intent(context, MesBrowseActivity.class);
         intent.putExtra("url", url);
         context.startActivity(intent);
-        if (context instanceof Activity){
+        if (context instanceof Activity) {
             ((Activity) context).overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
     }
@@ -113,7 +113,7 @@ public class MesBrowse extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.browse);
-        collectRepository = CollectRepository.getInstance();
+        collectDepository = CollectDepository.getInstance();
         myProgress = new ProgressDialog(this);
         init();
         findId();
@@ -124,10 +124,10 @@ public class MesBrowse extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(webView.canGoBack()){
+        if (webView.canGoBack()) {
             Log.i(TAG, "onBackPressed: back webview ");
             webView.goBack();
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -149,8 +149,8 @@ public class MesBrowse extends BaseActivity {
         initWEi();
         sharedialog = new ShareDialog();
         baseuiLister = new baseUiLister();
-        tencent = Tencent.createInstance(APP_ID, MesBrowse.this);
-        dialog = sharedialog.getDialog(MesBrowse.this,ResourceUtils.getString(R.string.title_share_message));
+        tencent = Tencent.createInstance(APP_ID, MesBrowseActivity.this);
+        dialog = sharedialog.getDialog(MesBrowseActivity.this, ResourceUtils.getString(R.string.title_share_message));
     }
 
     /**
@@ -178,7 +178,7 @@ public class MesBrowse extends BaseActivity {
             messageBean.setTime(intent.getStringExtra(MessageBean.keyVal.time));
             messageBean.setFrom(intent.getStringExtra(MessageBean.keyVal.from));
             messageBean.setLocate(intent.getStringExtra(MessageBean.keyVal.locate));
-            isCollect = collectRepository.contain(messageBean);
+            isCollect = collectDepository.contain(messageBean);
         } else if (visitKind == VISIT_CALENDER) {
             messageBean.setUrl(intent.getStringExtra("url"));
         }
@@ -224,9 +224,10 @@ public class MesBrowse extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                Log.i(TAG, "onPageStarted: target url "+url);
+                Log.i(TAG, "onPageStarted: target url " + url);
                 myProgress.show();
             }
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 cancelProgress();
@@ -252,7 +253,7 @@ public class MesBrowse extends BaseActivity {
     }
 
     private void cancelProgress() {
-        if(myProgress.isShowing()){
+        if (myProgress.isShowing()) {
             myProgress.cancel();
         }
     }
@@ -308,8 +309,8 @@ public class MesBrowse extends BaseActivity {
                 }
                 return true;
             case R.id.browse_comment:
-                CommentArea.StartActivity(this, messageBean);
-                return true ;
+                CommentActivity.StartActivity(this, messageBean);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -318,7 +319,7 @@ public class MesBrowse extends BaseActivity {
     private void postBug(Exception e) {
         LeaveMes mes = new LeaveMes();
         mes.setEmail("report");
-        mes.setContent("添加日历失败 mes：\n "+e.toString());
+        mes.setContent("添加日历失败 mes：\n " + e.toString());
         mes.setAppLevel(AppConfigUtils.getVersionName());
         mes.setDevice(AppConfigUtils.getDevice());
         mes.setDeviceLevel(AppConfigUtils.getDeviceLevel());
@@ -329,17 +330,17 @@ public class MesBrowse extends BaseActivity {
      * 添加到日历中
      */
     private void calendar() {
-        StringBuilder LOCATION = new StringBuilder();
+        StringBuilder location = new StringBuilder();
         if (messageBean.getFrom() == null && messageBean.getLocate() == null) {
-            LOCATION.append(ResourceUtils.getString(R.string.unKnowLocation));
+            location.append(ResourceUtils.getString(R.string.unKnowLocation));
         } else {
             if (messageBean.getFrom() != null)
-                LOCATION.append(messageBean.getFrom());
+                location.append(messageBean.getFrom());
             if (messageBean.getLocate() != null)
-                LOCATION.append(" " + messageBean.getLocate());
+                location.append(" " + messageBean.getLocate());
         }
         String str = messageBean.getTime();
-        if (str.indexOf("(") > 0) {
+        if (str.indexOf("(") > 0) {//时间后面有“（周二..）”
             messageBean.setTime(str.substring(0, str.indexOf("(")));
         }
         String[] times = messageBean.getTime().split("-|:| |\\n|：");
@@ -373,17 +374,18 @@ public class MesBrowse extends BaseActivity {
         calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
         calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
         calendarIntent.putExtra(CalendarContract.Events.TITLE, messageBean.getTitle());
-        calendarIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, LOCATION.toString());
-        if(isIntentAvailable(calendarIntent)){
+        calendarIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, location.toString());
+        if (isIntentAvailable(calendarIntent)) {
             startActivityForResult(calendarIntent, SendCalendarCode);
-        }else{
-            ToastUtils.showToast("添加日历出错");
+        } else {
+            ToastUtils.showToast("找不到日历~");
         }
     }
 
     public boolean isIntentAvailable(Intent intent) {
         return !getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isEmpty();
     }
+
     /**
      * 用浏览器打开
      */
@@ -411,13 +413,13 @@ public class MesBrowse extends BaseActivity {
     }
 
     private void changeCollectState() {
-        boolean contain = collectRepository.contain(messageBean);
+        boolean contain = collectDepository.contain(messageBean);
         if (!contain) {
-            collectRepository.add(messageBean);
+            collectDepository.add(messageBean);
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_add_collect));
             isCollect = true;
         } else {
-            collectRepository.delete(messageBean);
+            collectDepository.delete(messageBean);
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_delete_collect));
             isCollect = false;
         }
@@ -474,7 +476,7 @@ public class MesBrowse extends BaseActivity {
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, CacheConstant.AppIcnUrl);
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, ResourceUtils.getString(R.string.app_name));
         dialog.cancel();
-        tencent.shareToQQ(MesBrowse.this, params, baseuiLister);
+        tencent.shareToQQ(MesBrowseActivity.this, params, baseuiLister);
     }
 
     private void ToQzone() {
@@ -487,7 +489,7 @@ public class MesBrowse extends BaseActivity {
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, messageBean.getUrl());//必填
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, list);
         dialog.cancel();
-        tencent.shareToQzone(MesBrowse.this, params, baseuiLister);
+        tencent.shareToQzone(MesBrowseActivity.this, params, baseuiLister);
     }
 
     /**
@@ -497,7 +499,7 @@ public class MesBrowse extends BaseActivity {
 
         @Override
         public void onComplete(Object o) {
-//            Toast.makeText(MesBrowse.this,"分享成功！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MesBrowseActivity.this,"分享成功！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -506,7 +508,7 @@ public class MesBrowse extends BaseActivity {
 
         @Override
         public void onCancel() {
-//            Toast.makeText(MesBrowse.this,"取消分享！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MesBrowseActivity.this,"取消分享！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -519,5 +521,15 @@ public class MesBrowse extends BaseActivity {
             return;
         }
         Tencent.onActivityResultData(requestCode, resultCode, data, baseuiLister);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        if (myProgress != null && myProgress.isShowing()) {
+            myProgress.dismiss();
+        }
     }
 }

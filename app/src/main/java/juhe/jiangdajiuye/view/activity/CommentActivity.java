@@ -26,23 +26,23 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.ui.recyclerView.MyRecyclerView;
+import juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView;
 import juhe.jiangdajiuye.ui.recyclerView.adapter.FooterAdapter;
 import juhe.jiangdajiuye.base.BaseActivity;
+import juhe.jiangdajiuye.view.activity.userCenter.UserEntranceActivity;
 import juhe.jiangdajiuye.view.activity.userCenter.engine.UserManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.adapter.CommentAdapter;
 import juhe.jiangdajiuye.bean.comment.Post;
 import juhe.jiangdajiuye.view.dialog.ProgressDialog;
-import juhe.jiangdajiuye.view.activity.userCenter.UserEntrance;
-import juhe.jiangdajiuye.view.activity.userCenter.UserMessage;
+import juhe.jiangdajiuye.view.activity.userCenter.UserMessageActivity;
 
-public class CommentArea extends BaseActivity implements MyRecyclerView.OnLoadMoreListener {
-    private static final String TAG = "CommentArea";
+public class CommentActivity extends BaseActivity implements LoadMoreRecyclerView.OnLoadMoreListener {
+    private static final String TAG = "CommentActivity";
     private RecyclerView.LayoutManager manager;
     private CommentAdapter adapter;
-    private MyRecyclerView recyclerView;
+    private LoadMoreRecyclerView recyclerView;
     private EditText input;
     private ImageButton send;
     private MessageBean messageBean;
@@ -53,7 +53,7 @@ public class CommentArea extends BaseActivity implements MyRecyclerView.OnLoadMo
     private int pageNum  = 5 ;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置显示
     public static void StartActivity(Context context, MessageBean item) {
-        Intent intent = new Intent(context, CommentArea.class);
+        Intent intent = new Intent(context, CommentActivity.class);
         intent.putExtra(MessageBean.keyVal.url, item.getUrl());
         intent.putExtra(MessageBean.keyVal.title, item.getTitle());
         intent.putExtra(MessageBean.keyVal.time, item.getTime());
@@ -113,14 +113,14 @@ public class CommentArea extends BaseActivity implements MyRecyclerView.OnLoadMo
             @Override
             public void done(List<juhe.jiangdajiuye.bean.comment.Comment> objects, BmobException e) {
                 if (e == null && objects.size() != 0) {
-                    adapter.appendDate(objects);
+                    adapter.appendData(objects);
                     if(objects.size()<pageNum){
-                        recyclerView.setStatus(MyRecyclerView.STATUS_END);
+                        recyclerView.setCanLoadMoreRefresh(false);
                     }else{
-                        recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
+                        recyclerView.setDefaultStatus();
                     }
                 }else{
-                    recyclerView.setStatus(MyRecyclerView.STATUS_END);
+                    recyclerView.setCanLoadMoreRefresh(false);
                 }
                 mProgress.cancel();
                 showError(adapter.getDataSize()==0);
@@ -181,7 +181,7 @@ public class CommentArea extends BaseActivity implements MyRecyclerView.OnLoadMo
             public void onClick(View view, juhe.jiangdajiuye.bean.comment.Comment comment, int position) {
                     switch (view.getId()){
                         case R.id.item_comment_user_name:
-                            Intent intent = new Intent(CommentArea.this, UserMessage.class);
+                            Intent intent = new Intent(CommentActivity.this, UserMessageActivity.class);
                             intent.putExtra("userId",comment.getUser().getObjectId());
                             startActivitySlideInRight(intent);
                             break;
@@ -207,15 +207,15 @@ public class CommentArea extends BaseActivity implements MyRecyclerView.OnLoadMo
      */
     @Override
     public void onLoadMore() {
-        if(!recyclerView.isRefresh()){
-            recyclerView.setStatus(MyRecyclerView.STATUS_REFRESHING);
+        if(!recyclerView.isRefreshing()){
+            recyclerView.setPullUpToRefresh();
             findComment(post);
         }
     }
 
     public void send(View view) {
         if (!UserManager.getInStance().isLogin()) {
-             startActivitySlideInRight(this,UserEntrance.class);
+             startActivitySlideInRight(this,UserEntranceActivity.class);
             return;
         }
         if(TextUtils.isEmpty(input.getText().toString())){

@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.db;
+package juhe.jiangdajiuye.db.helper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -69,9 +69,17 @@ public class CollectSqlHelper extends SQLiteOpenHelper {
     }
 
     public boolean add(List<MessageBean> data){
-        for(MessageBean item : data ){
-            add(item);
+        SQLiteDatabase db = startTransaction(true) ;
+        for(MessageBean messageBean : data ){
+            ContentValues cv = new ContentValues();
+            cv.put(MessageBean.keyVal.title, messageBean.getTitle());
+            cv.put(MessageBean.keyVal.from, messageBean.getFrom());
+            cv.put(MessageBean.keyVal.locate, messageBean.getLocate());
+            cv.put(MessageBean.keyVal.time, messageBean.getTime());
+            cv.put(MessageBean.keyVal.url, messageBean.getUrl());
+            db.insert(MessageBean.keyVal.tableName, MessageBean.keyVal.title, cv);
         }
+        endTransaction(db);
         return true ;
     }
     public List<MessageBean> selectAll() {

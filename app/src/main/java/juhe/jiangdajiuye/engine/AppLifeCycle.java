@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.engine.lifecycle;
+package juhe.jiangdajiuye.engine;
 
 import android.app.Activity;
 import android.app.Application;

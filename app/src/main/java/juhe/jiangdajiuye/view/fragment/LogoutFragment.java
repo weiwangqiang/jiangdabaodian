@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.fragment;
+package juhe.jiangdajiuye.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,11 +21,11 @@ import cn.bmob.v3.listener.QueryListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.UserCenterBean;
 import juhe.jiangdajiuye.bean.bmobUser.UserBean;
-import juhe.jiangdajiuye.user.UserManager;
+import juhe.jiangdajiuye.view.activity.userCenter.engine.UserManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.SharePreUtils;
-import juhe.jiangdajiuye.activity.ChoiceProvince;
-import juhe.jiangdajiuye.activity.ChoiceSchool;
+import juhe.jiangdajiuye.view.activity.userCenter.ChoiceProvinceActivity;
+import juhe.jiangdajiuye.view.activity.userCenter.ChoiceSchoolActivity;
 import juhe.jiangdajiuye.adapter.UserCenterAdapter;
 
 /**
@@ -96,14 +96,14 @@ public class LogoutFragment extends BaseTooBarFragment implements View.OnClickLi
                 Log.i(TAG, "onItemClick: ");
                 switch (position) {
                     case 1:
-                        startActivity(new Intent(getActivity(), ChoiceProvince.class));
+                        startActivity(new Intent(getActivity(), ChoiceProvinceActivity.class));
                         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                         break;
                     case 2:
-                        ChoiceSchool.startActivity(getActivity(), ChoiceSchool.GET_COMPANY);
+                        ChoiceSchoolActivity.startActivity(getActivity(), ChoiceSchoolActivity.GET_COMPANY);
                         break;
                     case 3:
-                        ChoiceSchool.startActivity(getActivity(), ChoiceSchool.GET_WORK);
+                        ChoiceSchoolActivity.startActivity(getActivity(), ChoiceSchoolActivity.GET_WORK);
                         break;
                 }
             }

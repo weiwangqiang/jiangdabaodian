@@ -1,7 +1,7 @@
-package com.demo.garcia.utils;
+package juhe.jiangdajiuye.utils;
 
 
-import com.demo.garcia.base.BaseApplication;
+import juhe.jiangdajiuye.base.BaseApplication;
 
 /**
  * class description here

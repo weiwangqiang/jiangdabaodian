@@ -15,7 +15,7 @@ import android.view.WindowManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import juhe.jiangdajiuye.core.BaseApplication;
+import juhe.jiangdajiuye.base.BaseApplication;
 
 /**
  * class description here
@@ -149,5 +149,18 @@ public class ScreenSizeUtils {
             hasMenuKey = true;
         }
         return hasMenuKey;
+    }
+
+    /** dip转换px */
+    public static int dip2px(int dip) {
+        final float scale = BaseApplication.getContext().getResources().getDisplayMetrics().density;
+        return (int) (dip * scale + 0.5f);
+    }
+
+    /** px转换dip */
+
+    public static int px2dip(int px) {
+        final float scale = BaseApplication.getContext().getResources().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
     }
 }

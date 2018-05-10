@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/gray_little"
-    tools:context="juhe.jiangdajiuye.view.activity.ChoiceSchool">
+    tools:context="juhe.jiangdajiuye.view.activity.userCenter.ChoiceSchoolActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/choice_school_toolbar"

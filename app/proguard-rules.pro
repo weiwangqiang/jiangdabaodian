@@ -15,9 +15,20 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
+#不做预校验，加快混淆速度
+-dontpreverify
+#抛出异常时候保存行号
+-keepattributes SourceFile,LineNumberTable
 #-dontoptimize#防止编译器将一些方法内联
+#保留自定义的类不混淆
 -keep class juhe.jiangdajiuye.view.xuanJiang.** {*;}
+-keep class juhe.jiangdajiuye.bean.**{*;}
+-keep class juhe.jiangdajiuye.core.BaseActivity{*;}#不混淆该类
+-keep class juhe.jiangdajiuye.view.activity.**{*;}#不混淆某个包下的类
+#保留继承自activity、service等子类不被混淆
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+
 
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
@@ -26,12 +37,26 @@
 -keeppackagenames org.jsoup.nodes
 
 -dontwarn rx.internal.util.unsafe.*
+##---------------Begin: proguard configuration for Gson  ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { *; }
+
+##---------------End: proguard configuration for Gson  ----------
 # --------------------bugly混淆——-------------------------------
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 # --------------------bugly混淆——-------------------------------
-# ---------------------bmob 混淆----------------------------------
 
+# ---------------------bmob 混淆----------------------------------
 -ignorewarnings
 
 -keepattributes Signature,*Annotation*

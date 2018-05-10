@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.fragment;
+package juhe.jiangdajiuye.view.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,7 +25,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.bmobUser.UserBean;
-import juhe.jiangdajiuye.user.UserManager;
+import juhe.jiangdajiuye.view.activity.userCenter.engine.UserManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.SharePreUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
@@ -157,6 +157,7 @@ public class LoginFragment extends BaseTooBarFragment {
                 if (e == null && object.size() != 0) {
                     if(!object.get(0).equals(userBean)){
                         ToastUtils.showToast(ResourceUtils.getString(R.string.toast_user_password_error));
+                        mPasswordView.requestFocus();
                         showProgress(false);
                         return;
                     }
