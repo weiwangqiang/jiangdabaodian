@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.fragment;
+package juhe.jiangdajiuye.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

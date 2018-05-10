@@ -1,5 +1,4 @@
-package juhe.jiangdajiuye.fragment;
-
+package juhe.jiangdajiuye.view.xuanJiang.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.MessageBean;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.ui.recyclerView.MyRecyclerView;
-import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.utils.httpUtils.HttpHelper;
 import juhe.jiangdajiuye.utils.httpUtils.Inter.IDataListener;
@@ -27,79 +25,70 @@ import juhe.jiangdajiuye.adapter.IndexFragmentAdapter;
 import juhe.jiangdajiuye.view.xuanJiang.entity.MesItemHolder;
 
 /**
- * Created by wangqiang on 2016/9/27.
- * 首界面的fragment
+ * class description here
+ * fragment 基类
+ *
+ * @author wangqiang
+ * @since 2017-09-30
  */
-public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMoreListener {
-    public static final int XUANJIANG = 1;//宣讲会
-    public static final int ZHAOPINZHIWEI = 2;//招聘职位
-    public static final int XINXI = 3;//信息速递
-    public static final int ZHAOPINGONGGAO = 4;//招聘公告
-    public static final int ZHAOPINHUI = 5;//招聘会
+
+public abstract class BaseFragment extends Fragment implements MyRecyclerView.OnLoadMoreListener {
+    private static final String TAG = "BaseFragment";
     private View view, error;
-    private String baseUrl;
-    private String TAG;
-    private int tab;
     private MyRecyclerView recyclerView;
     private LinearLayoutManager manager;
     private IndexFragmentAdapter adapter;
-    //下拉刷新
+    //是否没有初始化数据
     private Boolean isFirst = true;
-    private int page = 1; //当前页面数
     private SwipeRefreshLayout swipeRefreshLayout;
-    private HttpHelper httpHelper ;
-    private StringBuilder str = new StringBuilder();
-    private MesItemHolder holder = new MesItemHolder();
-    public static IndexFragment newInstance(String url, String TAG, int tab) {
-        IndexFragment f = new IndexFragment();
-        Bundle b = new Bundle();
-        b.putString("url", url);
-        b.putString("TAG", TAG);
-        b.putInt("tab", tab);
-        f.setArguments(b);
-        return f;
-    }
+    private HttpHelper httpHelper;
+    private MesItemHolder holder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (view != null)
+        if (view != null){
+            if(recyclerView.isRefresh()){
+                swipeRefreshLayout.setRefreshing(true);
+            }
             return view;
+        }
         view = inflater.inflate(R.layout.fragment, container, false);
         init();
         return view;
     }
 
-    /**
-     * Called when the fragment is no longer in use.  This is called
-     * after {@link #onStop()} and before {@link #onDetach()}.
-     */
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unBindNetState();
+        NetStateReceiver.removeLister(receiver);
     }
-    private void init() {
-        httpHelper = HttpHelper.getInstance() ;
+
+    public void init() {
         Bundle bundle = getArguments();
-        baseUrl = bundle.getString("url");
-        TAG = bundle.getString("TAG");
-        tab = bundle.getInt("tab");//控制用哪个解析方法
-        holder.setTab(tab);
+        holder = new MesItemHolder();
+        holder.setBaseUrl(bundle.getString("BaseUrl"));
+        holder.setCollege(bundle.getString("college"));
+        holder.setCollegeId(bundle.getInt("collegeId"));
+        holder.setProvinceId(bundle.getInt("provinceId"));
         findId();
         initRefresh();
         initList();
         bindNetState();
+        httpHelper = HttpHelper.getInstance();
     }
 
     /**
      * 绑定网络监听
      */
-    private void bindNetState() {
+    public void bindNetState() {
         NetStateReceiver.addNetLister(receiver);
-    }
-
-    private void unBindNetState() {
-        NetStateReceiver.removeLister(receiver);
     }
 
     private NetStateReceiver.NetLister receiver = new NetStateReceiver.NetLister() {
@@ -121,29 +110,28 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
         }
     };
 
-    private void findId() {
+    public void findId() {
         error = view.findViewById(R.id.error);
-        recyclerView = (MyRecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView =  view.findViewById(R.id.recyclerView);
         manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setOnLoadMoreListener(this);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
-
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
     }
 
-    private void initRefresh() {
+    public void initRefresh() {
         swipeRefreshLayout.setSize(SwipeRefreshLayout.MEASURED_STATE_TOO_SMALL);
         swipeRefreshLayout.setDistanceToTriggerSync(200);
         swipeRefreshLayout.setOverScrollMode(View.OVER_SCROLL_NEVER);
         swipeRefreshLayout.setProgressBackgroundColorSchemeColor(
                 ContextCompat.getColor(getActivity(), R.color.white));
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.themeColor),
-                ContextCompat.getColor(getActivity(), R.color.themeColor));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.baseColor),
+                ContextCompat.getColor(getActivity(), R.color.baseColor));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if ( recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
+                if (recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
                     recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
                     getMessage();
                 } else {
@@ -151,14 +139,25 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
                 }
             }
         });
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                if (tab == XUANJIANG) {
-                    recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
+        if (getUserVisibleHint() && isFirst) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
                     swipeRefreshLayout.setRefreshing(true);
+                    recyclerView.setStatus(MyRecyclerView.STATUS_PULL_TO_REFRESH);
                     getMessage();
                 }
+            });
+        }
+    }
+
+    public void initList() {
+        adapter = new IndexFragmentAdapter(getActivity(), R.layout.main_list_item);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new IndexFragmentAdapter.OnItemClickListener() {
+            @Override
+            public void OnItemClick(MessageBean item) {
+                Browse.StartActivity(getActivity(), item);
             }
         });
     }
@@ -175,36 +174,33 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
         public void onFail(Exception exception, int responseCode) {
             recyclerView.setStatus(MyRecyclerView.STATUS_ERROR);
             swipeRefreshLayout.setRefreshing(false);
-            ToastUtils.showToast(ResourceUtils.getString(R.string.toast_network_error));
+            ToastUtils.showToast("网络不太顺畅哦！");
             showError();
         }
-    } ;
-    private void initList() {
-        adapter = new IndexFragmentAdapter(getActivity(), R.layout.main_list_item);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new IndexFragmentAdapter.OnItemClickListener() {
-            @Override
-            public void OnItemClick(MessageBean item) {
-                Browse.StartActivity(getActivity(), item);
-            }
-        });
+    };
+
+    /**
+     * http://career.hdu.edu.cn/module/getcareers?start_page=1&keyword=&type=inner&day=&count=10&start=1
+     */
+    public void getMessage() {
+        String url = getUrl(recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH
+                , holder);
+        Log.i(TAG, "connect url : " + url);
+        httpHelper.get(url, holder, iDataListener, HttpTask.Type.MessageItem);
     }
 
-    private void getMessage() {
-        httpHelper.get(getUrl(), holder, iDataListener, HttpTask.Type.MessageItem);
-    }
-
+    /**
+     * 判断当前是否需要显示Error
+     */
     private void showError() {
         if (adapter.getDataSize() == 0) {
             error.setVisibility(View.VISIBLE);
-            return;
         } else {
-            isFirst = false;
             error.setVisibility(View.GONE);
         }
     }
 
-    private void upDate(List<MessageBean> list) {
+    public void upDate(List<MessageBean> list) {
         //没有更多了
         if ((list.size() == 0 && adapter.getDataSize() != 0)) {
             recyclerView.setCanLoadMoreRefresh(false);
@@ -218,28 +214,23 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
             adapter.appendDate(list);
         }
         //如果adapter的数据不够，说明没有更多的数据，直接提示没有更多数据
-        if( adapter.getDataSize() <6){
+        if (adapter.getDataSize() < 6) {
+            Log.i(TAG, "upDate: end ------- size is  " + list.size());
             recyclerView.setStatus(MyRecyclerView.STATUS_END);
             return;
         }
         recyclerView.setStatus(MyRecyclerView.STATUS_DEFAULT);
-        page++;
+        RequestSuccess();
         showError();
     }
 
-    private String getUrl() {
-        str.setLength(0);
-        if (recyclerView.getStatus() == MyRecyclerView.STATUS_PULL_TO_REFRESH){
-            page = 1;
-        }
-        str.append(baseUrl);
-        str.append("page=" + page);
-        Log.i(TAG, "getUrl: " + str.toString());
-        return str.toString();
-    }
+    public abstract String getUrl(boolean isPull, MesItemHolder holder);
+
+    public abstract void RequestSuccess();
 
     @Override
     public void onLoadMore() {
+        Log.i(TAG, "onLoadMore: ");
         if (recyclerView.getStatus() == MyRecyclerView.STATUS_DEFAULT) {
             recyclerView.setStatus(MyRecyclerView.STATUS_REFRESHING);
             getMessage();
@@ -249,7 +240,7 @@ public class IndexFragment extends Fragment implements MyRecyclerView.OnLoadMore
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isFirst && isVisibleToUser && adapter != null && adapter.getDataSize() == 0) {
+        if (isFirst && isVisibleToUser) {
             if (swipeRefreshLayout != null && recyclerView.getStatus() != MyRecyclerView.STATUS_ERROR) {
                 swipeRefreshLayout.post(new Runnable() {
                     @Override

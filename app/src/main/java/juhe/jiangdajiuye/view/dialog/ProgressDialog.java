@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.dialog;
+package juhe.jiangdajiuye.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

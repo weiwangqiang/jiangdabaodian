@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.fragment;
+package juhe.jiangdajiuye.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,9 +24,9 @@ import juhe.jiangdajiuye.bean.bmobUser.UserBean;
 import juhe.jiangdajiuye.user.UserManager;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.SharePreUtils;
-import juhe.jiangdajiuye.view.activity.ChoiceProvince;
-import juhe.jiangdajiuye.view.activity.ChoiceSchool;
-import juhe.jiangdajiuye.view.adapter.UserCenterAdapter;
+import juhe.jiangdajiuye.activity.ChoiceProvince;
+import juhe.jiangdajiuye.activity.ChoiceSchool;
+import juhe.jiangdajiuye.adapter.UserCenterAdapter;
 
 /**
  * class description here

@@ -1,10 +1,11 @@
-package juhe.jiangdajiuye.view.fragment;
+package juhe.jiangdajiuye.fragment;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import juhe.jiangdajiuye.R;
+import juhe.jiangdajiuye.core.BaseApplication;
 
 /**
  * class description here
@@ -39,6 +40,9 @@ public class BaseTooBarFragment extends Fragment {
     protected void finish(){
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

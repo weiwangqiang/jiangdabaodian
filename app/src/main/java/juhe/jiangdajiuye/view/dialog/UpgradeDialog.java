@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.view.dialog;
+package juhe.jiangdajiuye.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,7 +15,8 @@ import android.widget.TextView;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.bean.bmobAppMes.AppVersionBean;
 import juhe.jiangdajiuye.utils.ResourceUtils;
-import juhe.jiangdajiuye.utils.netUtils.NetStateUtils;
+import juhe.jiangdajiuye.net.NetStateUtils;
+import juhe.jiangdajiuye.utils.versionUpGrade.DownLoadService;
 
 /**
  * class description here
@@ -31,7 +32,7 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
 
     private AppVersionBean bean = null;
     private Context mCtx = null;
-
+    private boolean upGradeInApk = true ;
     public UpgradeDialog(@NonNull Context context) {
         super(context);
         this.mCtx = context;
@@ -73,8 +74,7 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
     private void showConfirmDialog() {
         cancel();
         if (NetStateUtils.isWifiState()) {
-            upByMarket();
-//            DownLoadService.startDownLoadService(mCtx, bean.getDownLoadUrl());
+            upGrade();
             return;
         }
         new AlertDialog.Builder(mCtx)
@@ -84,9 +84,8 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                upByMarket();
-//                                    DownLoadService.startDownLoadService(mCtx, bean.getDownLoadUrl());
-//                                    dialog.cancel();
+                               upGrade();
+                                dialog.cancel();
                             }
                         })
                 .setNeutralButton(ResourceUtils.getString(R.string.cancel),
@@ -100,6 +99,15 @@ public class UpgradeDialog extends Dialog implements View.OnClickListener {
                 .create()
                 .show();
     }
+
+    private void upGrade() {
+        if(upGradeInApk){
+            DownLoadService.startDownLoadService(mCtx, bean.getDownLoadUrl());
+        }else {
+            upByMarket();
+        }
+    }
+
     //通过应用商店更新
     private void upByMarket() {
         Uri uri = Uri.parse("market://details?id=" + mCtx.getPackageName());
