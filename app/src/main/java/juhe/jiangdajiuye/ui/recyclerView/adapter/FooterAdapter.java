@@ -22,40 +22,19 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
 
 public abstract class FooterAdapter<T> extends AbsAdapter<T> {
     private mFooterViewHolder footerViewHolder;
-    protected OnItemClickListener listener ;
+
     public FooterAdapter(Context mContext, int mLayout) {
         super(mContext, mLayout);
     }
 
 
-    public interface OnItemClickListener<T> {
-        void onClick(View view , T t, int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener ;
-    }
-
     @Override
     public void bindFooterViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (position != 0)
-            ((FooterViewHolder) holder).root.setVisibility(View.VISIBLE);
-        else
-            ((FooterViewHolder) holder).root.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    protected void bindItemViewHolder(RecyclerView.ViewHolder holder, final int position, final T t) {
-        if (holder instanceof AbsAdapter.ItemViewHolder) {
-            ((AbsAdapter.ItemViewHolder) holder).root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != listener){
-                        listener.onClick(v , t,position);
-                    }
-                }
-            });
-        }
+//        if (position != 0) {
+//            ((FooterViewHolder) holder).root.setVisibility(View.VISIBLE);
+//        } else {
+//            ((FooterViewHolder) holder).root.setVisibility(View.INVISIBLE);
+//        }
     }
 
     @Override
@@ -67,8 +46,8 @@ public abstract class FooterAdapter<T> extends AbsAdapter<T> {
         switch (status) {
             case STATUS_PULL_DOWN_TO_REFRESH:
             case STATUS_DEFAULT:
-//                footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_pull_to_load_more));
-//                footerViewHolder.progressBar.setVisibility(View.GONE);
+                footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_pull_to_load_more));
+                footerViewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case STATUS_PULL_UP_TO_REFRESH:
                 footerViewHolder.tv.setText(ResourceUtils.getString(R.string.recycler_statues_loading));
@@ -88,7 +67,7 @@ public abstract class FooterAdapter<T> extends AbsAdapter<T> {
     }
 
     @Override
-    public FooterViewHolder getFooterViewHolder(ViewGroup parent) {
+    public BaseViewHolder getFooterViewHolder(ViewGroup parent) {
         if (footerViewHolder == null) {
             footerViewHolder = new mFooterViewHolder(SkinManager.inflater(mContext,
                     R.layout.footer, parent, false));
@@ -97,7 +76,7 @@ public abstract class FooterAdapter<T> extends AbsAdapter<T> {
         return footerViewHolder;
     }
 
-    public class mFooterViewHolder extends FooterViewHolder {
+    public class mFooterViewHolder extends BaseViewHolder {
         public TextView tv;
         public View progressBar;
 

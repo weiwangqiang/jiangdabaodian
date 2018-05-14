@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:id="@+id/footer_view">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/footer_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingBottom="15dp"
+    android:paddingTop="15dp">
 
-        <ProgressBar
-            android:id="@+id/footerProgressBar"
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:visibility="gone"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/footerTitle"
-            android:layout_marginRight="8.0dp" />
-    <TextView
+    <ProgressBar
+        android:id="@+id/footerProgressBar"
+        style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/recycler_statues_not_any_more"
+        android:layout_marginRight="8.0dp"
+        android:layout_toLeftOf="@+id/footerTitle"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/footerTitle"
-        android:textColor="@color/grey_600"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        />
-    </LinearLayout>
+        android:text="@string/recycler_statues_not_any_more"
+        android:textColor="@color/grey_600" />
+</LinearLayout>

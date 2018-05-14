@@ -24,6 +24,7 @@ import juhe.jiangdajiuye.bean.BookBean;
 import juhe.jiangdajiuye.broadCast.NetStateReceiver;
 import juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView;
 import juhe.jiangdajiuye.base.BaseActivity;
+import juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter;
 import juhe.jiangdajiuye.utils.ResourceUtils;
 import juhe.jiangdajiuye.utils.ToastUtils;
 import juhe.jiangdajiuye.net.httpUtils.HttpHelper;
@@ -39,6 +40,7 @@ public class LibraryActivity extends BaseActivity implements
     private EditText edit;
     private String TAG = "fragmentLibrary";
     private int currentPage = 1;
+    private int displaypg = 10;
     private int totalNum = 0;//搜索返回的结果数
     private String mTitle;
     private TextView search;
@@ -47,7 +49,7 @@ public class LibraryActivity extends BaseActivity implements
     private Toolbar toolbar;
     private InputMethodManager imm;
     private LibraryAdapter adapter;
-    private HttpHelper httpHelper ;
+    private HttpHelper httpHelper;
     private static String url = "http://huiwen.ujs.edu.cn:8080/opac/openlink.php?" +
             "location=ALL&doctype=ALL&lang_code=ALL&match_flag=forward" +
             "&displaypg=10&showmode=list&orderby=DESC&sort=CATA_DATE&onlylendable=no";
@@ -56,6 +58,9 @@ public class LibraryActivity extends BaseActivity implements
         @Override
         public void onSuccess(List<BookBean> bookBeans) {
             upData(bookBeans);
+            if (bookBeans.size() != 0) {
+                totalNum = bookBeans.get(0).getTotalNum(); //获取搜索结果的数量
+            }
             currentPage++;
             mProgress.cancel();
         }
@@ -66,7 +71,8 @@ public class LibraryActivity extends BaseActivity implements
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_network_error));
             mProgress.cancel();
         }
-    } ;
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +91,10 @@ public class LibraryActivity extends BaseActivity implements
     }
 
     public void findId() {
-        edit =  findViewById(R.id.library_edit);
+        edit = findViewById(R.id.library_edit);
         search = findViewById(R.id.library_search);
-        recyclerView = (LoadMoreRecyclerView) findViewById(R.id.library_listView);
-        toolbar = (Toolbar) findViewById(R.id.Library_toolbar);
+        recyclerView = findViewById(R.id.library_listView);
+        toolbar = findViewById(R.id.Library_toolbar);
     }
 
     public void initList() {
@@ -96,15 +102,18 @@ public class LibraryActivity extends BaseActivity implements
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         recyclerView.setOnLoadMoreListener(this);
-        adapter.setOnItemClickListener(new LibraryAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new AbsAdapter.OnItemClickListener<BookBean>() {
+
             @Override
-            public void OnItemClick(BookBean data) {
-                Intent intent = new Intent(LibraryActivity.this, LibraryDetailsActivity.class);
-                intent.putExtra("url", data.getUrl());
-                intent.putExtra("book", data.getBook());
-                intent.putExtra("editor", data.getEditor());
-                intent.putExtra("available", data.getAvailable());
-                intent.putExtra("number", data.getNumber());
+            public void onClick(View view, BookBean bookBean, int position) {
+                Intent intent = new Intent(
+                        LibraryActivity.this,
+                        LibraryDetailsActivity.class);
+                intent.putExtra("url", bookBean.getUrl());
+                intent.putExtra("book", bookBean.getBook());
+                intent.putExtra("editor", bookBean.getEditor());
+                intent.putExtra("available", bookBean.getAvailable());
+                intent.putExtra("number", bookBean.getNumber());
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
@@ -118,23 +127,11 @@ public class LibraryActivity extends BaseActivity implements
                     case EditorInfo.IME_ACTION_NEXT:
                     case EditorInfo.IME_ACTION_SEARCH:
                     case EditorInfo.IME_ACTION_GO:
-                        Log.i(TAG, "onEditorAction: action id ");
                         prepareSearch(v);
-                        return true ;
+                        return true;
                     default:
-                        break;
+                        return false;
                 }
-                if (event == null) {
-                    return false;
-                }
-                switch (event.getKeyCode()) {
-                    case KeyEvent.KEYCODE_ENTER:
-                    case KeyEvent.ACTION_DOWN:
-                        prepareSearch(v);
-                        Log.i(TAG, "onEditorAction: key code ");
-                        return true  ;
-                }
-                return false;
             }
         });
     }
@@ -162,7 +159,7 @@ public class LibraryActivity extends BaseActivity implements
 
     public void setLister() {
         search.setOnClickListener(this);
-        httpHelper = HttpHelper.getInstance() ;
+        httpHelper = HttpHelper.getInstance();
     }
 
     public void initToolbar() {
@@ -191,50 +188,48 @@ public class LibraryActivity extends BaseActivity implements
             ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_input_warn));
             return;
         }
-        if(recyclerView.isRefreshing()){
+        if (recyclerView.isRefreshing()) {
             //处于获取数据状态
             return;
         }
         mTitle = edit.getText().toString();
         recyclerView.setPullUpToRefresh();
         showProgress();
+        recyclerView.setPullDownToRefresh();
         searchBook();
     }
 
     public void searchBook() {
-        if (!recyclerView.isPullUpToRefresh()) {
-            if ((currentPage * 10) >= totalNum && adapter.getDataSize() != 0) {
+        if (recyclerView.isPullUpToRefresh()) {
+            if (adapter.getDataSize() >= totalNum) {
                 recyclerView.setCanLoadMoreRefresh(false);
-//                ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_content_not_more));
                 return;
             }
         }
         //解决中文乱码问题
 //        HttpUrl parsed = HttpUrl.parse(getUrl());
-        Log.i(TAG, "searchBook: "+getUrl());
-        httpHelper.get(getUrl(),null,iDataListener, HttpTask.Type.book);
+        httpHelper.get(getUrl(), null, iDataListener, HttpTask.Type.book);
     }
+
     //显示进度条
     public void showProgress() {
-        if(null == mProgress){
+        if (null == mProgress) {
             mProgress = new ProgressDialog(this);
         }
         mProgress.show();
     }
+
     //更新当前数据
     public void upData(List<BookBean> data) {
-        Log.i(TAG, "upData: "+data);
         if (data.size() == 0) {
             if (recyclerView.isPullDownToRefresh()) {
                 ToastUtils.showToast(ResourceUtils.getString(R.string.toast_library_can_not_search_book));
                 recyclerView.setDefaultStatus();
-            } else{
+            } else {
                 recyclerView.setCanLoadMoreRefresh(false);
             }
             return;
         }
-        totalNum = data.get(0).getTotalNum() ; //获取搜索结果的数量
-        Log.i(TAG, "upData: "+totalNum);
         if (recyclerView.isPullDownToRefresh()) {
             adapter.upDate(data);
             recyclerView.scrollToPosition(0);

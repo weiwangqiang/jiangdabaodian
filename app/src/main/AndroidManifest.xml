@@ -12,16 +12,16 @@
     <!-- 推送所需的权限 -->
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
+    <!--<uses-permission android:name="android.permission.READ_LOGS" />-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <!--<uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
+    <!--<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />-->
     <!-- Required  一些系统要求的权限，如访问网络等 -->
     <uses-permission android:name="juhe.jiangdajiuye.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
@@ -56,7 +56,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTop"
             android:theme="@style/StartAppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".view.activity.MainActivity"
@@ -259,13 +263,8 @@
             android:name=".view.activity.userCenter.ChoiceProvinceActivity"
             android:launchMode="singleTop" />
         <activity android:name=".view.activity.userCenter.UserMessageActivity" />
-        <activity android:name=".view.activity.SearchActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".view.activity.SearchActivity"></activity>
+        <activity android:name=".view.activity.CompanyJobActivity"></activity>
     </application>
 
 </manifest>

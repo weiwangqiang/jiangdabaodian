@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -34,7 +33,6 @@ import static juhe.jiangdajiuye.R.id.footerProgressBar;
 public class IndexAdapter extends AbsAdapter<MessageBean> {
     private static final String TAG = "IndexAdapter";
     private mFooterViewHolder footerViewHolder;
-    private Context mCtx;
     private OnItemClickListener itemClickListener;
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
@@ -45,8 +43,7 @@ public class IndexAdapter extends AbsAdapter<MessageBean> {
     }
 
     public IndexAdapter(Context mCtx, @LayoutRes int layout) {
-        super(layout);
-        this.mCtx = mCtx;
+        super(mCtx, layout);
     }
 
     /**
@@ -57,8 +54,8 @@ public class IndexAdapter extends AbsAdapter<MessageBean> {
      */
     @NonNull
     @Override
-    public ItemViewHolder getItemViewHolder(ViewGroup parent) {
-        return new mItemViewHolder(SkinManager.inflater(mCtx, mLayout));
+    public BaseViewHolder getItemViewHolder(View parent) {
+        return new mItemViewHolder(parent);
     }
 
     /**
@@ -69,10 +66,9 @@ public class IndexAdapter extends AbsAdapter<MessageBean> {
      */
     @NonNull
     @Override
-    public FooterViewHolder getFooterViewHolder(ViewGroup parent) {
-        Log.i(TAG, "getFooterViewHolder: ");
+    public BaseViewHolder getFooterViewHolder(ViewGroup parent) {
         if (footerViewHolder == null) {
-            footerViewHolder = new mFooterViewHolder(SkinManager.inflater(mCtx,
+            footerViewHolder = new mFooterViewHolder(SkinManager.inflater(mContext,
                     R.layout.footer, parent, false));
             stateChange(mStatus);
         }
@@ -98,7 +94,7 @@ public class IndexAdapter extends AbsAdapter<MessageBean> {
         viewHolder.company.setVisibility(View.GONE);
         try {
             viewHolder.title.setText(messageBean.getTitle());
-            viewHolder.title.setTextColor(mCtx.getResources()
+            viewHolder.title.setTextColor(mContext.getResources()
                     .getColor(messageBean.getHasBrowse() ?
                             R.color.grey_600:R.color.grey_900));
             viewHolder.time.setText(messageBean.getTime());
@@ -153,23 +149,23 @@ public class IndexAdapter extends AbsAdapter<MessageBean> {
     @Override
     public void bindFooterViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position != 0)
-            ((FooterViewHolder) holder).root.setVisibility(View.VISIBLE);
+            ((BaseViewHolder) holder).itemView.setVisibility(View.VISIBLE);
         else
-            ((FooterViewHolder) holder).root.setVisibility(View.INVISIBLE);
+            ((BaseViewHolder) holder).itemView.setVisibility(View.INVISIBLE);
     }
 
-    public class mItemViewHolder extends ItemViewHolder {
+    public class mItemViewHolder extends BaseViewHolder {
         TextView title, time, position, city,theme,company;
 
         private mItemViewHolder(View itemView) {
             super(itemView);
             root = getView(R.id.card_view);
-            title = (TextView) getView(R.id.recycler_message_title);
-            time = (TextView) getView(R.id.recycler_message_time);
-            position = (TextView) getView(R.id.recycler_message_position);
-            city = (TextView) getView(R.id.recycler_message_city);
-            theme = (TextView) getView(R.id.recycler_message_theme);
-            company = (TextView) getView(R.id.recycler_message_company);
+            title = getView(R.id.recycler_message_title);
+            time = getView(R.id.recycler_message_time);
+            position =  getView(R.id.recycler_message_position);
+            city = getView(R.id.recycler_message_city);
+            theme = getView(R.id.recycler_message_theme);
+            company = getView(R.id.recycler_message_company);
             setTextViewColor(time,R.color.grey_600);
             setTextViewColor(position,R.color.grey_600);
             setTextViewColor(city,R.color.grey_600);
@@ -186,7 +182,7 @@ public class IndexAdapter extends AbsAdapter<MessageBean> {
         DrawableCompat.setTintList(temp, colorStateList);
         view.setCompoundDrawables(temp,null,null,null);
     }
-    public class mFooterViewHolder extends FooterViewHolder {
+    public class mFooterViewHolder extends BaseViewHolder {
         public TextView tv;
         public View progressBar;
 
