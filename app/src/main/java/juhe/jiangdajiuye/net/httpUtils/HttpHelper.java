@@ -20,6 +20,7 @@ public class HttpHelper<T> {
     public static HttpHelper getInstance(){
         if(null == instance){
             instance = new HttpHelper();
+            instance.init();
         }
         return instance ;
     }

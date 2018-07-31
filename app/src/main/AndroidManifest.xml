@@ -12,16 +12,12 @@
     <!-- 推送所需的权限 -->
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!--<uses-permission android:name="android.permission.READ_LOGS" />-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--<uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
-    <!--<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />-->
     <!-- Required  一些系统要求的权限，如访问网络等 -->
     <uses-permission android:name="juhe.jiangdajiuye.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
@@ -41,7 +37,6 @@
 
     <!-- 安装apk需要的权限 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
     <!-- 安装apk需要的权限 -->
     <application
         android:name=".base.BaseApplication"
@@ -91,7 +86,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTop" />
         <!-- For test only 测试状态通知栏，需要打开的Activity -->
-
         <activity
             android:name=".view.activity.browse.MesBrowseActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -175,19 +169,6 @@
             android:windowSoftInputMode="stateHidden" />
         <!-- 腾讯的activity -->
         <!-- 腾信bugly -->
-
-
-        <!-- <receiver android:name=".broadCast.NetStateReceiver" -->
-        <!-- android:exported="false" -->
-        <!-- &gt; -->
-        <!-- <intent-filter android:priority="100000"> -->
-        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
-        <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED" /> -->
-        <!-- <action android:name="android.net.wifi.STATE_CHANGE" /> -->
-        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-        <!-- TODO 集成：1.2、bomb 添加推送所需要的服务和广播 -->
         <service
             android:name="cn.bmob.push.lib.service.PushService"
             android:exported="true"
@@ -216,7 +197,7 @@
         </receiver>
 
         <!-- 第3步中创建的消息接收器，在这里进行注册 -->
-        <receiver android:name=".broadCast.PushReceiver">
+        <receiver android:name=".broadcast.PushReceiver">
             <intent-filter>
                 <action android:name="cn.bmob.push.action.MESSAGE" />
             </intent-filter>
@@ -263,8 +244,8 @@
             android:name=".view.activity.userCenter.ChoiceProvinceActivity"
             android:launchMode="singleTop" />
         <activity android:name=".view.activity.userCenter.UserMessageActivity" />
-        <activity android:name=".view.activity.SearchActivity"></activity>
-        <activity android:name=".view.activity.CompanyJobActivity"></activity>
+        <activity android:name=".view.activity.SearchActivity"/>
+        <activity android:name=".view.activity.CompanyJobActivity"/>
     </application>
 
 </manifest>

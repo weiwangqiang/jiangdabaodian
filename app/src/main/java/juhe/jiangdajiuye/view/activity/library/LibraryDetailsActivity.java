@@ -73,7 +73,6 @@ public class LibraryDetailsActivity extends BaseActivity {
         libraryDepository = LibraryDepository.getInstance();
         getParam();
         initView();
-
     }
 
     public void initView() {
@@ -85,13 +84,11 @@ public class LibraryDetailsActivity extends BaseActivity {
     }
 
     public void findId() {
-        back = (Button) findViewById(R.id.search_back);
-        mListView = (ExpandableListView) findViewById(R.id.search_list);
-        collect = (RadioButton) findViewById(R.id.browse_collect);
-
+        back =  findViewById(R.id.search_back);
+        mListView =  findViewById(R.id.search_list);
+        collect =  findViewById(R.id.browse_collect);
         back.setOnClickListener(this);
         collect.setOnClickListener(this);
-
         isCheck = libraryDepository.contain(bookBean);
         collect.setChecked(isCheck);
     }

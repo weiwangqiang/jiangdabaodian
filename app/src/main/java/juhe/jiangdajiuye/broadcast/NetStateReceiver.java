@@ -1,4 +1,4 @@
-package juhe.jiangdajiuye.broadCast;
+package juhe.jiangdajiuye.broadcast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

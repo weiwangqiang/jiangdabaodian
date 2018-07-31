@@ -21,7 +21,7 @@ import cn.bmob.v3.listener.FindListener;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.IndexAdapter;
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.broadCast.NetStateReceiver;
+import juhe.jiangdajiuye.broadcast.NetStateReceiver;
 import juhe.jiangdajiuye.db.repository.BrowseDepository;
 import juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView;
 import juhe.jiangdajiuye.utils.ToastUtils;

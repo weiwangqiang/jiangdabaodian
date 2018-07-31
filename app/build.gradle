@@ -19,7 +19,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 26
         versionCode 7
-        versionName "1.6.1"
+        versionName "1.6.2"
         flavorDimensions "versionCode"
         multiDexKeepProguard file("multidexKeep.pro")//腾讯bugly的类放在主dex
         ndk {
@@ -43,7 +43,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
-
     }
     productFlavors {
         //渠道包

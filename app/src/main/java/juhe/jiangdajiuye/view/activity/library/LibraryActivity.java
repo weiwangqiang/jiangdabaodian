@@ -21,7 +21,7 @@ import java.util.List;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.LibraryAdapter;
 import juhe.jiangdajiuye.bean.BookBean;
-import juhe.jiangdajiuye.broadCast.NetStateReceiver;
+import juhe.jiangdajiuye.broadcast.NetStateReceiver;
 import juhe.jiangdajiuye.ui.recyclerView.LoadMoreRecyclerView;
 import juhe.jiangdajiuye.base.BaseActivity;
 import juhe.jiangdajiuye.ui.recyclerView.adapter.AbsAdapter;

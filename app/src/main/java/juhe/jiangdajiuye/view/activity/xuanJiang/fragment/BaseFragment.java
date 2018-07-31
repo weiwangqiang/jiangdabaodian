@@ -14,7 +14,7 @@ import java.util.List;
 import juhe.jiangdajiuye.R;
 import juhe.jiangdajiuye.adapter.IndexAdapter;
 import juhe.jiangdajiuye.bean.MessageBean;
-import juhe.jiangdajiuye.broadCast.NetStateReceiver;
+import juhe.jiangdajiuye.broadcast.NetStateReceiver;
 import juhe.jiangdajiuye.db.repository.BrowseDepository;
 import juhe.jiangdajiuye.net.httpUtils.HttpHelper;
 import juhe.jiangdajiuye.net.httpUtils.inter.IDataListener;

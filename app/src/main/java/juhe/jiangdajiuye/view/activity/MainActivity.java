@@ -49,7 +49,7 @@ import juhe.jiangdajiuye.adapter.FragmentAdapter;
 import juhe.jiangdajiuye.bean.bmobAppMes.BootPicture;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.ShareRecord;
 import juhe.jiangdajiuye.bean.bmobRecordEntity.UserBrowseRecord;
-import juhe.jiangdajiuye.broadCast.NetStateReceiver;
+import juhe.jiangdajiuye.broadcast.NetStateReceiver;
 import juhe.jiangdajiuye.constant.CacheConstant;
 import juhe.jiangdajiuye.base.BaseActivity;
 import juhe.jiangdajiuye.base.BaseApplication;

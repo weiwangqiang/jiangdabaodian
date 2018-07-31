@@ -18,7 +18,6 @@ import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.InstallationListener;
 import cn.bmob.v3.exception.BmobException;
 import juhe.jiangdajiuye.net.NetStateUtils;
-import juhe.jiangdajiuye.net.httpUtils.HttpHelper;
 
 /**
  * class description here
@@ -61,7 +60,6 @@ public class InitWorker {
             CrashReport.initCrashReport(mCtx, Bugly_APPId,false);
             CrashReport.startCrashReport();
         }
-        HttpHelper.getInstance().init();
         Log.i(TAG, "onStartCommand: 初始化完成 ！ ");
 
     }

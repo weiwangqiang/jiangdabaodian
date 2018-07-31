@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:android1="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nav_comment_edit"
         android:icon="@drawable/ic_border_color_white"
         android:title=""
-        android1:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />
 </menu>
 

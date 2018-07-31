@@ -37,14 +37,13 @@ public class LibrarySqlHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        if (sqLiteDatabase != null) {
-            sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + LibraryTable.tableName + " ( "
-                    + LibraryTable.book + " VARCHAR, "
-                    + LibraryTable.editor + " VARCHAR  , "
-                    + LibraryTable.available + " VARCHAR , "
-                    + LibraryTable.number + " VARCHAR, "
-                    + LibraryTable.url + " VARCHAR unique);");
-        }
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + LibraryTable.tableName + " ( "
+                + LibraryTable.book + " VARCHAR, "
+                + LibraryTable.editor + " VARCHAR  , "
+                + LibraryTable.available + " VARCHAR , "
+                + LibraryTable.number + " VARCHAR, "
+                + LibraryTable.url + " VARCHAR unique);");
+
     }
 
     @Override
@@ -61,9 +60,15 @@ public class LibrarySqlHelper extends SQLiteOpenHelper {
         cv.put(LibraryTable.number, bookBean.getNumber());
         cv.put(LibraryTable.url, bookBean.getUrl());
         SQLiteDatabase db = startTransaction(true);
-        long result = db.insert(LibraryTable.tableName, LibraryTable.book, cv);
-        endTransaction(db);
-        return result > 0 ? true : false;
+        try {
+            long result = db.insert(LibraryTable.tableName, LibraryTable.book, cv);
+            return result > 0 ? true : false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            endTransaction(db);
+        }
+        return false;
     }
 
 
@@ -76,7 +81,7 @@ public class LibrarySqlHelper extends SQLiteOpenHelper {
             cv.put(LibraryTable.available, bookBean.getAvailable());
             cv.put(LibraryTable.number, bookBean.getNumber());
             cv.put(LibraryTable.url, bookBean.getUrl());
-             db.insert(LibraryTable.tableName, LibraryTable.book, cv);
+            db.insert(LibraryTable.tableName, LibraryTable.book, cv);
         }
         endTransaction(db);
         return true;
@@ -129,11 +134,13 @@ public class LibrarySqlHelper extends SQLiteOpenHelper {
                         LibraryTable.tableName + " where "
                         + LibraryTable.url + " =? ",
                 new String[]{url});
-        Boolean has = cursor.moveToFirst();
+        Boolean has = false;
         try {
+            has = cursor.moveToFirst();
             cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
         endTransaction(db);
         return has;
@@ -142,6 +149,10 @@ public class LibrarySqlHelper extends SQLiteOpenHelper {
     public void delete(BookBean bookBean) {
         String where = LibraryTable.url + " =? ";
         String[] value = {bookBean.getUrl()};
-        getWritableDatabase().delete(LibraryTable.tableName, where, value);
+        try {
+            getWritableDatabase().delete(LibraryTable.tableName, where, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
