@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        config {
-            keyPassword '1995421'
-            storeFile file('G:/android/key/androidkey/wei.jks')
-            storePassword '1995421'
-            keyAlias 'wei'
-        }
-    }
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
     //**bmob兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'**
@@ -41,7 +33,6 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
         }
     }
     productFlavors {
